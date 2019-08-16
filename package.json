@@ -1,11 +1,11 @@
 {
-  "name": "finapi-ib",
+  "name": "fintools-ib",
   "version": "1.0.0",
   "description": "",
-  "homepage": "https://gitlab.com/konradp/finapi-ib",
+  "homepage": "https://gitlab.com/konradp/fintools-ib",
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/konradp/finapi-ib.git"
+    "url": "git+https://gitlab.com/konradp/fintools-ib.git"
   },
   "main": "server.js",
   "scripts": {
