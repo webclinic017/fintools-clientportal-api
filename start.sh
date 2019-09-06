@@ -26,5 +26,7 @@ keepalive &
 PID2=$!
 echo "STARTED KEEPALIVE ($PID2)"
 trap cleanup INT
-npm start
+while true; do
+  npm start
+done
 cleanup
