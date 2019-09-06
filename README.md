@@ -3,15 +3,12 @@
 Replacement for fintools, using IB Client API beta.
 
 # Quickstart
-Run IB gateway and keepalive.
+Run IB gateway, keepalive, and start the client.
 ```
-./gateway.sh &
-./keepalive.sh
+./start.sh
 ```
+Then auth in the browser window which automatically opened.
 
-To kill, kill `java`.
+To kill, Ctrl+C.
 
-Start client.
-```
-npm start
-```
+Note: If some process was left hanging, `killall java; killall npm` and the one in `ps aux | grep keepalive.sh`.
