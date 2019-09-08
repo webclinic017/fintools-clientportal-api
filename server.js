@@ -1,26 +1,112 @@
 var express = require('express');
 var app = express();
+var https = require('https');
 var path = require('path');
 var port = 8080;
+var iburl = 'localhost';
+var ibport = 5000;
 
+// Convert object to url query string
+// Example: { one: two, three: four }
+// converts to ?one=two&three=four
+function urlparams(data) {
+  var i = 0,
+      encoded = '?'
+  Object.keys(data).forEach((key) => {
+    if (i > 0) encoded += '&';
+    encoded += key + '=' + data[key];
+    i++;
+  });
+  return encoded;
+}
+
+// CORS Request
+function ibRequest(method, path, body = null) {
+  return new Promise((resolve, reject) => {
+    var options = {
+      hostname: iburl,
+      port: ibport,
+      path: path,
+      method: method,
+      headers: {
+        'Accept': '*/*',
+        'User-Agent': 'curl/7.52.1'
+      }
+    }
+    if (body != null) {
+      if (method == 'POST') {
+        body = JSON.stringify(body);
+        options.data = body;
+        options.headers['Content-Type'] = 'application/json';
+        options.headers['Content-Length'] = body.length;
+      } else if (method == 'GET') {
+        // Request is GET, so params are urlencoded
+        options.path = path + urlparams(body);
+      } else {
+        console.log("ERROR, we shouldn't be here");
+      }
+    }
+    process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
+    console.log(method, options.path);
+    var rq = https.request(options, (rs) => {
+      let data = '';
+      rs.on('data', (chunk) => {
+        data += chunk;
+      });
+      rs.on('end', () => {
+        try {
+          if (data == '') {
+            reject('No data received');
+          } else {
+            resolve(JSON.parse(data));
+          }
+        } catch(error) {
+          reject('Invalid JSON: ' + error + ': ' + data);
+        }
+      });
+    }).on("error", (err) => {
+      console.log("Error: " + err.message);
+      reject('Error: ' + err);
+    });
+    if (body != null && method == 'POST') {
+      rq.write(body);
+    }
+    rq.end();
+  });
+};
 
 // Serve rest from 'public' dir
 app.use(express.static('public'))
+
+app.get('/chart/:ticker/:time', (req,res) => {
+  // TODO
+  var ticker = req.params.ticker,
+      time = req.params.time;
+  // Get ticker conid
+  ibRequest('POST', '/v1/portal/iserver/secdef/search', { symbol: ticker })
+    .then((r) => {
+      var s = r.filter(i => i.description == 'NASDAQ');
+      var conid = s[0].conid;
+      // Get OHLC data
+      ibRequest('GET', '/v1/portal/iserver/marketdata/history',
+            { conid: conid, period: time })
+        .then((s) => {
+          res.send(s.data);
+        })
+  }).catch((err) => {
+      res.status(400).json({ error: err });
+      console.log('ERROR: ' + err);
+  }) //ibRequest
+});
 
 app.get('/chartDemo/:ticker/:time', (req,res) => {
   var ticker = req.params.ticker,
       time = req.params.time;
   var k = 0;
   switch (time) {
-    case '1d':
-      k = 1;
-      break;
-    case '1m':
-      k = 2;
-      break;
-    case '3m':
-      k = 3;
-      break;
+    case '1d': k = 1; break;
+    case '1m': k = 2; break;
+    case '3m': k = 3; break;
     default:
       console.log('Invalid time: ', time);
       res.status(400).json({ error: 'Invalid time ',time });

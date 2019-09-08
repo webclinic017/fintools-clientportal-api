@@ -90,9 +90,28 @@ class Plot {
   dataType = 'array';
   lines = [];
   spacing = 2;
+  fLabels = {
+    open: "open",
+    high: "high",
+    low: "low",
+    close: "close"
+  };
 
   constructor(ctx) {
     this.ctx = ctx;
+  }
+
+  setLabels(labels) {
+    // Use this if the JSON data has got fields named other than
+    // open,high,low,close, e.g. o,h,l,c
+    // INPUT: Array, e.g.
+    // [ 'o', 'h', 'l', 'c' ]
+    this.fLabels = {
+      open: labels[0],
+      high: labels[1],
+      low: labels[2],
+      close: labels[3]
+    };
   }
 
   setData(data, fields = [ 'open', 'high', 'low', 'close' ]) {
@@ -119,13 +138,14 @@ class Plot {
           lo = data[i][f.indexOf('low')];
       }
     } else if (this.dataType == 'json') {
-      var hi = data[0].high;
-      var lo = data[0].low;
+      var l = this.fLabels;
+      var hi = data[0][l.high];
+      var lo = data[0][l.low];
       for (var i in data) {
-        if (data[i].high > hi)
-          hi = data[i].high;
-        if (data[i].low < lo)
-          lo = data[i].low;
+        if (data[i][l.high] > hi)
+          hi = data[i][l.high];
+        if (data[i][l.low] < lo)
+          lo = data[i][l.low];
       }
     } else {
       throw 'Unknown data type';
@@ -175,13 +195,14 @@ class Plot {
         c.draw();
       }
     } else if (this.dataType == 'json') {
+      var l = this.fLabels;
       for (var i in this.data) {
         var c = new Candle(this.ctx,
           i*this.spacing+10,     // date
-          this.data[i].open,  // open
-          this.data[i].high,  // high
-          this.data[i].low,   // low
-          this.data[i].close, // close
+          this.data[i][l.open],  // open
+          this.data[i][l.high],  // high
+          this.data[i][l.low],   // low
+          this.data[i][l.close], // close
         );
         c.maxY = this.max;
         c.minY = this.min;

@@ -1,7 +1,7 @@
 var base = location.href.substring(0, location.href.lastIndexOf("/"));
 
 // Menu
-items = [ 'index', 'demo' ];
+items = [ 'index', 'chart', 'demo' ];
 var d = document;
 var menu = d.getElementById('menu');
 var ul = d.createElement('ul')
