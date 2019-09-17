@@ -1,4 +1,5 @@
 // Minimal example to pull data from IB beta client API
+// It tests auth
 var express = require('express');
 var app = express();
 var https = require('https');

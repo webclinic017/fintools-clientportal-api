@@ -3,6 +3,8 @@
 function cleanup() {
   echo EXITTING $PID1 $PID2
   kill $(ps -o pid= --ppid $PID1 $PID2)
+  killall npm
+  exit 0
 }
 
 function keepalive() {
@@ -16,6 +18,12 @@ function keepalive() {
   done
 }
 
+function keepalivenpm() {
+  while true; do
+    npm start
+  done
+}
+
 pushd /home/konrad/Apps/IB/betaAPI
 ./bin/run.sh root/conf.yaml &
 PID1=$!
@@ -26,7 +34,7 @@ keepalive &
 PID2=$!
 echo "STARTED KEEPALIVE ($PID2)"
 trap cleanup INT
+keepalivenpm &
 while true; do
-  npm start
+  sleep 10
 done
-cleanup

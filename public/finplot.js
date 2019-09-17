@@ -2,7 +2,7 @@
 var kCandleWidth = 10;
 
 class Candle {
-  constructor(ctx, x, open, high, low, close) {
+  constructor(ctx, x, open, high, low, close, width = null) {
     // Check
     if (ctx == null) throw 'Context undefined';
     if (x == null) throw 'X undefined';
@@ -17,7 +17,7 @@ class Candle {
     this.close = close;
     // Other
     this.cHeight = ctx.canvas.height;
-    this.candleWidth = kCandleWidth;
+    this.candleWidth = (width != null)? width : kCandleWidth;
     this.maxY = 100;
     this.minY = 0;
   };
@@ -198,11 +198,12 @@ class Plot {
       var l = this.fLabels;
       for (var i in this.data) {
         var c = new Candle(this.ctx,
-          i*this.spacing+10,     // date
+          i*this.spacing,     // date
           this.data[i][l.open],  // open
           this.data[i][l.high],  // high
           this.data[i][l.low],   // low
           this.data[i][l.close], // close
+          (0.8)*this.ctx.canvas.width/this.data.length, // candle width
         );
         c.maxY = this.max;
         c.minY = this.min;

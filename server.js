@@ -5,6 +5,7 @@ var path = require('path');
 var port = 8080;
 var iburl = 'localhost';
 var ibport = 5000;
+var debug = true;
 
 // Convert object to url query string
 // Example: { one: two, three: four }
@@ -21,7 +22,7 @@ function urlparams(data) {
 }
 
 // CORS Request
-function ibRequest(method, path, body = null) {
+function ibRequest(method, path, body = null, detail = null) {
   return new Promise((resolve, reject) => {
     var options = {
       hostname: iburl,
@@ -58,7 +59,7 @@ function ibRequest(method, path, body = null) {
           if (data == '') {
             reject('No data received');
           } else {
-            resolve(JSON.parse(data));
+            resolve({ data: JSON.parse(data), detail: detail });
           }
         } catch(error) {
           reject('Invalid JSON: ' + error + ': ' + data);
@@ -75,6 +76,8 @@ function ibRequest(method, path, body = null) {
   });
 };
 
+
+///////////////////// ENDPOINTS ///////////////////////
 // Serve rest from 'public' dir
 app.use(express.static('public'))
 
@@ -85,14 +88,52 @@ app.get('/chart/:ticker/:time', (req,res) => {
   // Get ticker conid
   ibRequest('POST', '/v1/portal/iserver/secdef/search', { symbol: ticker })
     .then((r) => {
-      var s = r.filter(i => i.description == 'NASDAQ');
+      var s = r.data.filter(i => i.description == 'NASDAQ');
       var conid = s[0].conid;
       // Get OHLC data
       ibRequest('GET', '/v1/portal/iserver/marketdata/history',
-            { conid: conid, period: time })
+            { conid: conid, period: time }, conid)
         .then((s) => {
-          res.send(s.data);
+          console.log('data', s.data);
+          console.log('detail', s.detail);
+          res.send(s.data.data);
         })
+  }).catch((err) => {
+      res.status(400).json({ error: err });
+      console.log('ERROR: ' + err);
+  }) //ibRequest
+});
+
+app.get('/winners/:perc/:price', (req,res) => {
+  // TODO
+  var perc = req.params.perc,
+      price = req.params.price;
+  // Get scanner results
+  ibRequest('POST', '/v1/portal/iserver/scanner/run', {
+    type: "TOP_PERC_GAIN",
+    instrument: "STK",
+    filter: [
+      {
+        code: "priceBelow",
+        value: parseInt(price)
+      }
+    ],
+    location: "STK.US.MAJOR",
+    size: "10"
+  }).then((r) => {
+    debug = true;
+    if (debug) { console.log('body', r); }
+    var ret = [];
+    var r = r.data.contracts;
+    for (let i = 0; i < r.length; ++i) {
+      ret.push({
+        symbol: r[i].symbol,
+        con_id: r[i].con_id,
+        company_name: r[i].company_name
+      })
+    }
+    res.setHeader('Content-Type', 'application/json');
+    res.send(ret);
   }).catch((err) => {
       res.status(400).json({ error: err });
       console.log('ERROR: ' + err);
@@ -112,36 +153,15 @@ app.get('/chartDemo/:ticker/:time', (req,res) => {
       res.status(400).json({ error: 'Invalid time ',time });
   }
   var c = [
-    {
-      "date": "2019-04-23",
-      "open": k*1.52,
-      "close": k*1.73,
-      "high": k*2,
-      "low": k*1.47,
-      "volume": 175201,
-      "label": "Apr 23, 19",
-    },
-    {
-      "date": "2019-04-24",
-      "open": k*1.52,
-      "close": k*1.73,
-      "high": k*k,
-      "low": k*1.47,
-      "volume": 584261,
-      "label": "Apr 24, 19",
-    },
-    {
-      "date": "2019-04-24",
-      "open": 1.52,
-      "close": 1.73,
-      "high": k,
-      "low": 0.1,
-      "volume": 584261,
-      "label": "Apr 24, 19",
-    }
+    { "date": "2019-04-23", "open": k*1.52, "close": k*1.73, "high": k*2, "low": k*1.47, "volume": 175201, "label": "Apr 23, 19", },
+    { "date": "2019-04-24", "open": k*1.52, "close": k*1.73, "high": k*k, "low": k*1.47, "volume": 584261, "label": "Apr 24, 19", },
+    { "date": "2019-04-24", "open": 1.52, "close": 1.73, "high": k, "low": 0.1, "volume": 584261, "label": "Apr 24, 19", }
   ];
-
   res.send(c);
+});
+
+app.post('/get', (req, res) => {
+  console.log('AAAAA'+req.body);
 });
 
 console.log('Listening on port', port);
