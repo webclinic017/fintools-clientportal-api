@@ -3,7 +3,6 @@ var base = location.href.substring(0, location.href.lastIndexOf("/"));
 // Menu
 items = [
   'index',
-  'chart',
   'chart-test',
   'demo',
   'scanner'
