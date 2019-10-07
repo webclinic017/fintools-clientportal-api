@@ -6,6 +6,7 @@ Replacement for fintools, using IB Client API beta.
 Run IB gateway, keepalive, and start the client.
 ```
 ./start.sh
+npm start
 ```
 Then auth in the browser window which automatically opened.
 
