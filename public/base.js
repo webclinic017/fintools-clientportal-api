@@ -5,7 +5,7 @@ items = [
   'index',
   'chart-test',
   'demo',
-  'scanner'
+  'scanner-nasdaq'
 ];
 var d = document;
 var menu = d.getElementById('menu');

@@ -45,7 +45,7 @@ function getChart(ticker, time) {
   var url = kUrlIb + 'chart/' + ticker + '/' + time;
   return new Promise((resolve, reject) => {
     createRequest('GET', url)
-      .then((res) => { resolve({ "ticker": ticker, "data": res }); })
+      .then((res) => { resolve(res); })
       .catch((err) => { reject(err); });
   });
 }
@@ -78,7 +78,7 @@ function getWinners() {
       .catch((err) => { reject(err); });
   })
 };
-
+var plot = null;
 function drawPlot(timeRange) {
     console.log('Drawing', timeRange);
     ticker = document.getElementById('ticker').value;
@@ -89,21 +89,24 @@ function drawPlot(timeRange) {
           var c = document.getElementById('canvas');
           if (c.getContext) {
             var p = new Plot(c.getContext('2d'));
+            plot = p;
+            console.log(p);
             p.setLabels(['o', 'h', 'l', 'c']);
             p.setData(d.data);
-            //getFilings(d.ticker).then((filings) => {
-            //  var plot = kPlots[filings.symbol];
-            //  var d = [];
-            //  for (var i in filings.data) {
-            //    d.push({
-            //      "date": new Date(filings.data[i].date)
-            //      .toISOString().slice(0, 10),
-            //      "label": filings.data[i].value,
-            //    });
-            //  }
-            //  plot.setLines(d);
-            //  plot.draw();
-            //});
+            getFilings(d.ticker).then((filings) => {
+              console.log(filings);
+              var d = [];
+              for (var i in filings.data) {
+                d.push({
+                  "date": new Date(filings.data[i].date)
+                  .toISOString().slice(0, 10),
+                  "label": filings.data[i].value,
+                });
+              }
+              plot.setLines(d);
+              console.log(plot);
+              plot.draw();
+            });
             p.draw();
           } else {
             throw 'Could not find canvas';

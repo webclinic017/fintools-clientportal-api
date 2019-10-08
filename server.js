@@ -96,7 +96,13 @@ app.get('/chart/:ticker/:time', (req,res) => {
         .then((s) => {
           console.log('data', s.data);
           console.log('detail', s.detail);
-          res.send(s.data.data);
+          res.send({
+            data: s.data.data,
+            high: s.data.high,
+            low: s.data.low,
+            ticker: s.data.symbol,
+            text: s.data.text
+          });
         })
   }).catch((err) => {
       res.status(400).json({ error: err });
