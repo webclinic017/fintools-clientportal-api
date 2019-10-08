@@ -37,7 +37,7 @@ function createRequest(method, url) {
 
 /* GETTERS */
 function getData() {
-  var url = kUrlIb + 'winners/US/' + perc + '/' + price;
+  var url = kUrlIb + 'winners/UK/' + perc + '/' + price;
   return new Promise((resolve, reject) => {
     createRequest('GET', url)
       .then((res) => { resolve(res); })

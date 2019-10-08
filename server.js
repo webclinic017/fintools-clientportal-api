@@ -76,7 +76,6 @@ function ibRequest(method, path, body = null, detail = null) {
   });
 };
 
-
 ///////////////////// ENDPOINTS ///////////////////////
 // Serve rest from 'public' dir
 app.use(express.static('public'))
@@ -110,28 +109,44 @@ app.get('/chart/:ticker/:time', (req,res) => {
   }) //ibRequest
 });
 
-app.get('/winners/:perc/:price', (req,res) => {
-  // TODO
-  var perc = req.params.perc,
+app.get('/winners/:loc/:perc/:price', (req,res) => {
+  // loc = US or EU
+  var loc = req.params.loc,
+      perc = req.params.perc,
       price = req.params.price;
   // Get scanner results
+  if (loc == 'US') {
+    var instrument = 'STK',
+        ibLocation = 'STK.US.MAJOR';
+  } else if (loc == 'UK') {
+    var instrument = 'STOCK.EU',
+        ibLocation = 'STK.EU.LSE';
+  } else {
+    throw 'Unknown location';
+  }
   ibRequest('POST', '/v1/portal/iserver/scanner/run', {
     type: "TOP_PERC_GAIN",
-    instrument: "STK",
+    instrument: instrument,
     filter: [
       {
+        code: "changePercAbove",
+        value: parseInt(perc),
+      },
+      {
         code: "priceBelow",
-        value: parseInt(price)
-      }
+        value: parseInt(price),
+      },
     ],
-    location: "STK.US.MAJOR",
+    location: ibLocation,
     size: "10"
   }).then((r) => {
     debug = true;
-    if (debug) { console.log('body', r); }
+    console.log(r);
+    if (r.data.error != null) throw r.data.error;
     var ret = [];
     var r = r.data.contracts;
     for (let i = 0; i < r.length; ++i) {
+      if (debug) { console.log('item', r[i]); }
       ret.push({
         symbol: r[i].symbol,
         con_id: r[i].con_id,
