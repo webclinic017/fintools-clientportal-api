@@ -23,15 +23,25 @@ PID1=$!
 echo "STARTED GATEWAY ($PID1)"
 chromium https://localhost:5000 &
 popd
-#keepalive &
-#PID2=$!
 echo "STARTED KEEPALIVE ($PID2)"
 trap cleanup INT
 while true; do
-  echo `date`
-  echo /auth/status
-  curl -sk https://localhost:5000/v1/portal/iserver/auth/status | jq &
+  VAL=$(curl -sk \
+    --connect-timeout 2 \
+    --max-time 2 \
+    https://localhost:5000/v1/portal/iserver/auth/status)
+  if [[ $(echo $VAL | jq '.statusCode') == 401 ]]; then
+    echo /auth/status: $VAL
+  fi
+  if [[ "$(echo $VAL | jq '.authenticated')" == "true" ]]; then
+    break
+  fi
+  sleep 1
+done
+echo Authenticated
+while true; do
   echo /sso/validate
-  curl -sk https://localhost:5000/v1/portal/sso/validate | jq &
+  VAL=$(curl -sk https://localhost:5000/v1/portal/sso/validate | jq '.')
+  echo $VAL
   sleep 60
 done

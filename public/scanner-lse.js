@@ -68,10 +68,15 @@ function getFilings(symbol) {
 // MAIN
 getData()
   .then((d) => {
-    var table = document.getElementById('table');
-    table.innerHTML = '';
+    if (debug) console.log(d);
+    // Draw list
+    var list = document.getElementById('list');
+    for (let i = 0; i < d.length; ++i) {
+      list.innerHTML += d[i].symbol + ' ';
+    }
     // Draw table
     var table = document.getElementById('table');
+    table.innerHTML = '';
     var t = document.createElement('table');
     t.setAttribute('border', true);
     for (let i = 0; i < d.length; ++i) {

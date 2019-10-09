@@ -4,6 +4,7 @@ var base = location.href.substring(0, location.href.lastIndexOf("/"));
 items = [
   'index',
   'chart-test',
+  'chart-list',
   'demo',
   'scanner-lse',
   'scanner-nasdaq',
