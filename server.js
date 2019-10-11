@@ -80,6 +80,40 @@ function ibRequest(method, path, body = null, detail = null) {
 // Serve rest from 'public' dir
 app.use(express.static('public'))
 
+app.get('/snapshot/:tickers', (req,res) => {
+  // tickers = list of conids, coma separated
+  // Need to call this twice
+  var tickers = req.params.tickers;
+  var url = '/v1/portal/iserver/marketdata/snapshot'
+    + '?conids=' + tickers + '&fields=83';
+  ibRequest('GET', url)
+  .then((r) => {
+    ibRequest('GET', url)
+    .then((s) => {
+      debug = true;
+      if (debug) console.log(s);
+      if (s.data.error != null) throw s.data.error;
+      var ret = [];
+      var s = s.data;
+      for (let i = 0; i < s.length; ++i) {
+        ret.push({
+          symbol: s[i][55],
+          con_id: s[i].conid,
+          price_ClosePrevious: s[i][7296],
+          price_AfterHours: s[i][31],
+          priceChangeAfterHours: s[i][82],
+          priceChangePerc: s[i][83],
+        })
+      }
+      res.setHeader('Content-Type', 'application/json');
+      res.send(ret);
+    })
+  }).catch((err) => {
+      res.status(400).json({ error: err });
+      console.log('ERROR: ' + err);
+  }) //ibRequest
+});
+
 app.get('/chart/:ticker/:time', (req,res) => {
   // TODO
   var ticker = req.params.ticker,
