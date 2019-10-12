@@ -114,6 +114,17 @@ app.get('/snapshot/:tickers', (req,res) => {
   }) //ibRequest
 });
 
+app.get('/conid/:ticker', (req,res) => {
+  var ticker = req.params.ticker;
+  ibRequest('POST', '/v1/portal/iserver/secdef/search', { symbol: ticker })
+    .then((r) => {
+      var s = r.data.filter(i => i.description == 'NASDAQ');
+      res.send({
+        conid: s[0].conid,
+      });
+    })
+})
+
 app.get('/chart/:ticker/:time', (req,res) => {
   // TODO
   var ticker = req.params.ticker,

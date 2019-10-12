@@ -5,6 +5,7 @@ items = [
   'index',
   'chart-test',
   'chart-list',
+  'conid',
   'demo',
   'scanner-lse',
   'scanner-nasdaq',
