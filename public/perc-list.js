@@ -49,78 +49,78 @@ function getChart(ticker, time) {
   });
 }
 
-function getFilings(symbol) {
-  // Output: JSON { symbol, data }
-  if(symbol == '') throw 'Symbol is not set';
+function getConid(ticker) {
+  var url = kUrlIb + 'lseconid/' + ticker;
   return new Promise((resolve, reject) => {
-    createRequest('GET', kUrlFilings + symbol)
-      .then((r) => {
-        // Repad data
-        d = [];
-        for(var i = 0; i < r.length; i++) {
-          d[i] = {
-            date: Date.parse(r[i].date),
-            value: r[i].type
-          };
-        }
-        if(debug) console.log({symbol: symbol, data: d});
-        resolve({ symbol: symbol, data: d });
-      }).catch((err) => { reject(err); });
+    createRequest('GET', url)
+      .then((res) => { resolve(res); })
+      .catch((err) => { reject(err); });
   });
 }
 
-function drawPlot(timeRange) {
-    console.log('Drawing', timeRange);
+function getSnapshot(conid) {
+  var url = kUrlIb + 'snapshot-single/' + conid;
+  return new Promise((resolve, reject) => {
+    createRequest('GET', url)
+      .then((res) => { resolve(res); })
+      .catch((err) => { reject(err); });
+  });
+}
+
+// - get conids from list
+// - get snapshots
+// - draw tables
+function drawTables() {
+    console.log('Drawing');
     ticker = document.getElementById('ticker').value;
-    var root = document.getElementById('plot');
-    root.innerHTML = '';
+    var table = document.getElementById('table');
+    table.border = true;
+    table.innerHTML = '';
+    var header = document.createElement('thead'),
+      headers = [
+        { label: 'ticker', field: 'ticker' },
+        { label: 'Last Price', field: 31 },
+        { label: 'Change Percent', field: 83 },
+        { label: 'Open Price', field: 7295 },
+        { label: 'Close Price', field: 7296 },
+      ],
+      row = document.createElement('tr');
+    for (let i = 0; i < headers.length; ++i) {
+      var th = document.createElement('th');
+      th.innerHTML = headers[i].label;
+      row.appendChild(th);
+      table.appendChild(row);
+    }
     if (ticker != '') {
       tickers = ticker.split(' ');
       for (let i = 0; i < tickers.length; ++i) {
-        // Pre-add charts and labels
-        var container = document.createElement('div'),
-            label = document.createElement('label');
+        // Pre-add tickers
+        var tr = document.createElement('tr'),
+            td = document.createElement('td');
         var labelStr = tickers[i].toUpperCase();
-        container.id = labelStr;
-        label.innerHTML = labelStr;
-        container.appendChild(label);
-        root.appendChild(container);
+        tr.id = labelStr;
+        td.innerHTML = labelStr;
+        tr.appendChild(td);
+        table.appendChild(tr);
       }
-      // Draw actual charts asynchronously
       tickers.forEach((ticker) => {
-        getChart(ticker, timeRange)
+        // Populate table (async)
+        getConid(ticker)
           .then((d) => {
             console.log(d);
-            // Canvas
-            var div = document.getElementById(d.ticker.toUpperCase());
-            var c = document.createElement('canvas');
-            c.id = 'canvas';
-            c.style = 'width:100%; height:50%; display: block;';
-            c.width = 800;
-            c.height = 400;
-            div.appendChild(c);
-
-            if (c.getContext) {
-              var p = new Plot(c.getContext('2d'));
-              p.setLabels(['o', 'h', 'l', 'c']);
-              p.setData(d.data);
-              getFilings(d.ticker).then((filings) => {
-                console.log(filings);
-                var d = [];
-                for (var i in filings.data) {
-                  d.push({
-                    "date": new Date(filings.data[i].date)
-                    .toISOString().slice(0, 10),
-                    "label": filings.data[i].value,
-                  });
-                }
-                p.setLines(d);
-                p.draw();
-              });
-              p.draw();
-            } else {
-              throw 'Could not find canvas';
-            }
+            getSnapshot(d.conid)
+            .then((data) => {
+              var d = data;
+              console.log(d);
+              var tr = document.getElementById(d['55'].toUpperCase());
+              for (let i = 1; i < headers.length; ++i) {
+                var td = document.createElement('td');
+                td.innerHTML = d[headers[i].field];
+                tr.appendChild(td);
+              }
+            }).catch((err) => {
+              console.log('Could not get snapshot:', err);
+            }); // getSnapshot
           }).catch((err) => {
             console.log('Could not get chart:', err);
           }); //getChart
@@ -142,7 +142,7 @@ tickerField.addEventListener("keyup", function(event) {
     if (kTicker == '') {
       alert('Set the ticker');
     } else {
-      drawPlot(kTime);
+      drawTables();
     }
   }
 });

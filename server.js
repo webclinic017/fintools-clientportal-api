@@ -114,6 +114,29 @@ app.get('/snapshot/:tickers', (req,res) => {
   }) //ibRequest
 });
 
+app.get('/snapshot-single/:ticker', (req,res) => {
+  // ticker = a single ticker, conid, e.g. 12345
+  // Need to call this twice
+  var tickers = req.params.ticker;
+  var url = '/v1/portal/iserver/marketdata/snapshot'
+    + '?conids=' + tickers + '&fields=83';
+  ibRequest('GET', url)
+  .then((r) => {
+    ibRequest('GET', url)
+    .then((s) => {
+      debug = true;
+      if (debug) console.log(s);
+      if (s.data.error != null) throw s.data.error;
+      var ret = s.data[0];
+      res.setHeader('Content-Type', 'application/json');
+      res.send(ret);
+    })
+  }).catch((err) => {
+      res.status(400).json({ error: err });
+      console.log('ERROR: ' + err);
+  }) //ibRequest
+});
+
 app.get('/conid/:ticker', (req,res) => {
   var ticker = req.params.ticker;
   ibRequest('POST', '/v1/portal/iserver/secdef/search', { symbol: ticker })
@@ -122,6 +145,33 @@ app.get('/conid/:ticker', (req,res) => {
       res.send({
         conid: s[0].conid,
       });
+    })
+    .catch((err) => {
+      console.log('ERROR:', err);
+      res.status(500).json(err);
+    })
+})
+
+app.get('/lseconid/:ticker', (req,res) => {
+  var ticker = req.params.ticker;
+  ibRequest('POST', '/v1/portal/iserver/secdef/search', { symbol: ticker })
+    .then((r) => {
+      var s = r.data.filter(i => i.description == 'LSE');
+      console.log('Filtered: ', s);
+      if (!s.length) {
+        console.log('Could not find ticker');
+        res.status(404).send();
+        return;
+      }
+      console.log(s[0]);
+      res.send({
+        conid: s[0].conid,
+        ticker: ticker
+      });
+    })
+    .catch((err) => {
+      console.log('ERROR:', err);
+      res.status(500).json(err);
     })
 })
 
@@ -201,7 +251,7 @@ app.get('/winners/:loc/:perc/:price', (req,res) => {
     res.setHeader('Content-Type', 'application/json');
     res.send(ret);
   }).catch((err) => {
-      res.status(400).json({ error: err });
+      res.status(500).json({ error: err });
       console.log('ERROR: ' + err);
   }) //ibRequest
 });

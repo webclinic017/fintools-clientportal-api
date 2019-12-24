@@ -7,6 +7,7 @@ items = [
   'chart-list',
   'conid',
   'demo',
+  'perc-list',
   'scanner-lse',
   'scanner-nasdaq',
 ];

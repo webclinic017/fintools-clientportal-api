@@ -54,26 +54,6 @@ function getSnapshots(conids) {
   });
 }
 
-function getFilings(symbol) {
-  // Output: JSON { symbol, data }
-  if(symbol == '') throw 'Symbol is not set';
-  return new Promise((resolve, reject) => {
-    createRequest('GET', kUrlFilings + symbol)
-      .then((r) => {
-        // Repad data
-        d = [];
-        for(var i = 0; i < r.length; i++) {
-          d[i] = {
-            date: Date.parse(r[i].date),
-            value: r[i].type
-          };
-        }
-        if(debug) console.log({symbol: symbol, data: d});
-        resolve({ symbol: symbol, data: d });
-      }).catch((err) => { reject(err); });
-  });
-}
-
 // MAIN
 getData()
   .then((d) => {
@@ -121,6 +101,7 @@ getData()
       .then((d) => {
         console.log(d);
         d.forEach((i) => {
+          // Cells
           var tr = document.getElementById(i.symbol);
           td = document.createElement('td');
           td.innerHTML = i.price_ClosePrevious;
@@ -135,7 +116,7 @@ getData()
           td.innerHTML = i.priceChangePerc;
           tr.appendChild(td);
         })
-    })
+    }) //getSnapshots
 
 
   }).catch((err) => {
