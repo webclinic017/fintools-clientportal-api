@@ -42,13 +42,30 @@ class Candle {
       var lower = close;
     }
     // Candlestick: draw
-    c.beginPath();
-    c.fillRect(
-      this.x,
-      this.translate(lower),
-      this.candleWidth,
-      this.translate(higher) - this.translate(lower)
-    );
+    //c.beginPath();
+    if (higher == lower) {
+      // Open equals close, draw a horiz line instead of a candlestick
+      c.beginPath();
+      c.strokeStyle = 'rgb(0, 0, 0)'; // black
+      c.lineWidth = 2;
+      c.moveTo(
+        this.x,
+        this.translate(higher)
+      );
+      c.lineTo(
+        this.x + this.candleWidth,
+        this.translate(higher)
+      );
+      c.stroke();
+    } else {
+      // Draw candle box
+      c.fillRect(
+        this.x,
+        this.translate(lower),
+        this.candleWidth,
+        this.translate(higher) - this.translate(lower)
+      );
+    }
     // Wick: high
     c.beginPath();
     c.strokeStyle = 'rgb(0, 0, 0)'; // black
