@@ -11,7 +11,7 @@ items = {
     [ 'scanner-nasdaq', 'NASDAQ: Scanner top gainers' ]
   ],
   lse: [
-    [ 'ib-list',        'LSE: Filter out tickers not in IB' ],
+    [ 'list-ib',        'LSE: Filter out tickers not in IB' ],
     [ 'lse-chart-list', 'LSE: Chart list for given tickers' ],
     [ 'lse-chart',      'LSE: Chart for ticker' ],
     [ 'perc-list',      'LSE: List ticker info' ],
