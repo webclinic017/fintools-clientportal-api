@@ -12,7 +12,7 @@ items = {
   ],
   lse: [
     [ 'list-ib',        'LSE: Filter out tickers not in IB' ],
-    [ 'lse-chart-list', 'LSE: Chart list for given tickers' ],
+    [ 'list-lse-chart', 'LSE: Chart list for given tickers' ],
     [ 'lse-chart',      'LSE: Chart for ticker' ],
     [ 'perc-list',      'LSE: List ticker info' ],
     [ 'scanner-lse',    'LSE: Scanner top gainers' ]
