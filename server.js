@@ -85,7 +85,7 @@ function getChart(ticker, time, exchange) {
         var conid = s[0].conid;
         // Get OHLC data
         ibRequest('GET', '/v1/portal/iserver/marketdata/history',
-              { conid: conid, period: time }, conid)
+              { conid: conid, period: time, bar: '1h' }, conid)
           .then((s) => {
             console.log('data', s.data);
             console.log('detail', s.detail);
