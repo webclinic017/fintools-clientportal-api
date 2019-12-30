@@ -74,10 +74,10 @@ getData()
       + '<tr>'
       + '  <th>Symbol</th>'
       + '  <th>Name</th>'
-      + '  <th>prev close</th>'
+      + '  <th>prevClose</th>'
       + '  <th>price</th>'
       + '  <th>change</th>'
-      + '  <th>change (%)</th>'
+      + '  <th>change(%)</th>'
       + '</tr>';
     t.appendChild(thead);
     for (let i = 0; i < d.length; ++i) {

@@ -15,6 +15,7 @@ items = {
     [ 'list-lse-chart', 'LSE: Chart list for given tickers' ],
     [ 'list-perc',      'LSE: List ticker info' ],
     [ 'lse-chart',      'LSE: Chart for ticker' ],
+    [ 'lse-conid',      'LSE: Conid for ticker' ],
     [ 'scanner-lse',    'LSE: Scanner top gainers' ]
   ]
 };

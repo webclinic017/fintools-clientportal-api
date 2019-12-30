@@ -38,7 +38,7 @@ function createRequest(method, url) {
 function getConidApi(ticker) {
   if(ticker == '')
     throw 'Ticker is not set';
-  var url = kUrlIb + 'conid/' + ticker;
+  var url = kUrlIb + 'lseconid/' + ticker;
   return new Promise((resolve, reject) => {
     createRequest('GET', url)
       .then((res) => { resolve(res); })
