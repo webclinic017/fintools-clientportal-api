@@ -104,6 +104,34 @@ function getChart(ticker, time, exchange) {
   }) // Promise
 }
 
+function getChartTwoDay(ticker, exchange) {
+  return new Promise((resolve, reject) => {
+    // Get ticker conid
+    ibRequest('POST', '/v1/portal/iserver/secdef/search', { symbol: ticker })
+      .then((r) => {
+        var s = r.data.filter(i => i.description == exchange);
+        var conid = s[0].conid;
+        // Get OHLC data
+        ibRequest('GET', '/v1/portal/iserver/marketdata/history',
+              { conid: conid, period: '2d', bar: '5m' }, conid)
+          .then((s) => {
+            console.log('data', s.data);
+            console.log('detail', s.detail);
+            resolve({
+              data: s.data.data,
+              high: s.data.high,
+              low: s.data.low,
+              ticker: s.data.symbol,
+              text: s.data.text
+            });
+          })
+    }).catch((err) => {
+      reject({ error: err });
+      console.log('ERROR: ' + err);
+    }) //ibRequest
+  }) // Promise
+}
+
 ///////////////////// ENDPOINTS ///////////////////////
 // Serve rest from 'public' dir
 app.use(express.static('public'))
@@ -207,6 +235,13 @@ app.get('/chart/:ticker/:time', (req,res) => {
   var ticker = req.params.ticker,
       time = req.params.time;
   getChart(ticker, time, 'NASDAQ')
+    .then((chart) => { res.send(chart); })
+    .catch((err) => { res.status(400).json({ error: err }); })
+});
+
+app.get('/chart-two-day/:ticker', (req,res) => {
+  var ticker = req.params.ticker;
+  getChartTwoDay(ticker, 'NASDAQ')
     .then((chart) => { res.send(chart); })
     .catch((err) => { res.status(400).json({ error: err }); })
 });
