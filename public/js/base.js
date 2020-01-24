@@ -3,14 +3,14 @@ var base = location.href.substring(0, location.href.lastIndexOf("/"));
 // Menu
 items = {
   nasdaq: [
-    [ 'index',              'NASDAQ: Chart for ticker' ],
-    [ 'chart-day',          'NASDAQ: Chart for ticker (day)' ],
-    [ 'chart-test',         'a' ],
-    [ 'chart-list',         'NASDAQ: Chart list for given tickers' ],
-    [ 'conid',              'a' ],
-    [ 'demo',               'a' ],
-    [ 'list-fluctuate-day', 'NASDAQ: Fluctuate for tickers' ],
-    [ 'scanner-nasdaq',     'NASDAQ: Scanner top gainers' ]
+    [ 'nq-chart-for-ticker', 'NASDAQ: Chart for ticker' ],
+    [ 'chart-day',           'NASDAQ: Chart for ticker (day)' ],
+    [ 'chart-test',          'a' ],
+    [ 'chart-list',          'NASDAQ: Chart list for given tickers' ],
+    [ 'conid',               'a' ],
+    [ 'demo',                'a' ],
+    [ 'list-fluctuate-day',  'NASDAQ: Fluctuate for tickers' ],
+    [ 'scanner-nasdaq',      'NASDAQ: Scanner top gainers' ]
   ],
   lse: [
     [ 'list-ib',        'LSE: Filter out tickers not in IB' ],
