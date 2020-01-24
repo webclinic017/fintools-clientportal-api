@@ -43,3 +43,7 @@ Array('lse', 'nasdaq').forEach((exch) => {
   div.appendChild(ul);
   menu.appendChild(div);
 })
+
+window.addEventListener('load', function() {
+  main();
+});

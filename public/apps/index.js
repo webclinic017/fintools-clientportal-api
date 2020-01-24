@@ -116,27 +116,28 @@ function drawPlot(timeRange) {
     }
 }
 
-
 // MAIN
-var tickerField = document.getElementById('ticker');
-tickerField.focus();
-tickerField.addEventListener("keyup", function(event) {
-  if (event.keyCode === 13) { // Enter
-    event.preventDefault();
-    kTicker = document.getElementById('ticker').value;
-    if (kTicker == '') {
-      alert('Set the ticker');
-    } else {
-      drawPlot(kTime);
+function main() {
+  var tickerField = document.getElementById('ticker');
+  tickerField.focus();
+  tickerField.addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) { // Enter
+      event.preventDefault();
+      kTicker = document.getElementById('ticker').value;
+      if (kTicker == '') {
+        alert('Set the ticker');
+      } else {
+        drawPlot(kTime);
+      }
     }
-  }
-});
+  });
+  // Canvas
+  var kPlot = document.getElementById('plot');
+  var canvas = document.createElement('canvas');
+  canvas.id = 'canvas';
+  canvas.style = 'width:100%; height:50%; display: block;';
+  canvas.width = 800;
+  canvas.height = 400;
+  kPlot.appendChild(canvas);
+}
 
-var kPlot = document.getElementById('plot');
-// Canvas
-var canvas = document.createElement('canvas');
-canvas.id = 'canvas';
-canvas.style = 'width:100%; height:50%; display: block;';
-canvas.width = 800;
-canvas.height = 400;
-kPlot.appendChild(canvas);
