@@ -3,6 +3,7 @@ var debug = false;
 var base = location.href.substring(0, location.href.lastIndexOf("/"));
 var kUrlIb = 'http://localhost:8080/';
 var missedTickers = [];
+var tickerCount = 0;
 
 // CORS Request
 function createRequest(method, url) {
@@ -40,13 +41,9 @@ function calFluctuations(data, low, high) {
   for(var i = 0; i < data.length; i++) {
     var dPoint = data[i];
     if (findLow) {
-      if (dPoint.l <= low) {
-        console.log('FOUND LOW');
-        findLow = false;
-      }
+      if (dPoint.l <= low) findLow = false;
     } else {
       if (dPoint.h >= high) {
-        console.log('FOUND HIGH');
         findLow = true;
         countFlux++;
       }
@@ -99,7 +96,6 @@ function arrayRemove(arr, value) {
 
 function parseData(ticker, d) {
   // return: [ ticker, avg, entry, exit, countF1, countF2 ]
-  console.log(d);
   var data = {};
   var current = 0;
   var currentDay = 0;
@@ -156,33 +152,42 @@ function parseData(ticker, d) {
   ];
 }
 
+function getTicker(ticker) {
+  getChart(ticker)
+  .then((d) => {
+    // [ ticker, avg, entry, exit, countF0, countF1 ]
+    var data = parseData(d.ticker, d.data);
+    if (data[4] > 0 && data[5] > 0) {
+      tName = 't-success';
+    } else if (data[4] > 0 && data[5] == 0) {
+      tName = 't-fail';
+    } else {
+      tName = 't-other';
+    }
+    addRow(tName, data);
+    missedTickers = arrayRemove(missedTickers, d.ticker);
+    setCounter('found', ++tickerCount);
+  }).catch((err) => {
+    console.log('Could not get chart:', err);
+  }) //getChart
+}
+
+function setCounter(type, value) {
+  var div = document.getElementById('count-' + type);
+  div.innerHTML = 'Count ' + type + ': ' + value;
+}
+
 function drawTables() {
     // TABLE
     ticker = document.getElementById('ticker').value;
     // TICKERS
     if (ticker != '') {
       tickers = ticker.split(' ');
+      setCounter('total', tickers.length);
       missedTickers = tickers;
-      tickers.forEach((ticker) => {
-        getChart(ticker)
-        .then((d) => {
-          // [ ticker, avg, entry, exit, countF0, countF1 ]
-          var data = parseData(d.ticker, d.data);
-          if (data[4] > 0 && data[5] > 0) {
-            tName = 't-success';
-          } else if (data[4] > 0 && data[5] == 0) {
-            tName = 't-fail';
-          } else {
-            tName = 't-other';
-          }
-          addRow(tName, data);
-          missedTickers = arrayRemove(missedTickers, d.ticker);
-          console.log('Done', d.ticker);
-        }).catch((err) => {
-          console.log('Could not get chart:', err);
-        }) //getChart
-      })
+      tickers.forEach(ticker => getTicker(ticker));
       // FOREACH TICKER
+      console.log('Print missedTickers for errors');
     } else {
       // No ticker
       alert('Set the ticker');
