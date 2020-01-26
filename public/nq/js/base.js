@@ -10,7 +10,7 @@ items = {
     [ 'conid',               'a' ],
     [ 'demo',                'a' ],
     [ 'list-fluctuate-day',  'NASDAQ: Fluctuate for tickers' ],
-    [ 'scanner-nasdaq',      'NASDAQ: Scanner top gainers' ]
+    [ 'scan-top-gain',      'Scanner: Top gainers' ]
   ],
 };
 var d = document;
@@ -23,9 +23,16 @@ Array('nasdaq').forEach((exch) => {
   div.appendChild(h3);
   menu.appendChild(div);
   var ul = d.createElement('ul')
+  // Home
+  var li = d.createElement('li');
+  var a = d.createElement('a');
+  a.href = '/';
+  a.innerHTML = 'Home';
+  li.appendChild(a);
+  ul.appendChild(li);
   for (i in items[exch]) {
-    var li = d.createElement('li');
-    var a = d.createElement('a');
+    li = d.createElement('li');
+    a = d.createElement('a');
     var item = items[exch][i];
     a.href = item[0] + ".html";
     a.innerHTML = item[0] + ': ' + item[1];
