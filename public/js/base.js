@@ -45,5 +45,7 @@ Array('lse', 'nasdaq').forEach((exch) => {
 })
 
 window.addEventListener('load', function() {
-  main();
+  if (typeof main === 'function') {
+    main();
+  }
 });
