@@ -165,8 +165,8 @@ app.get('/snapshot/:tickers', (req,res) => {
       res.send(ret);
     })
   }).catch((err) => {
-      res.status(400).json({ error: err });
-      console.log('ERROR: ' + err);
+    res.status(400).json({ error: err });
+    console.log('ERROR: ' + err);
   }) //ibRequest
 });
 
@@ -188,8 +188,8 @@ app.get('/snapshot-single/:ticker', (req,res) => {
       res.send(ret);
     })
   }).catch((err) => {
-      res.status(400).json({ error: err });
-      console.log('ERROR: ' + err);
+    res.status(400).json({ error: err });
+    console.log('ERROR: ' + err);
   }) //ibRequest
 });
 
@@ -211,24 +211,24 @@ app.get('/conid/:ticker', (req,res) => {
 app.get('/lseconid/:ticker', (req,res) => {
   var ticker = req.params.ticker;
   ibRequest('POST', '/v1/portal/iserver/secdef/search', { symbol: ticker })
-    .then((r) => {
-      var s = r.data.filter(i => i.description == 'LSE');
-      console.log('Filtered: ', s);
-      if (!s.length) {
-        console.log('Could not find ticker');
-        res.status(404).send();
-        return;
-      }
-      console.log(s[0]);
-      res.send({
-        conid: s[0].conid,
-        ticker: ticker
-      });
-    })
-    .catch((err) => {
-      console.log('ERROR:', err);
-      res.status(500).json(err);
-    })
+  .then((r) => {
+    var s = r.data.filter(i => i.description == 'LSE');
+    console.log('Filtered: ', s);
+    if (!s.length) {
+      console.log('Could not find ticker');
+      res.status(404).send();
+      return;
+    }
+    console.log(s[0]);
+    res.send({
+      conid: s[0].conid,
+      ticker: ticker
+    });
+  })
+  .catch((err) => {
+    console.log('ERROR:', err);
+    res.status(500).json(err);
+  })
 })
 
 app.get('/chart/:ticker/:time', (req,res) => {
@@ -251,8 +251,8 @@ app.get('/lsechart/:ticker/:time', (req,res) => {
   var ticker = req.params.ticker,
       time = req.params.time;
   getChart(ticker, time, 'LSE')
-    .then((chart) => { res.send(chart); })
-    .catch((err) => { res.status(400).json({ error: err }); })
+  .then((chart) => { res.send(chart); })
+  .catch((err) => { res.status(400).json({ error: err }); })
 });
 
 app.get('/winners/:loc/:perc/:price', (req,res) => {
@@ -307,9 +307,8 @@ app.get('/winners/:loc/:perc/:price', (req,res) => {
   }) //ibRequest
 });
 
-app.get('/chartDemo/:ticker/:time', (req,res) => {
-  var ticker = req.params.ticker,
-      time = req.params.time;
+app.get('/chartDemo/:time', (req,res) => {
+  var time = req.params.time;
   var k = 0;
   switch (time) {
     case '1d': k = 1; break;
@@ -320,15 +319,34 @@ app.get('/chartDemo/:ticker/:time', (req,res) => {
       res.status(400).json({ error: 'Invalid time ',time });
   }
   var c = [
-    { "date": "2019-04-23", "open": k*1.52, "close": k*1.73, "high": k*2, "low": k*1.47, "volume": 175201, "label": "Apr 23, 19", },
-    { "date": "2019-04-24", "open": k*1.52, "close": k*1.73, "high": k*k, "low": k*1.47, "volume": 584261, "label": "Apr 24, 19", },
-    { "date": "2019-04-24", "open": 1.52, "close": 1.73, "high": k, "low": 0.1, "volume": 584261, "label": "Apr 24, 19", }
+    {
+      "date": "2019-04-23",
+      "open": k*1.52,
+      "close": k*1.73,
+      "high": k*2,
+      "low": k*1.47,
+      "volume": 175201,
+      "label": "Apr 23, 19",
+    }, {
+      "date": "2019-04-24",
+      "open": k*1.52,
+      "close": k*1.73,
+      "high": k*k,
+      "low": k*1.47,
+      "volume": 584261,
+      "label": "Apr 24, 19",
+    },
+    {
+      "date": "2019-04-24",
+      "open": 1.52,
+      "close": 1.73,
+      "high": k,
+      "low": 0.1,
+      "volume": 584261,
+      "label": "Apr 24, 19",
+    }
   ];
   res.send(c);
-});
-
-app.post('/get', (req, res) => {
-  console.log('AAAAA'+req.body);
 });
 
 console.log('Listening on port', port);

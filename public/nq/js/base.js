@@ -3,13 +3,12 @@ var base = location.href.substring(0, location.href.lastIndexOf("/"));
 // Menu
 items = {
   nasdaq: [
-    [ 'nq-chart-for-ticker', 'NASDAQ: Chart for ticker' ],
-    [ 'chart-day',           'NASDAQ: Chart for ticker (day)' ],
-    [ 'chart-test',          'a' ],
-    [ 'chart-list',          'NASDAQ: Chart list for given tickers' ],
-    [ 'conid',               'a' ],
-    [ 'demo',                'a' ],
-    [ 'list-fluctuate-day',  'NASDAQ: Fluctuate for tickers' ],
+    [ 'demo',               'Demo: finplots chart' ],
+    [ 'ticker-to-conid',    'ticker  -> conid' ],
+    [ 'ticker-to-chart',    'ticker  -> chart' ],
+    [ 'chart-day',          'ticker  -> chart (day)' ],
+    [ 'chart-list',         'tickers -> chart' ],
+    [ 'tickers-strtg-fluctuate',    'Fluctuate for tickers' ],
     [ 'scan-top-gain',      'Scanner: Top gainers' ]
   ],
 };
@@ -35,7 +34,7 @@ Array('nasdaq').forEach((exch) => {
     a = d.createElement('a');
     var item = items[exch][i];
     a.href = item[0] + ".html";
-    a.innerHTML = item[0] + ': ' + item[1];
+    a.innerHTML = item[1];
     li.appendChild(a);
     ul.appendChild(li);
   }
