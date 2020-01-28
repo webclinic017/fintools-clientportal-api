@@ -3,13 +3,13 @@ var base = location.href.substring(0, location.href.lastIndexOf("/"));
 // Menu
 items = {
   nasdaq: [
-    [ 'demo',               'Demo: finplots chart' ],
-    [ 'ticker-to-conid',    'ticker  -> conid' ],
-    [ 'ticker-to-chart',    'ticker  -> chart' ],
-    [ 'chart-day',          'ticker  -> chart (day)' ],
-    [ 'chart-list',         'tickers -> chart' ],
-    [ 'tickers-strtg-fluctuate',    'Fluctuate for tickers' ],
-    [ 'scan-top-gain',      'Scanner: Top gainers' ]
+    [ 'demo',                    'Demo: finplots chart' ],
+    [ 'ticker-to-conid',         'ticker  -> conid' ],
+    [ 'ticker-to-chart',         'ticker  -> chart' ],
+    [ 'chart-day',               'ticker  -> chart (day)' ],
+    [ 'chart-list',              'tickers -> chart' ],
+    [ 'strtg-tickers-fluctuate', 'Strategy: tickers -> fluctuate' ],
+    [ 'scan-top-gain',           'Scanner: Top gainers' ]
   ],
 };
 var d = document;

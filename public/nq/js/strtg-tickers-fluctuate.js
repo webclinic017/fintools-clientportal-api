@@ -194,18 +194,19 @@ function drawTables() {
     }
 }
 
-
-// MAIN
-var tickerField = document.getElementById('ticker');
-tickerField.focus();
-tickerField.addEventListener("keyup", function(event) {
-  if (event.keyCode === 13) { // Enter
-    event.preventDefault();
-    kTicker = document.getElementById('ticker').value;
-    if (kTicker == '') {
-      alert('Set the ticker');
-    } else {
-      drawTables();
+function main() {
+  // MAIN
+  var tickerField = document.getElementById('ticker');
+  tickerField.focus();
+  tickerField.addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) { // Enter
+      event.preventDefault();
+      kTicker = document.getElementById('ticker').value;
+      if (kTicker == '') {
+        alert('Set the ticker');
+      } else {
+        drawTables();
+      }
     }
-  }
-});
+  });
+}
