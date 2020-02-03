@@ -3,6 +3,7 @@ var debug = false;
 var base = location.href.substring(0, location.href.lastIndexOf("/"));
 var kUrlIb = 'http://localhost:8080/';
 var missedTickers = [];
+var data = {};
 var tickerCount = 0;
 
 // CORS Request
@@ -194,6 +195,15 @@ function drawTables() {
     }
 }
 
+function go() {
+  var tickerField = document.getElementById('ticker');
+  if (tickerField.value == '') {
+    alert('Set the ticker');
+  } else {
+    drawTables();
+  }
+}
+
 function main() {
   // MAIN
   var tickerField = document.getElementById('ticker');
@@ -201,8 +211,7 @@ function main() {
   tickerField.addEventListener("keyup", function(event) {
     if (event.keyCode === 13) { // Enter
       event.preventDefault();
-      kTicker = document.getElementById('ticker').value;
-      if (kTicker == '') {
+      if (tickerField.value == '') {
         alert('Set the ticker');
       } else {
         drawTables();

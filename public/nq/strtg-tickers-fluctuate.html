@@ -3,12 +3,39 @@
 <script src='js/base.js'></script>
 <script src='js/strtg-tickers-fluctuate.js'></script>
 <hr>
-<div id='buttons'>
+<div id='controls'>
   <input id='ticker' type='text' placeholder='Tickers'/>
+  <button id='go' onclick='go();'>Go</button>
+  <table id='radios'>
+    <tr>
+      <td>First:</td>
+      <td>
+      <input type="radio" name="first" value="1">1%
+      <input type="radio" name="first" value="2">2%
+      <input type="radio" name="first" value="3">3%
+      <input type="radio" name="first" value="4" checked>4%
+      <input type="radio" name="first" value="5">5%
+      </td>
+    </tr>
+    <tr>
+      <td>Second:</td>
+      <td>
+      <input type="radio" name="second" value="1">1%
+      <input type="radio" name="second" value="2">2%
+      <input type="radio" name="second" value="3">3%
+      <input type="radio" name="second" value="4" checked>4%
+      <input type="radio" name="second" value="5">5%
+      </td>
+    </tr>
+  </table>
 </div>
+
 <br>
 <div id='count-total'></div>
 <div id='count-found'></div>
+<br>
+
+
 
 <table id='table'></table>
 <h3>Success</h3>
