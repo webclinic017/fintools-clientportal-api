@@ -7,7 +7,7 @@ steps:
 / specify ticker, find conid
 / save as json to file
 / get last 1 day data for list of tickers
-- get last 1 day data for list of tickers, save as json in dirs
+/ get last 1 day data for list of tickers, save as json in dir, separate files
 - get last 2 day data for given tickers
 - split them into 2 days, save as JSON to dirs
 ------

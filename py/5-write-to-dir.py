@@ -36,14 +36,13 @@ except ApiException as e:
 try:
     # Get market data
     for symbol, conid in conids.items():
-        print(symbol)
         api = MarketDataApi(ib_web_api.ApiClient(config))
         response = api.iserver_marketdata_history_get(conid, '1d').data
-        #response = response.to_str()
-        data = []
-        for i in response:
-            data.append(i.to_dict())
-        print(json.dumps(data, indent=2))
-
+        datapoints = []
+        for datapoint in response:
+            datapoints.append(datapoint.to_dict())
+        f = open('5-data/' + symbol + '.json', 'w')
+        f.write(json.dumps(datapoints))
+        f.close()
 except ApiException as e:
     print("Exception: %s\n" % e)
