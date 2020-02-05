@@ -23,7 +23,7 @@ client = ib_web_api.ApiClient(config)
 api = ContractApi(client)
 try:
     conid = int
-    response = api.iserver_secdef_search_post({ "symbol": "AAPL" })
+    response = api.iserver_secdef_search_post({ "symbol": args.ticker })
     for item in response:
         if item.description == 'NASDAQ':
             conid = item.conid
