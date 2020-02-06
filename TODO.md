@@ -14,23 +14,25 @@ Exercises:
 Two scripts:
 - download.py: download data (adapt from ex.6):
   - get current date, create dir, put data there, into data dirs
-- analyse.py: analyse data:
-  - input:
-    - data dir
-    - perc1 (for day 1)
-    - perc2 (for day 2)
-  - output:
-    - symbols count
-    - print input (percentages)
-    - split table into three tables:
-      - match: day 1 match, day 2 match
-      - fail: day 1 match, day 2 fail
-      - other: day 1 fail, day 2 fail
-    - table cols:
-      - symbol
-      - day 1 fluct count
-      - day 2 fluct count
-      - day 1 low fluct price
-      - day 1 hi fluct price
-      - day 2 low fluct price
-      - day 2 hi fluct price
+- analyse.py: analyse data
+
+analyse.py:
+- input:
+  - data dir
+  - perc1 (for day 1)
+  - perc2 (for day 2)
+- output:
+  - symbols count
+  - print input (percentages)
+  - split table into three tables:
+    - match: day 1 match, day 2 match
+    - fail: day 1 match, day 2 fail
+    - other: day 1 fail, day 2 fail
+  - table cols:
+    - symbol
+    - day 1 fluct count
+    - day 2 fluct count
+    - day 1 low fluct price
+    - day 1 hi fluct price
+    - day 2 low fluct price
+    - day 2 hi fluct price
