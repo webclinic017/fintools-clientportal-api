@@ -12,9 +12,9 @@ Exercises:
 7 x function: given average, work out +/- %, for 1,2,3,4,5%
 ------
 Two scripts:
-- download.py: download data (adapt from ex.6):
+- / download.py: download data (adapt from ex.6):
   - get current date, create dir, put data there, into data dirs
-- analyse.py: analyse data
+- x analyse.py: analyse data
 
 analyse.py:
 - input:
