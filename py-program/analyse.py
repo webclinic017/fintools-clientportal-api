@@ -37,9 +37,17 @@ for date in dates:
     datedir = args.dir_path + '/' + date
     if is_dir(datedir):
         # Symbols
-        symbols = os.listdir(datedir)
-        print(symbols)
+        symbol_files = os.listdir(datedir)
+        symbols_count = len(symbol_files)
+        for symbol_file in symbol_files:
+            print(datedir + '/' + symbol_file)
         # TODO: Read file, get average, get percentages
         # TODO: Categorise
         # TODO: Output count
         # TODO: Output table
+
+
+print('=====')
+print('Number of symbols:', symbols_count)
+print('Perc 1:', args.perc1)
+print('Perc 2:', args.perc2)

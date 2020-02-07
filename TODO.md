@@ -13,17 +13,20 @@ Exercises:
 ------
 Two scripts:
 - / download.py: download data (adapt from ex.6):
-  - get current date, create dir, put data there, into data dirs
+  - / get current date, create dir, put data there, into data dirs
 - x analyse.py: analyse data
 
 analyse.py:
-- input:
-  - data dir
-  - perc1 (for day 1)
-  - perc2 (for day 2)
+- / input:
+  - / data dir
+  - / perc1 (for day 1)
+  - / perc2 (for day 2)
 - output:
-  - symbols count
-  - print input (percentages)
+  - / symbols count
+  - / print input (percentages)
+  - rework ohlc to averages (points): Take only H and L, get median
+  - function: average -> +/- % values
+  - function: data (points), +/- % values -> count of fluctuation
   - split table into three tables:
     - match: day 1 match, day 2 match
     - fail: day 1 match, day 2 fail
