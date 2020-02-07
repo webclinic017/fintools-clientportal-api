@@ -28,6 +28,10 @@ def create_dir(dir_path):
 # Main
 # Create data dir
 create_dir(data_dir)
+data_dir = data_dir \
+         + '/snapshot-' \
+         + datetime.today().strftime('%Y-%m-%d')
+create_dir(data_dir)
 
 # Parse args
 parser = argparse.ArgumentParser(
