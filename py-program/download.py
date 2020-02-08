@@ -36,8 +36,8 @@ create_dir(data_dir)
 # Parse args
 parser = argparse.ArgumentParser(
     description='Display last day data for ticker')
-parser.add_argument('tickers', metavar='TICKER', type=str, nargs='+',
-    help='Ticker, e.g. AAPL')
+parser.add_argument('tickers', metavar='TICKERS', type=str, nargs='+',
+    help='Tickers, e.g. AAPL AMZN')
 args = parser.parse_args()
 
 # Instantiate API class
@@ -47,20 +47,35 @@ client = ib_web_api.ApiClient(config)
 
 try:
     # Get conids
+    print('Get conids')
     api = ContractApi(client)
     conids = {}
     for ticker in args.tickers:
         conid = int
-        response = api.iserver_secdef_search_post({ "symbol": ticker })
+        try:
+            response = api.iserver_secdef_search_post({ "symbol": ticker })
+        except Exception:
+            # Could not get conid, so skip it
+            continue
         for item in response:
             if item.description == 'NASDAQ':
                 conids[ticker] = item.conid
 except ApiException as e:
-    print("Could not find conid: %s\n" % e)
+    # Could not get conid, skip for now
+    print("Could not get conids: %s\n" % e)
+    exit(1)
+if len(conids) == 0:
+    # Terminate if no conids found
+    print('Could not find any conids')
     exit(1)
 
+# Print summary
+print('Conids supplied:', len(args.tickers))
+print('Conids found:', len(conids))
+
 try:
-    # Get market data
+    # Get market data for each conid
+    print('Get market data')
     for symbol, conid in conids.items():
         api = MarketDataApi(ib_web_api.ApiClient(config))
         response = api.iserver_marketdata_history_get(conid, '2d').data
