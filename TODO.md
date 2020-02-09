@@ -24,9 +24,13 @@ analyse.py:
 - output:
   - / symbols count
   - / print input (percentages)
-  - rework ohlc to averages (points): Take only H and L, get median
-  - function: average -> +/- % values
-  - function: data (points), +/- % values -> count of fluctuation
+  - for first date:
+    - / rework ohlc to averages (points): Take only H and L, get median, get average over each point
+    - / F1: function: (average, perc1) -> +/- % values
+    - F2: function: data (ohlc), +/- % values -> count of fluctuation (use L/H values)
+  - for second date:
+    - F1: +/- % values with perc2
+    - F2 count
   - split table into three tables:
     - match: day 1 match, day 2 match
     - fail: day 1 match, day 2 fail

@@ -7,47 +7,83 @@
 # Example: ./analyse.py ./2020-02-06 4 3
 
 import argparse
+import json
 import os
+import pprint
 from datetime import datetime
 
 # Helpers
 def is_dir(string):
-    if os.path.isdir(string):
-        return string
-    else:
-        raise NotADirectoryError(string)
+  if os.path.isdir(string):
+    return string
+  else:
+    raise NotADirectoryError(string)
 
+def get_range_prices(average, percentage):
+  # input:
+  # - average: number, e.g. 102
+  # - percentage: number, e.g. 4/100
+  # output:
+  # - a pair of numbers:
+  #   - low price
+  #   - high price
+  x = average
+  p = percentage
+  return ( 2*x/(2+p), 2*x*(1+p)/(2+p) )
 
 
 # Parse args
 parser = argparse.ArgumentParser(
-    description='Display last day data for ticker')
+  description='Display last day data for ticker')
 parser.add_argument('dir_path', metavar='DIR_PATH', type=is_dir,
-    help='Path to dir')
+  help='Path to dir')
 parser.add_argument('perc1', metavar='PERC1', type=int,
-    help='Percentage day 1')
+  help='Percentage day 1')
 parser.add_argument('perc2', metavar='PERC2', type=int,
-    help='Percentage day 2')
+  help='Percentage day 2')
 args = parser.parse_args()
 
 # Main
 dates = os.listdir(args.dir_path)
 # TODO: Check there are only two subdirs
+i = 0
+out_table = {}
 for date in dates:
-    datedir = args.dir_path + '/' + date
-    if is_dir(datedir):
-        # Symbols
-        symbol_files = os.listdir(datedir)
-        symbols_count = len(symbol_files)
-        for symbol_file in symbol_files:
-            print(datedir + '/' + symbol_file)
-        # TODO: Read file, get average, get percentages
-        # TODO: Categorise
-        # TODO: Output count
-        # TODO: Output table
+  datedir = args.dir_path + '/' + date
+  if is_dir(datedir):
+    # Symbols
+    symbol_files = os.listdir(datedir)
+    symbols_count = len(symbol_files)
+    for symbol_file in symbol_files:
+      symbol = symbol_file.replace('.json', '')
+      if symbol not in out_table.keys():
+        out_table[symbol] = {}
+      if date not in out_table[symbol].keys():
+        out_table[symbol][date] = {}
+      points = []
+      with open(datedir + '/' + symbol_file) as f:
+        d = json.load(f)
+        for data_point in d:
+          points.append((data_point['o'] + data_point['h'])/2)
+      #out_table[symbol][date]
+      avg = round(sum(points)/len(points), 2)
+      out_table[symbol][date]['avg'] = avg
+      if i == 0:
+        perc = args.perc1
+      else:
+        perc = args.perc2
+      price_range = get_range_prices(avg, perc)
+      out_table[symbol][date]['l'] = round(price_range[0], 2)
+      out_table[symbol][date]['h'] = round(price_range[1], 2)
+    i += 1
+    # TODO: Read file, get average, get percentages
+    # TODO: Categorise
+    # TODO: Output count
+    # TODO: Output table
 
 
 print('=====')
 print('Number of symbols:', symbols_count)
 print('Perc 1:', args.perc1)
 print('Perc 2:', args.perc2)
+pprint.pprint(out_table)
