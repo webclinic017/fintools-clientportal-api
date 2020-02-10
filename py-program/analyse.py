@@ -48,6 +48,7 @@ dates = os.listdir(args.dir_path)
 # TODO: Check there are only two subdirs
 i = 0
 out_table = {}
+price_range_day_one = ()
 for date in dates:
   datedir = args.dir_path + '/' + date
   if is_dir(datedir):
@@ -65,18 +66,26 @@ for date in dates:
         d = json.load(f)
         for data_point in d:
           points.append((data_point['o'] + data_point['h'])/2)
-      #out_table[symbol][date]
       avg = round(sum(points)/len(points), 2)
       out_table[symbol][date]['avg'] = avg
       if i == 0:
         perc = args.perc1
       else:
         perc = args.perc2
+      # Get price range
       price_range = get_range_prices(avg, perc)
-      out_table[symbol][date]['l'] = round(price_range[0], 2)
-      out_table[symbol][date]['h'] = round(price_range[1], 2)
+      price_range = (round(price_range[0], 2), round(price_range[1], 2))
+      out_table[symbol][date]['l'] = price_range[0]
+      out_table[symbol][date]['h'] = price_range[1]
+      # Get count
+      if i == 0:
+        # First day
+        price_range_day_one = price_range
+      else:
+        # Second day
+        price_range = price_range_day_one
+      # TODO: Get count
     i += 1
-    # TODO: Read file, get average, get percentages
     # TODO: Categorise
     # TODO: Output count
     # TODO: Output table
