@@ -24,12 +24,15 @@ def get_range_prices(average, percentage):
   # - average: number, e.g. 102
   # - percentage: number, e.g. 4/100
   # output:
-  # - a pair of numbers:
-  #   - low price
-  #   - high price
+  # - a dict of numbers:
+  #   - l: low price
+  #   - h: high price
   x = average
   p = percentage
-  return ( 2*x/(2+p), 2*x*(1+p)/(2+p) )
+  return {
+    'l': round(2*x/(2+p), 2),
+    'h': round(2*x*(1+p)/(2+p), 2)
+  }
 
 
 # Parse args
@@ -74,9 +77,7 @@ for date in dates:
         perc = args.perc2
       # Get price range
       price_range = get_range_prices(avg, perc)
-      price_range = (round(price_range[0], 2), round(price_range[1], 2))
-      out_table[symbol][date]['l'] = price_range[0]
-      out_table[symbol][date]['h'] = price_range[1]
+      out_table[symbol][date]['range'] = price_range
       # Get count
       if i == 0:
         # First day
