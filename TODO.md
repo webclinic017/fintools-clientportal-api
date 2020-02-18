@@ -27,7 +27,7 @@ analyse.py:
   - for first date:
     - / rework ohlc to averages (points): Take only H and L, get median, get average over each point
     - / F1: function: (average, perc1) -> +/- % values
-    - F2: function: data (ohlc), +/- % values -> count of fluctuation (use L/H values)
+    - / F2: function: data (ohlc), +/- % values -> count of fluctuation (use L/H values)
   - for second date:
     - F1: +/- % values with perc2
     - F2 count

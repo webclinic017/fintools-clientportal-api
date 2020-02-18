@@ -10,6 +10,8 @@ import argparse
 import ib_web_api
 import json
 import os
+import pprint
+import sys
 from datetime import datetime
 from ib_web_api import MarketDataApi
 from ib_web_api import ContractApi
@@ -18,12 +20,13 @@ from ib_web_api.rest import ApiException
 # Settings
 data_dir = 'data'
 
-
 # Helpers
 def create_dir(dir_path):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
 
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
 
 # Main
 # Create data dir
@@ -47,7 +50,6 @@ client = ib_web_api.ApiClient(config)
 
 try:
     # Get conids
-    print('Get conids')
     api = ContractApi(client)
     conids = {}
     for ticker in args.tickers:
@@ -70,14 +72,13 @@ if len(conids) == 0:
     exit(1)
 
 # Print summary
-print('Conids supplied:', len(args.tickers))
-print('Conids found:', len(conids))
+eprint('Conids found: %s/%s' % (len(conids), len(args.tickers)))
 
 try:
     # Get market data for each conid
-    print('Get market data')
+    eprint('Get market data')
     for symbol, conid in conids.items():
-        api = MarketDataApi(ib_web_api.ApiClient(config))
+        api = MarketDataApi(client)
         response = api.iserver_marketdata_history_get(conid, '2d').data
         datapoints = []
         # Convert to dict
@@ -98,6 +99,51 @@ try:
             create_dir(date_dir)
             f = open(date_dir + '/' + symbol + '.json', 'w')
             f.write(json.dumps(dates[date]))
+            f.close()
+except ApiException as e:
+    print("Exception: %s\n" % e)
+
+try:
+    # Get snapshot
+    eprint('Get snapshot')
+    for symbol, conid in conids.items():
+        api = MarketDataApi(client)
+        ret = api.iserver_marketdata_snapshot_get(conid)[0]
+        # Write data to dir
+        path = data_dir + '/snapshot'
+        create_dir(path)
+        with open(path + '/' + symbol + '.json', 'w') as f:
+            # Clean
+            o = {
+                'after_hours': ret._31,
+                'prev_close': ret._7296,
+                'price_chg': ret._82,
+                'price_chg_perc': ret._83,
+                '52w_hi': ret._7293,
+                '52w_lo': ret._7294,
+            }
+            f.write(json.dumps(o))
+            f.close()
+except ApiException as e:
+    print("Exception: %s\n" % e)
+
+try:
+    # Get quote for each conid
+    eprint('Get quotes')
+    for symbol, conid in conids.items():
+        api = ContractApi(client)
+        ret = api.iserver_contract_conid_info_get(conid).to_dict()
+        # Write data to dir
+        dir_quote = data_dir + '/quote'
+        create_dir(dir_quote)
+        with open(dir_quote + '/' + symbol + '.json', 'w') as f:
+            # Clean
+            del ret['rules']
+            del ret['instrument_type']
+            del ret['r_t_h']
+            del ret['currency']
+            del ret['exchange']
+            f.write(json.dumps(ret))
             f.close()
 except ApiException as e:
     print("Exception: %s\n" % e)
