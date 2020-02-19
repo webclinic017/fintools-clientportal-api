@@ -17,9 +17,6 @@ from ib_web_api import MarketDataApi
 from ib_web_api import ContractApi
 from ib_web_api.rest import ApiException
 
-# Settings
-data_dir = 'data'
-
 # Helpers
 def create_dir(dir_path):
     if not os.path.exists(dir_path):
@@ -30,11 +27,13 @@ def eprint(*args, **kwargs):
 
 # Main
 # Create data dir
+date = datetime.today().strftime('%Y-%m-%d')
+data_dir = 'data'
 create_dir(data_dir)
-data_dir = data_dir \
-         + '/snapshot-' \
-         + datetime.today().strftime('%Y-%m-%d')
-create_dir(data_dir)
+data_dir_m = data_dir + '/' + date + '-s'
+data_dir_d = data_dir + '/' + date + '-d'
+create_dir(data_dir_m)
+create_dir(data_dir_d)
 
 # Parse args
 parser = argparse.ArgumentParser(
@@ -95,7 +94,7 @@ try:
             dates[cur_date].append(datapoint)
         # Write data to dirs
         for date in dates:
-            date_dir = data_dir + '/' + date
+            date_dir = data_dir_m + '/' + date
             create_dir(date_dir)
             f = open(date_dir + '/' + symbol + '.json', 'w')
             f.write(json.dumps(dates[date]))
@@ -103,6 +102,8 @@ try:
 except ApiException as e:
     print("Exception: %s\n" % e)
 
+
+# Both go in the same -d dir
 try:
     # Get snapshot
     eprint('Get snapshot')
@@ -110,7 +111,7 @@ try:
         api = MarketDataApi(client)
         ret = api.iserver_marketdata_snapshot_get(conid)[0]
         # Write data to dir
-        path = data_dir + '/snapshot'
+        path = data_dir_d + '/snapshot'
         create_dir(path)
         with open(path + '/' + symbol + '.json', 'w') as f:
             # Clean
@@ -134,7 +135,7 @@ try:
         api = ContractApi(client)
         ret = api.iserver_contract_conid_info_get(conid).to_dict()
         # Write data to dir
-        dir_quote = data_dir + '/quote'
+        dir_quote = data_dir_d + '/quote'
         create_dir(dir_quote)
         with open(dir_quote + '/' + symbol + '.json', 'w') as f:
             # Clean

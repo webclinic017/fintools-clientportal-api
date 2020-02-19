@@ -75,11 +75,13 @@ def get_average(f_path):
 parser = argparse.ArgumentParser(
   description='Display last day data for ticker')
 parser.add_argument('dir_path', metavar='DIR_PATH', type=is_dir,
-  help='Path to dir')
+  help='path to dir')
 parser.add_argument('perc1', metavar='PERC1', type=int,
-  help='Percentage day 1')
+  help='percentage day 1')
 parser.add_argument('perc2', metavar='PERC2', type=int,
-  help='Percentage day 2')
+  help='percentage day 2')
+parser.add_argument('--summary', action='store_true',
+  help='show summary only')
 args = parser.parse_args()
 
 # Name args
@@ -148,18 +150,20 @@ for s in ret:
     table['other'][s] = i
 order = [ 'match', 'fail', 'other' ]
 
-# Print table
+# Print summary
 d0 = dates[0]
 d1 = dates[1]
-print('=====')
-print('=====')
-print('Number of symbols:', len(symbols))
+print('Symbols:', len(symbols))
 print('Perc 1:', args.perc1)
 print('Perc 2:', args.perc2)
 t = table
 print('Match:', len(t['match']))
 print('Fail:', len(t['fail']))
 print('Other:', len(t['other']))
+
+if args.summary:
+  exit(0)
+# Print table
 table_format = '%-5s %5s %5s %2s %2s %5s %5s %5s %5s'
 for category in order:
   print('=====', category, '=====')
