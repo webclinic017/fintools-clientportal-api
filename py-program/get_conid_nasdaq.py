@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-# Get category of given tickers
-# Run as:  ./get_category.py TICKERS
-# Example: ./get_category.py AAPL AMZN
+# Get NASDAQ conid for given ticker
+# Return exitcode 1 if ticker is not NASDAQ or not in IB
+# Run as:  ./get_conid_nasdaq.py TICKERS
+# Example: ./get_conid_nasdaq.py AAPL
 
 import argparse
 import ib_web_api
@@ -31,7 +32,7 @@ api = ContractApi(client)
 try:
     # Get conid
     conid = int
-    response = api.iserver_secdef_search_post({ "symbol": ticker })
+    response = api.iserver_secdef_search_post({ "symbol": args.ticker })
     for item in response:
         if item.description == 'NASDAQ':
             print(item.conid)
