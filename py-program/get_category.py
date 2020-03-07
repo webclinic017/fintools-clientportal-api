@@ -17,6 +17,8 @@ parser = argparse.ArgumentParser(
     description='Display last day data for ticker')
 parser.add_argument('tickers', metavar='TICKERS', type=str, nargs='+',
     help='Tickers, e.g. AAPL AMZN')
+parser.add_argument('-v', dest='verbose', action='store_true',
+                    help='Verbose mode, print info messages')
 args = parser.parse_args()
 
 # Instantiate API class
@@ -28,7 +30,8 @@ api = ContractApi(client)
 # Main
 try:
     # Get conids
-    print('Get conids')
+    if args.verbose:
+        print('Get conids')
     conids = {}
     for ticker in args.tickers:
         conid = int
@@ -50,7 +53,8 @@ if len(conids) == 0:
     exit(1)
 
 # Print summary
-print('Conids found: %s/%s' % (len(conids), len(args.tickers)))
+if args.verbose:
+    print('Conids found: %s/%s' % (len(conids), len(args.tickers)))
 
 try:
     # Get market data for each conid
