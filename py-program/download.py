@@ -47,37 +47,40 @@ config = ib_web_api.Configuration()
 config.verify_ssl = False
 client = ib_web_api.ApiClient(config)
 
+# Get conids
 try:
-    # Get conids
+    eprint('Get conids')
     api = ContractApi(client)
     conids = {}
     for ticker in args.tickers:
         conid = int
-        try:
-            response = api.iserver_secdef_search_post({ "symbol": ticker })
-        except Exception:
-            # Could not get conid, so skip it
-            continue
-        for item in response:
-            if item.description == 'NASDAQ':
-                conids[ticker] = item.conid
+        for j in range(6):
+            # Retry on fail
+            try:
+                response = api.iserver_secdef_search_post({ "symbol": ticker })
+                for item in response:
+                    if item.description == 'NASDAQ':
+                        conids[ticker] = item.conid
+                        break
+            except Exception:
+                if j == 5:
+                    print('Could not get symbol %s' % ticker)
+                    failed = True
+                    continue
 except ApiException as e:
-    # Could not get conid, skip for now
     print("Could not get conids: %s\n" % e)
     exit(1)
 if len(conids) == 0:
-    # Terminate if no conids found
     print('Could not find any conids')
     exit(1)
-
 # Print summary
 eprint('Conids found: %s/%s' % (len(conids), len(args.tickers)))
 
+# Get market data
 try:
-    # Get market data for each conid
     eprint('Get market data')
+    api = MarketDataApi(client)
     for symbol, conid in conids.items():
-        api = MarketDataApi(client)
         response = api.iserver_marketdata_history_get(conid, '2d').data
         datapoints = []
         # Convert to dict
@@ -86,8 +89,7 @@ try:
         # Split into two days by date
         dates = {}
         for datapoint in datapoints:
-            cur_date = datetime \
-                .fromtimestamp(int(datapoint['t']/1000)) \
+            cur_date = datetime .fromtimestamp(int(datapoint['t']/1000)) \
                 .strftime('%Y-%m-%d')
             if cur_date not in dates:
                 dates[cur_date] = []
@@ -103,12 +105,10 @@ except ApiException as e:
     print("Exception: %s\n" % e)
 
 
-# Both go in the same -d dir
 try:
-    # Get snapshot
     eprint('Get snapshot')
+    api = MarketDataApi(client)
     for symbol, conid in conids.items():
-        api = MarketDataApi(client)
         ret = api.iserver_marketdata_snapshot_get(conid)[0]
         # Write data to dir
         path = data_dir_d + '/snapshot'
@@ -129,7 +129,6 @@ except ApiException as e:
     print("Exception: %s\n" % e)
 
 try:
-    # Get quote for each conid
     eprint('Get quotes')
     for symbol, conid in conids.items():
         api = ContractApi(client)
