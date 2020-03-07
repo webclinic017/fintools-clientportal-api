@@ -19,6 +19,8 @@ parser.add_argument('tickers', metavar='TICKERS', type=str, nargs='+',
     help='Tickers, e.g. AAPL AMZN')
 parser.add_argument('-v', dest='verbose', action='store_true',
                     help='Verbose mode, print info messages')
+parser.add_argument('-s', dest='small', action='store_true',
+                    help='Print only result (category), without the ticker')
 args = parser.parse_args()
 
 # Instantiate API class
@@ -60,6 +62,9 @@ try:
     # Get market data for each conid
     for symbol, conid in conids.items():
         ret = api.iserver_contract_conid_info_get(conid)
-        print(symbol, ret.category)
+        if args.small:
+            print(ret.category)
+        else:
+            print(symbol, ret.category)
 except ApiException as e:
     print("Exception: %s\n" % e)
