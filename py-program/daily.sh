@@ -12,7 +12,7 @@ wget -O data_sh/nasdaq_file \
 
 echo Filter file to get symbols only
 ./get_symbols.sh &>/dev/null
- Skip first and last line headers
+# Skip first and last line headers
 tail -n +2 data_sh/nasdaq_file \
   | head -n -1 \
   | cut -d'|' -f1 \
