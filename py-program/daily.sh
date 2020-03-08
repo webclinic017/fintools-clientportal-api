@@ -54,7 +54,7 @@ LT=2
 for I in $QUOTE_DIR/*; do
   CLOSE=$(jq '.c' $I)
   if (( $(echo "$CLOSE <= $LT" | bc -l) )); then
-    echo $I: $CLOSE
+    echo ${I##*/}: $CLOSE
   else
     :
   fi
