@@ -10,5 +10,7 @@ URL="https://localhost:5000\
 /v1/portal/iserver/marketdata/history\
 ?conid=$CONID\
 &period=3d&bar=1d"
-curl -k -X GET $URL \
-  -H 'Content-Type: application/x-www-form-urlencoded'
+DATA=$(curl -sk -X GET $URL \
+  -H 'Content-Type: application/x-www-form-urlencoded')
+POINTS=$(jq '.' <<< $DATA)
+echo $POINTS
