@@ -27,7 +27,7 @@ while read I; do
     echo $I $CONID >> $OUT_FILE
   fi
 done < $IN_FILE
-if [[ $(wc -l $OUT_FILE) == 0 ]]; then
+if [[ $(wc -l $OUT_FILE | cut -d' ' -f1) == 0 ]]; then
   echo None of the symbols are available in IB. Check your IB connection
   exit 1
 fi
