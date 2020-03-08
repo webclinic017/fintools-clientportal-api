@@ -1,7 +1,7 @@
 #!/bin/bash
 # $1: CONID
-# AAPL: 209011562
-# ./get_quote 209011562
+# e.g. conid for AAPL: 209011562
+# Exqmple: ./get_quote 209011562
 
 [[ -z $1 ]] && echo No conid && exit 1
 CONID=$1
