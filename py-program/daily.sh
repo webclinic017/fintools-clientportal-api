@@ -33,15 +33,24 @@ DATADIR=data_sh
 #    echo $I $CONID >> $OUT_FILE
 #  fi
 #done < $IN_FILE
+#
+#echo Download quotes
+#QUOTE_DIR=$DATADIR/quotes
+#if [[ -d $QUOTE_DIR ]]; then
+#  rm -rf $QUOTE_DIR
+#fi
+#mkdir $QUOTE_DIR
+#
+#IN_FILE=$DATADIR/nasdaq_symbols_ib_conids
+#while read SYMB CONID; do
+#  ./down_quote.sh $CONID > $QUOTE_DIR/$SYMB.json
+#  if [[ $? != 0 ]]; then
+#    echo Could not get ticker $SYMB ($CONID)
+#  fi
+#done < $IN_FILE
 
-echo Download quotes
-QUOTE_DIR=$DATADIR/quotes
-if [[ -d $QUOTE_DIR ]]; then
-  rm -rf $QUOTE_DIR
-fi
-mkdir $QUOTE_DIR
-
-IN_FILE=$DATADIR/nasdaq_symbols_ib_conids
-while read SYMB CONID; do
-  ./down_quote.sh $CONID > $QUOTE_DIR/$SYMB.json
-done < $IN_FILE
+echo Find less than \$2 close
+for I in $QUOTE_DIR/*; do
+  CLOSE=$(jq '.c' $I)
+  echo $CLOSE
+done
