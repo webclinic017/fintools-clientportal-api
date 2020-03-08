@@ -12,5 +12,6 @@ URL="https://localhost:5000\
 &period=3d&bar=1d"
 DATA=$(curl -sk -X GET $URL \
   -H 'Content-Type: application/x-www-form-urlencoded')
-POINTS=$(jq '.' <<< $DATA)
-echo $POINTS
+POINT=$(jq -r '.points' <<< $DATA)
+LAST_DATA=$(jq ".data[$POINT]" <<< $DATA)
+echo $LAST_DATA
