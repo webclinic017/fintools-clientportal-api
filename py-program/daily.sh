@@ -8,13 +8,15 @@
 echo Get NASDAQ tickers file
 curl --silent -o $DATA_DIR/nasdaq_file \
   ftp://ftp.nasdaqtrader.com/symboldirectory/nasdaqlisted.txt
+wc -l $DATA_DIR/nasdaq_file
 
 echo Filter file to get symbols only
 # Skip first and last line headers
 tail -n +2 $DATA_DIR/nasdaq_file \
   | head -n -1 \
   | cut -d'|' -f1 \
-  > data_sh/nasdaq_symbols
+  > $DATA_DIR/nasdaq_symbols
+wc -l $DATA_DIR/nasdaq_symbols
 
 echo Filter to get only symbols which are in IB and get conids
 IN_FILE=$DATA_DIR/nasdaq_symbols
@@ -31,7 +33,7 @@ if [[ $(wc -l $OUT_FILE | cut -d' ' -f1) == 0 ]]; then
   echo None of the symbols are available in IB. Check your IB connection
   exit 1
 fi
-
+wc -l $OUT_FILE
 
 echo Download conids
 # Filter to get only symbols which are in IB and get conids
@@ -43,6 +45,7 @@ while read I; do
   CONID=$(./down_conid.py $I &>/dev/null)
   [[ $? == 0 ]] && echo $I $CONID >> $OUT_FILE
 done < $IN_FILE
+wc -l $OUT_FILE
 
 echo Download quotes
 [[ -d $QUOTE_DIR ]] && rm -rf $QUOTE_DIR
@@ -52,3 +55,4 @@ while read SYMB CONID; do
   ./down_conid2quote.sh $CONID > $QUOTE_DIR/$SYMB.json
   [[ $? != 0 ]] && echo Could not get ticker $SYMB \($CONID\)
 done < $IN_FILE
+ls $QUOTE_DIR | wc -l
