@@ -22,7 +22,7 @@ OUT_FILE=$DATA_DIR/nasdaq_symbols_ib
 [[ -f $OUT_FILE ]] && rm $OUT_FILE
 touch $OUT_FILE
 while read I; do
-  CONID=$(./get_conid_nasdaq.py $I &>/dev/null)
+  CONID=$(./down_ticker2conid.py $I)
   if [[ $? == 0 ]]; then
     echo $I $CONID >> $OUT_FILE
   fi
