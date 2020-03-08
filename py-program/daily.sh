@@ -10,16 +10,15 @@ wget -O $DATA_DIR/nasdaq_file \
   ftp://ftp.nasdaqtrader.com/symboldirectory/nasdaqlisted.txt
 
 echo Filter file to get symbols only
-./get_symbols.sh &>/dev/null
 # Skip first and last line headers
-tail -n +2 data_sh/nasdaq_file \
+tail -n +2 $DATA_DIR/nasdaq_file \
   | head -n -1 \
   | cut -d'|' -f1 \
   > data_sh/nasdaq_symbols
 
 echo Filter to get only symbols which are in IB and get conids
-IN_FILE=data_sh/nasdaq_symbols
-OUT_FILE=data_sh/nasdaq_symbols_ib
+IN_FILE=$DATA_DIR/nasdaq_symbols
+OUT_FILE=$DATA_DIR/nasdaq_symbols_ib
 [[ -f $OUT_FILE ]] && rm $OUT_FILE
 touch $OUT_FILE
 while read I; do
@@ -28,6 +27,11 @@ while read I; do
     echo $I $CONID >> $OUT_FILE
   fi
 done < $IN_FILE
+if [[ $(wc -l $OUT_FILE) == 0 ]]; then
+  echo None of the symbols are available in IB. Check your IB connection
+  exit 1
+fi
+
 
 echo Download conids
 # Filter to get only symbols which are in IB and get conids
