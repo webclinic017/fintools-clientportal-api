@@ -18,7 +18,7 @@ tail -n +2 $DATA_DIR/nasdaq_file \
   > $DATA_DIR/nasdaq_symbols
 wc -l $DATA_DIR/nasdaq_symbols
 
-echo Filter to get only symbols which are in IB and get conids
+echo Filter to get only symbols which are in IB and get conids \(SLOW\)
 IN_FILE=$DATA_DIR/nasdaq_symbols
 OUT_FILE=$DATA_DIR/nasdaq_symbols_ib
 [[ -f $OUT_FILE ]] && rm $OUT_FILE
