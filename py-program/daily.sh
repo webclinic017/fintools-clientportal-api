@@ -6,7 +6,7 @@
 . config.sh
 
 echo Get NASDAQ tickers file
-curl -o $DATA_DIR/nasdaq_file \
+curl --silent -o $DATA_DIR/nasdaq_file \
   ftp://ftp.nasdaqtrader.com/symboldirectory/nasdaqlisted.txt
 
 echo Filter file to get symbols only
