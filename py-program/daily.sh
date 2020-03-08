@@ -1,14 +1,15 @@
 #!/bin/bash
 
+# Config:
+# - DATA_DIR
+# - QUOTE_DIR
+. config.sh
+
 # Helpers
 get:conid() {
   # Get it from already downloaded
   :
 }
-
-# Config
-DATADIR=data_sh
-QUOTE_DIR=$DATADIR/quotes
 
 #echo Get NASDAQ tickers file
 #./get_symbols_file.sh &>/dev/null
@@ -41,7 +42,7 @@ QUOTE_DIR=$DATADIR/quotes
 #fi
 #mkdir $QUOTE_DIR
 #
-#IN_FILE=$DATADIR/nasdaq_symbols_ib_conids
+#IN_FILE=$DATA_DIR/nasdaq_symbols_ib_conids
 #while read SYMB CONID; do
 #  ./down_quote.sh $CONID > $QUOTE_DIR/$SYMB.json
 #  if [[ $? != 0 ]]; then
@@ -49,13 +50,6 @@ QUOTE_DIR=$DATADIR/quotes
 #  fi
 #done < $IN_FILE
 
-echo Find less than \$2 close
 LT=1
-for I in $QUOTE_DIR/*; do
-  CLOSE=$(jq '.c' $I)
-  if (( $(echo "$CLOSE <= $LT" | bc -l) )); then
-    echo $(basename $I .json): $CLOSE
-  else
-    :
-  fi
-done
+echo Find less than $LT close
+./get_close_lt.sh c $LT
