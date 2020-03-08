@@ -5,3 +5,5 @@ echo Filter file to get symbols only
 ./get_symbols.sh &>/dev/null
 echo Filter to get only symbols which are in IB and get conids
 ./get_symbols_ib.sh
+echo Get last close
+./get_last_close.sh
