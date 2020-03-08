@@ -40,7 +40,7 @@ if [[ -d $DATADIR/quotes ]]; then
 fi
 mkdir $DATADIR/quotes
 
-INFILE=$DATADIR/nasdaq_symbols_ib_conids
+IN_FILE=$DATADIR/nasdaq_symbols_ib_conids
 while read I J; do
   echo $I $J
 done < $IN_FILE
