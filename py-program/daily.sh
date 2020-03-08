@@ -8,6 +8,7 @@ get:conid() {
 
 # Config
 DATADIR=data_sh
+QUOTE_DIR=$DATADIR/quotes
 
 #echo Get NASDAQ tickers file
 #./get_symbols_file.sh &>/dev/null
@@ -35,7 +36,6 @@ DATADIR=data_sh
 #done < $IN_FILE
 #
 #echo Download quotes
-#QUOTE_DIR=$DATADIR/quotes
 #if [[ -d $QUOTE_DIR ]]; then
 #  rm -rf $QUOTE_DIR
 #fi
@@ -50,7 +50,12 @@ DATADIR=data_sh
 #done < $IN_FILE
 
 echo Find less than \$2 close
+LT=2
 for I in $QUOTE_DIR/*; do
   CLOSE=$(jq '.c' $I)
-  echo $CLOSE
+  if (( $(echo "$CLOSE <= $LT" | bc -l) )); then
+    echo $I: $CLOSE
+  else
+    :
+  fi
 done
