@@ -50,7 +50,7 @@ QUOTE_DIR=$DATADIR/quotes
 #done < $IN_FILE
 
 echo Find less than \$2 close
-LT=2
+LT=1
 for I in $QUOTE_DIR/*; do
   CLOSE=$(jq '.c' $I)
   if (( $(echo "$CLOSE <= $LT" | bc -l) )); then
