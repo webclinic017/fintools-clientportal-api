@@ -35,12 +35,13 @@ DATADIR=data_sh
 #done < $IN_FILE
 
 echo Download quotes
-if [[ -d $DATADIR/quotes ]]; then
-  rm -rf $DATADIR/quotes
+QUOTE_DIR=$DATADIR/quotes
+if [[ -d $QUOTE_DIR ]]; then
+  rm -rf $QUOTE_DIR
 fi
-mkdir $DATADIR/quotes
+mkdir $QUOTE_DIR
 
 IN_FILE=$DATADIR/nasdaq_symbols_ib_conids
-while read I J; do
-  echo $I $J
+while read SYMB CONID; do
+  ./down_quote.sh $CONID > $QUOTE_DIR/$SYMB.json
 done < $IN_FILE
