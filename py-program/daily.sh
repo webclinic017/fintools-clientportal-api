@@ -46,6 +46,6 @@ echo Download quotes
 mkdir $QUOTE_DIR
 IN_FILE=$DATA_DIR/nasdaq_symbols_ib_conids
 while read SYMB CONID; do
-  ./down_quote.sh $CONID > $QUOTE_DIR/$SYMB.json
+  ./down_conid2quote.sh $CONID > $QUOTE_DIR/$SYMB.json
   [[ $? != 0 ]] && echo Could not get ticker $SYMB ($CONID)
 done < $IN_FILE
