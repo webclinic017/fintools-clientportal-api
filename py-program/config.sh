@@ -1,2 +1,2 @@
-DATA_DIR=data_sh
-QUOTE_DIR=$DATA_DIR/quotes
+D_DATA=data_sh
+D_QUOT=$D_DATA/quotes

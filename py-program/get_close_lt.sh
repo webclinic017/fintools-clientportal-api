@@ -3,8 +3,8 @@
 # ./get_close_lt o/h/l/c PRICE
 
 # Config:
-# - DATA_DIR
-# - QUOTE_DIR
+# - D_DATA
+# - D_QUOT
 . config.sh
 
 usage() {
@@ -16,7 +16,7 @@ usage() {
 TYPE=$1
 PRICE=$2
 
-for I in $QUOTE_DIR/*; do
+for I in $D_QUOT/*; do
   STOCK_PRICE=$(jq ".$TYPE" $I)
   if (( $(echo "$STOCK_PRICE <= $PRICE" | bc -l) )); then
     echo $(basename $I .json): $STOCK

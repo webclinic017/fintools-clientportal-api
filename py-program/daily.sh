@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Config:
-# - DATA_DIR
-# - QUOTE_DIR
+# - D_DATA
+# - D_QUOT
 . config.sh
 
 DATE=$(date +'%Y-%m-%d %H:%M')
@@ -10,21 +10,21 @@ echo $DATE: Starting $0
 cd "$(dirname "$0")"
 
 echo Get NASDAQ tickers file
-curl --silent -o $DATA_DIR/nasdaq_file \
+curl --silent -o $D_DATA/nasdaq_file \
   ftp://ftp.nasdaqtrader.com/symboldirectory/nasdaqlisted.txt
-wc -l $DATA_DIR/nasdaq_file
+wc -l $D_DATA/nasdaq_file
 
 echo Filter file to get symbols only
 # Skip first and last line headers
-tail -n +2 $DATA_DIR/nasdaq_file \
+tail -n +2 $D_DATA/nasdaq_file \
   | head -n -1 \
   | cut -d'|' -f1 \
-  > $DATA_DIR/nasdaq_symbols
-wc -l $DATA_DIR/nasdaq_symbols
+  > $D_DATA/nasdaq_symbols
+wc -l $D_DATA/nasdaq_symbols
 
 echo Filter to get only symbols which are in IB and get conids \(SLOW\)
-IN_FILE=$DATA_DIR/nasdaq_symbols
-OUT_FILE=$DATA_DIR/nasdaq_symbols_ib
+IN_FILE=$D_DATA/nasdaq_symbols
+OUT_FILE=$D_DATA/nasdaq_symbols_ib
 [[ -f $OUT_FILE ]] && rm $OUT_FILE
 touch $OUT_FILE
 while read I; do
@@ -40,8 +40,8 @@ fi
 wc -l $OUT_FILE
 
 echo Download conids
-IN_FILE=data_sh/nasdaq_symbols
-OUT_FILE=data_sh/nasdaq_symbols_ib_conids
+IN_FILE=$D_DATA/nasdaq_symbols
+OUT_FILE=$D_DATA/nasdaq_symbols_ib_conids
 [[ -f $OUT_FILE ]] && rm $OUT_FILE
 touch $OUT_FILE
 while read I; do
@@ -55,14 +55,14 @@ fi
 wc -l $OUT_FILE
 
 echo Download quotes
-[[ -d $QUOTE_DIR ]] && rm -rf $QUOTE_DIR
-mkdir $QUOTE_DIR
-IN_FILE=$DATA_DIR/nasdaq_symbols_ib_conids
+[[ -d $D_QUOT ]] && rm -rf $D_QUOT
+mkdir $D_QUOT
+IN_FILE=$D_DATA/nasdaq_symbols_ib_conids
 while read SYMB CONID; do
-  ./down_conid2quote.sh $CONID > $QUOTE_DIR/$SYMB.json
+  ./down_conid2quote.sh $CONID > $D_QUOT/$SYMB.json
   [[ $? != 0 ]] && echo Could not get ticker $SYMB \($CONID\)
 done < $IN_FILE
-ls $QUOTE_DIR | wc -l
+ls $D_QUOT | wc -l
 
 DATE=$(date +'%Y-%m-%d %H:%M')
 echo $DATE: Finished $0
