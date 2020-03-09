@@ -10,7 +10,10 @@ cd ..
 # - D_DATA
 # - D_QUOT
 . bin/config.sh
+
+# Supress warnings
 ./bin/supress_source_me.sh
+export PYTHONWARNINGS="ignore:Unverified HTTPS request"
 
 if [[ -d $D_DATA ]]; then
   rm -r $D_DATA
