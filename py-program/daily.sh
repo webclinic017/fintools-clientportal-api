@@ -1,13 +1,13 @@
 #!/bin/bash
 
+DATE=$(date +'%Y-%m-%d %H:%M')
+echo $DATE: Starting $0
+cd "$(dirname "$0")"
+
 # Config:
 # - D_DATA
 # - D_QUOT
 . config.sh
-
-DATE=$(date +'%Y-%m-%d %H:%M')
-echo $DATE: Starting $0
-cd "$(dirname "$0")"
 
 echo Get NASDAQ tickers file
 curl --silent -o $D_DATA/nasdaq_file \
