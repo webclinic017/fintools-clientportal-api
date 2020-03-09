@@ -4,12 +4,18 @@
 DATE=$(date +'%Y-%m-%d %H:%M')
 echo $DATE: Starting $0
 cd "$(dirname "$0")"
+cd ..
 
 # Config:
 # - D_DATA
 # - D_QUOT
-. config.sh
-. ../supress_source_me.sh
+. bin/config.sh
+./bin/supress_source_me.sh
+
+if [[ -d $D_DATA ]]; then
+  rm -r $D_DATA
+fi
+mkdir $D_DATA
 
 echo Get NASDAQ tickers file
 curl --silent -o $D_DATA/nasdaq_file \
@@ -30,7 +36,7 @@ OUT_FILE=$D_DATA/nasdaq_symbols_ib
 [[ -f $OUT_FILE ]] && rm $OUT_FILE
 touch $OUT_FILE
 while read I; do
-  CONID=$(./down_ticker2conid.py $I)
+  CONID=$($D_BIN/down_ticker2conid.py $I)
   if [[ $? == 0 ]]; then
     echo $I $CONID >> $OUT_FILE
   fi
@@ -47,7 +53,7 @@ OUT_FILE=$D_DATA/nasdaq_symbols_ib_conids
 [[ -f $OUT_FILE ]] && rm $OUT_FILE
 touch $OUT_FILE
 while read I; do
-  CONID=$(./down_conid.py $I &>/dev/null)
+  CONID=$($D_BIN/down_conid.py $I &>/dev/null)
   [[ $? == 0 ]] && echo $I $CONID >> $OUT_FILE
 done < $IN_FILE
 if [[ $(wc -l $OUT_FILE | cut -d' ' -f1) == 0 ]]; then
@@ -61,7 +67,7 @@ echo Download quotes
 mkdir $D_QUOT
 IN_FILE=$D_DATA/nasdaq_symbols_ib_conids
 while read SYMB CONID; do
-  ./down_conid2quote.sh $CONID > $D_QUOT/$SYMB.json
+  $D_BIN/down_conid2quote.sh $CONID > $D_QUOT/$SYMB.json
   [[ $? != 0 ]] && echo Could not get ticker $SYMB \($CONID\)
 done < $IN_FILE
 ls $D_QUOT | wc -l
