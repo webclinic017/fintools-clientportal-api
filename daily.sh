@@ -1,4 +1,5 @@
 #!/bin/bash
+# Run this daily on cron
 
 DATE=$(date +'%Y-%m-%d %H:%M')
 echo $DATE: Starting $0
