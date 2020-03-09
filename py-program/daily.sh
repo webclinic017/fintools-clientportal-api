@@ -5,6 +5,10 @@
 # - QUOTE_DIR
 . config.sh
 
+DATE=$(date +'%Y-%m-%d %H:%M')
+echo $DATE: Starting $0
+cd "$(dirname "$0")"
+
 echo Get NASDAQ tickers file
 curl --silent -o $DATA_DIR/nasdaq_file \
   ftp://ftp.nasdaqtrader.com/symboldirectory/nasdaqlisted.txt
@@ -36,7 +40,6 @@ fi
 wc -l $OUT_FILE
 
 echo Download conids
-# Filter to get only symbols which are in IB and get conids
 IN_FILE=data_sh/nasdaq_symbols
 OUT_FILE=data_sh/nasdaq_symbols_ib_conids
 [[ -f $OUT_FILE ]] && rm $OUT_FILE
@@ -60,3 +63,6 @@ while read SYMB CONID; do
   [[ $? != 0 ]] && echo Could not get ticker $SYMB \($CONID\)
 done < $IN_FILE
 ls $QUOTE_DIR | wc -l
+
+DATE=$(date +'%Y-%m-%d %H:%M')
+echo $DATE: Finished $0
