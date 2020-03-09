@@ -8,7 +8,7 @@ cd "$(dirname "$0")"
 # - D_DATA
 # - D_QUOT
 . config.sh
-. ../suppress_source_me.sh
+. ../supress_source_me.sh
 
 echo Get NASDAQ tickers file
 curl --silent -o $D_DATA/nasdaq_file \
