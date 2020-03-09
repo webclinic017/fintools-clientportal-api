@@ -45,6 +45,10 @@ while read I; do
   CONID=$(./down_conid.py $I &>/dev/null)
   [[ $? == 0 ]] && echo $I $CONID >> $OUT_FILE
 done < $IN_FILE
+if [[ $(wc -l $OUT_FILE | cut -d' ' -f1) == 0 ]]; then
+  echo Could not get IB conids for any of the stocks
+  exit 1
+fi
 wc -l $OUT_FILE
 
 echo Download quotes
