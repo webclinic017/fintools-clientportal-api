@@ -13,11 +13,13 @@ usage() {
 
 [[ -z $1 ]] && usage && exit 1
 [[ -z $2 ]] && usage && exit 1
-LT=1
+TYPE=$1
+PRICE=$2
+
 for I in $QUOTE_DIR/*; do
-  CLOSE=$(jq '.c' $I)
-  if (( $(echo "$CLOSE <= $LT" | bc -l) )); then
-    echo $(basename $I .json): $CLOSE
+  STOCK_PRICE=$(jq ".$TYPE" $I)
+  if (( $(echo "$STOCK_PRICE <= $PRICE" | bc -l) )); then
+    echo $(basename $I .json): $STOCK
   else
     :
   fi
