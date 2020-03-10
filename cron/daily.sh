@@ -41,43 +41,45 @@ wc -l $D_DATA/nasdaq_symbols
 log Filter to get only symbols which are in IB and get conids \(SLOW\)
 IN_FILE=$D_DATA/nasdaq_symbols
 OUT_FILE=$D_DATA/nasdaq_symbols_ib
-[[ -f $OUT_FILE ]] && rm $OUT_FILE
-touch $OUT_FILE
+[[ -f $OUT_FILE.tmp ]] && rm $OUT_FILE.tmp
 while read I; do
   CONID=$($D_BIN/down_ticker2conid.py $I)
   if [[ $? == 0 ]]; then
-    echo $I $CONID >> $OUT_FILE
+    echo $I $CONID >> $OUT_FILE.tmp
   fi
 done < $IN_FILE
-if [[ $(wc -l $OUT_FILE | cut -d' ' -f1) == 0 ]]; then
+if [[ $(wc -l $OUT_FILE.tmp | cut -d' ' -f1) == 0 ]]; then
   log None of the symbols are available in IB. Check your IB connection
   exit 1
 fi
-wc -l $OUT_FILE
+wc -l $OUT_FILE.tmp
+mv $OUT_FILE.{tmp,}
 
 log Download quote from conids
 IN_FILE=$D_DATA/nasdaq_symbols_ib
 OUT_FILE=$D_DATA/nasdaq_symbols_ib_conids
-[[ -f $OUT_FILE ]] && rm $OUT_FILE
-touch $OUT_FILE
+[[ -f $OUT_FILE.tmp ]] && rm $OUT_FILE.tmp
 while read I; do
   CONID=$($D_BIN/down_conid2quote.sh $I &>/dev/null)
-  [[ $? == 0 ]] && echo $I $CONID >> $OUT_FILE
+  [[ $? == 0 ]] && echo $I $CONID >> $OUT_FILE.tmp
 done < $IN_FILE
-if [[ $(wc -l $OUT_FILE | cut -d' ' -f1) == 0 ]]; then
+if [[ $(wc -l $OUT_FILE.tmp | cut -d' ' -f1) == 0 ]]; then
   log Could not get IB conids for any of the stocks
   exit 1
 fi
-wc -l $OUT_FILE
+wc -l $OUT_FILE.tmp
+mv $OUT_FILE.{tmp,}
 
 log Download quotes
-[[ -d $D_QUOT ]] && rm -rf $D_QUOT
-mkdir $D_QUOT
+[[ -d $D_QUOT.tmp ]] && rm -rf $D_QUOT.tmp
+mkdir $D_QUOT.tmp
 IN_FILE=$D_DATA/nasdaq_symbols_ib_conids
 while read SYMB CONID; do
-  $D_BIN/down_conid2quote.sh $CONID > $D_QUOT/$SYMB.json
+  $D_BIN/down_conid2quote.sh $CONID > $D_QUOT.tmp/$SYMB.json
   [[ $? != 0 ]] && log Could not get ticker $SYMB \($CONID\)
 done < $IN_FILE
-ls $D_QUOT | wc -l
+ls $D_QUOT.tmp | wc -l
+[[ -d $D_QUOT ]] && rm -rf $D_QUOT
+mv $D_QUOT.{tmp,}
 
 log Finished $0
