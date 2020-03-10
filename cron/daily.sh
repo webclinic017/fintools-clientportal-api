@@ -50,13 +50,13 @@ if [[ $(wc -l $OUT_FILE | cut -d' ' -f1) == 0 ]]; then
 fi
 wc -l $OUT_FILE
 
-echo Download conids
-IN_FILE=$D_DATA/nasdaq_symbols
+echo Download quote from conids
+IN_FILE=$D_DATA/nasdaq_symbols_ib
 OUT_FILE=$D_DATA/nasdaq_symbols_ib_conids
 [[ -f $OUT_FILE ]] && rm $OUT_FILE
 touch $OUT_FILE
 while read I; do
-  CONID=$($D_BIN/down_conid.py $I &>/dev/null)
+  CONID=$($D_BIN/down_conid2quote.sh $I &>/dev/null)
   [[ $? == 0 ]] && echo $I $CONID >> $OUT_FILE
 done < $IN_FILE
 if [[ $(wc -l $OUT_FILE | cut -d' ' -f1) == 0 ]]; then
