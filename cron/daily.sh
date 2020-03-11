@@ -54,7 +54,7 @@ if [[ $(wc -l $OUT_FILE.tmp | cut -d' ' -f1) == 0 ]]; then
   exit 1
 fi
 wc -l $OUT_FILE.tmp
-mv $OUT_FILE.{tmp,}
+mv $OUT_FILE{.tmp,}
 
 log Download quote from conids
 IN_FILE=$D_DATA/nasdaq_symbols_ib
@@ -69,7 +69,7 @@ if [[ $(wc -l $OUT_FILE.tmp | cut -d' ' -f1) == 0 ]]; then
   exit 1
 fi
 wc -l $OUT_FILE.tmp
-mv $OUT_FILE.{tmp,}
+mv $OUT_FILE{.tmp,}
 
 log Download quotes
 [[ -d $D_QUOT.tmp ]] && rm -rf $D_QUOT.tmp
@@ -81,6 +81,6 @@ while read SYMB CONID; do
 done < $IN_FILE
 ls $D_QUOT.tmp | wc -l
 [[ -d $D_QUOT ]] && rm -rf $D_QUOT
-mv $D_QUOT.{tmp,}
+mv $D_QUOT{.tmp,}
 
 log Finished $0
