@@ -7,14 +7,14 @@ function log() {
   echo $DATE: $@
 }
 
-log Starting $0
+log Start $0
 cd "$(dirname "$0")"
 cd ..
 
 # Config:
 # - D_DATA
 # - D_QUOT
-. bin/config.sh
+. /etc/fintools-ib/config.sh
 
 # Supress warnings
 ./bin/supress_source_me.sh

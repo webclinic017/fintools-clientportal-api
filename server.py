@@ -14,10 +14,9 @@ def hello():
 @app.route('/lt/<price>')
 def lt(price):
   res = {}
-  # Get file 
+  # Get files
   for s_file in os.listdir(dir_path):
     s = s_file.split('.')[0]
-    print(s)
     fname = dir_path + '/' + s_file
     if os.stat(fname).st_size > 1:
       with open(fname) as f:
