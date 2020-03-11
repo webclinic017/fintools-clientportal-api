@@ -13,17 +13,18 @@ def hello():
 
 @app.route('/lt/<price>')
 def lt(price):
-  res = []
+  res = {}
   # Get file 
-  for s in os.listdir(dir_path):
-    #res.append(s)
-    fname = dir_path + '/' + s
+  for s_file in os.listdir(dir_path):
+    s = s_file.split('.')[0]
+    print(s)
+    fname = dir_path + '/' + s_file
     if os.stat(fname).st_size > 1:
-      with open(dir_path + '/' + s) as f:
+      with open(fname) as f:
         p = json.load(f)['c']
-        if float(p) < float(price):
-          res.append(s + ' ' + str(p))
-  return '<br>'.join(res)
+        if float(p) <= float(price):
+          res[s] = p
+  return json.dumps(res), 200, {'Content-Type': 'application/json'}
 
 if __name__ == '__main__':
   app.run(port=80)
