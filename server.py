@@ -5,7 +5,7 @@ import os
 from flask import Flask
 app = Flask(__name__)
 
-dir_path = '/opt/fintools-ib/data/sh/quotes'
+dir_path = '/opt/fintools-ib/data/quotes'
 
 @app.route("/")
 def hello():
