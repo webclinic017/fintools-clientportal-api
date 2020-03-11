@@ -1,5 +1,6 @@
 #!/bin/bash
 # Run this daily on cron
+# Requirement: /etc/fintools-ib/config.sh
 
 # Helpers
 function log() {
