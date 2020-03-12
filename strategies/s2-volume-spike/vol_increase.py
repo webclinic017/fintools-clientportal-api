@@ -21,11 +21,11 @@ class VolIncrease:
       # TODO: Iterate over data here, get lowest, see if latest is
       # more than X perc
       # Get lowest volume
-      int low
+      low = None
       for p in points:
         # c, h, l, o, t, v
         p = p.to_dict()
-        if low is null:
+        if low is None:
           low = p['v']
           print('found' + low)
         #print(p['v'])
