@@ -19,3 +19,5 @@ class VolIncrease:
       print(conid)
       res = api.iserver_marketdata_history_get(conid, '1d').data
       print(res)
+      # TODO: Iterate over data here, get lowest, see if latest is
+      # more than X perc
