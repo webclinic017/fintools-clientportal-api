@@ -36,7 +36,6 @@ class VolIncrease:
           low = p['v']
           continue
         if p['v'] < low:
-          print('found lower: ' + str(p['v']))
           low = p['v']
       # TODO: End 'Fix logic here'
       # TODO: see if latest is more than X perc more than lowest
