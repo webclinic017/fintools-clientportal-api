@@ -17,5 +17,8 @@ class VolIncrease:
     conids = [ '265598', '3691937' ]
     for conid in conids:
       print(conid)
-      res = api.iserver_marketdata_history_get(conid, '1d').data
-      print(res)
+      points = api.iserver_marketdata_history_get(conid, '1d').data
+      # TODO: Iterate over data here, get lowest, see if latest is
+      # more than X perc
+      for points as p:
+        print(p['v'])
