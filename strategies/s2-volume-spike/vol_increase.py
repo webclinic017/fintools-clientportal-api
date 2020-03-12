@@ -21,5 +21,6 @@ class VolIncrease:
       # TODO: Iterate over data here, get lowest, see if latest is
       # more than X perc
       for p in points:
+        print(p)
         p = p.to_dict()
-        print(p['v'])
+        #print(p['v'])
