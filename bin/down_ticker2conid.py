@@ -18,8 +18,12 @@ parser = argparse.ArgumentParser(
     description='Display last day data for ticker')
 parser.add_argument('ticker', metavar='TICKER', type=str,
     help='Ticker, e.g. AAPL')
-parser.add_argument('-s', dest='small', action='store_true',
-                    help='Print only result (category), without the ticker')
+parser.add_argument(
+    '-s',
+    dest='small',
+    action='store_true',
+    help='Print only result (category), without the ticker'
+)
 args = parser.parse_args()
 
 # Instantiate API class
