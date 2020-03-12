@@ -20,7 +20,12 @@ class VolIncrease:
       points = api.iserver_marketdata_history_get(conid, '1d').data
       # TODO: Iterate over data here, get lowest, see if latest is
       # more than X perc
+      # Get lowest volume
+      int low
       for p in points:
-        print(p)
+        # c, h, l, o, t, v
         p = p.to_dict()
+        if low is null:
+          low = p['v']
+          print('found' + low)
         #print(p['v'])
