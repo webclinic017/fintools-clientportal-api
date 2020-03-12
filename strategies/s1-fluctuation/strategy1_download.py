@@ -81,7 +81,11 @@ try:
     eprint('Get market data')
     api = MarketDataApi(client)
     for symbol, conid in conids.items():
-        response = api.iserver_marketdata_history_get(conid, '2d').data
+        response = api.iserver_marketdata_history_get(
+          conid,
+          '2d',
+          bar='5m'
+        ).data
         datapoints = []
         # Convert to dict
         for datapoint in response:
