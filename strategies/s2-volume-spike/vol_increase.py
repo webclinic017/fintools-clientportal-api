@@ -20,5 +20,5 @@ class VolIncrease:
       points = api.iserver_marketdata_history_get(conid, '1d').data
       # TODO: Iterate over data here, get lowest, see if latest is
       # more than X perc
-      for points as p:
+      for p in points:
         print(p['v'])
