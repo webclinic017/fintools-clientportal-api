@@ -16,16 +16,27 @@ class VolIncrease:
     # TODO: Use utility method here: translate symbols to conids
     conids = [ '265598', '3691937' ]
     for conid in conids:
-      print(conid)
-      points = api.iserver_marketdata_history_get(conid, '1d').data
-      # TODO: Iterate over data here, get lowest, see if latest is
-      # more than X perc
+      # Note: the bar is actually one minute here, quirk of the API
+      # 390 minute datapoints, i.e. 6.5 hours of market day data
+      points = api.iserver_marketdata_history_get(
+        conid,
+        '1d',
+        bar='5m'
+      ).data
       # Get lowest volume
+      # TODO: Fix logic here
+      # TODO: Can we write this more neatly, with Pythonic one-liner lambda-like
+      # generator?
       low = None
       for p in points:
         # c, h, l, o, t, v
         p = p.to_dict()
+        print(str(p['t']))
         if low is None:
           low = p['v']
-          print('found' + low)
-        #print(p['v'])
+          continue
+        if p['v'] < low:
+          print('found lower: ' + str(p['v']))
+          low = p['v']
+      # TODO: End 'Fix logic here'
+      # TODO: see if latest is more than X perc more than lowest
