@@ -23,7 +23,11 @@ def lt(price):
         p = json.load(f)['c']
         if float(p) <= float(price):
           res[s] = p
-  return json.dumps(res), 200, {'Content-Type': 'application/json'}
+    res_sorted = {}
+    for k, v in sorted(res.items()):
+      # Sort by symbol
+      res_sorted[k] = v
+  return json.dumps(res_sorted), 200, {'Content-Type': 'application/json'}
 
 if __name__ == '__main__':
   app.run(port=80)
