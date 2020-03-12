@@ -1,3 +1,4 @@
+import ib_web_api
 from ib_web_api import MarketDataApi
 from ib_web_api.rest import ApiException
 
@@ -12,3 +13,9 @@ class VolIncrease:
     config.verify_ssl = False
     client = ib_web_api.ApiClient(config)
     api = MarketDataApi(client)
+    # TODO: Use utility method here: translate symbols to conids
+    conids = [ '265598', '3691937' ]
+    for conid in conids:
+      print(conid)
+      res = api.iserver_marketdata_history_get(conid, '1d').data
+      print(res)
