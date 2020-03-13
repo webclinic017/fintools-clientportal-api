@@ -31,7 +31,6 @@ class VolIncrease:
       for p in points:
         # c, h, l, o, t, v
         p = p.to_dict()
-        print(str(p['t']))
         if low is None:
           low = p['v']
           continue
