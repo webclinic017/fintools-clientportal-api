@@ -31,12 +31,10 @@ class VolIncrease:
       for p in points:
         # c, h, l, o, t, v
         p = p.to_dict()
-        print(str(p['t']))
         if low is None:
           low = p['v']
           continue
         if p['v'] < low:
-          print('found lower: ' + str(p['v']))
           low = p['v']
       # TODO: End 'Fix logic here'
       # TODO: see if latest is more than X perc more than lowest
