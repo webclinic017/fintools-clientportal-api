@@ -23,18 +23,6 @@ class VolIncrease:
         '1d',
         bar='5m'
       ).data
-      # Get lowest volume
-      # TODO: Fix logic here
-      # TODO: Can we write this more neatly, with Pythonic one-liner lambda-like
-      # generator?
-      low = None
-      for p in points:
-        # c, h, l, o, t, v
-        p = p.to_dict()
-        if low is None:
-          low = p['v']
-          continue
-        if p['v'] < low:
-          low = p['v']
-      # TODO: End 'Fix logic here'
-      # TODO: see if latest is more than X perc more than lowest
+      # Get lowest non-zero volume
+      low = min([p.to_dict()['v'] for p in points if p.to_dict()['v'] > 0])
+      print(low)
