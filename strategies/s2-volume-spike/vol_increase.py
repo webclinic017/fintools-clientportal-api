@@ -23,6 +23,11 @@ class VolIncrease:
         '1d',
         bar='5m'
       ).data
+      # To dict
+      vol = [ p.to_dict()['v'] ]
+      print(len(vol))
+      # Get last 15 minutes
       # Get lowest non-zero volume
       low = min([p.to_dict()['v'] for p in points if p.to_dict()['v'] > 0])
+      # Get highest volume over last 15 minutes
       print(low)
