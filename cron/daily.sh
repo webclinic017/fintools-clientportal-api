@@ -79,7 +79,11 @@ while read SYMB CONID; do
   $D_BIN/down_conid2quote.sh $CONID > $D_QUOT.tmp/$SYMB.json
   [[ $? != 0 ]] && log Could not get ticker $SYMB \($CONID\)
 done < $IN_FILE
-ls $D_QUOT.tmp | wc -l
+COUNT=$($D_QUOT.tmp | wc -l)
+if [[ $COUNT == 0 ]]; then
+  log Could not get quotes
+  exit 1
+fi
 [[ -d $D_QUOT ]] && rm -rf $D_QUOT
 mv $D_QUOT{.tmp,}
 

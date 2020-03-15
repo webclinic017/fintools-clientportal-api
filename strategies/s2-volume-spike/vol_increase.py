@@ -1,33 +1,40 @@
 import ib_web_api
+from datetime import datetime
 from ib_web_api import MarketDataApi
 from ib_web_api.rest import ApiException
+from statistics import mean
 
 class VolIncrease:
   # Given a list of tickers, return tickers which spiked X% volume within last
   # Y time, e.g. 15% increase from the lowest volume over last 15min.
   def run(self, symbols):
-    print('Running on symbols: ' + ' '.join(symbols))
     # Instantiate API class
-    # TODO: put this in constructor
     config = ib_web_api.Configuration()
     config.verify_ssl = False
     client = ib_web_api.ApiClient(config)
     api = MarketDataApi(client)
     # TODO: Use utility method here: translate symbols to conids
-    conids = [ '265598', '3691937' ]
-    for conid in conids:
-      # Note: the bar is actually one minute here, quirk of the API
-      # 390 minute datapoints, i.e. 6.5 hours of market day data
+    symbols = { 'AAPL': '265598', 'AMZN': '3691937' }
+    for symbol, conid in symbols.items():
+      # Get last 15 minutes data
       points = api.iserver_marketdata_history_get(
         conid,
-        '1d',
-        bar='5m'
+        '15min',
+        bar='1min'
       ).data
-      # To dict
-      vol = [ p.to_dict()['v'] ]
-      print(len(vol))
-      # Get last 15 minutes
-      # Get lowest non-zero volume
-      low = min([p.to_dict()['v'] for p in points if p.to_dict()['v'] > 0])
-      # Get highest volume over last 15 minutes
-      print(low)
+      # Convert to dict
+      data = [ p.to_dict() for p in points ]
+      # Get just volume
+      vol = [i['v'] for i in data]
+      # Min/max volume points
+      lo = min(i for i in vol if i > 0)
+      hi = max(vol)
+      m = mean(vol)
+      # Perc increase from median
+      perc = ((hi-m)/m)*100
+      print('SYMBOL: ' + symbol + '(' + conid + ')')
+      print('CONID: ' + conid)
+      print('LO: ' + str(lo))
+      print('HI: ' + str(hi))
+      print('ME: ' + str(round(m, 2)))
+      print('PERC: ' + str(round(perc, 2)) + '%')
