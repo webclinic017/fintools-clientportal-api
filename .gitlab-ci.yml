@@ -17,8 +17,5 @@ deploy:
   - chmod 600 ~/.ssh/id_rsa
   - cd ansible
   - echo Run Ansible deploy playbook
-  - ANSIBLE_CONFIG=./ansible.cfg
-    ANSIBLE_HOST_KEY_CHECKING=False
-    ansible-playbook install.yml
+  - ansible-playbook install.yml
         --extra-vars "APP_NAME=$PROJECT_NAME"
-        --limit=prod
