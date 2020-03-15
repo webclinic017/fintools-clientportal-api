@@ -1,0 +1,12 @@
+---
+# Deploy the app
+# INPUT:
+# APP_NAME: (optiona) Name of the app, likely the name of GitLab project
+
+- hosts: all
+  remote_user: root
+  tasks:
+  - include_role:
+      name: install
+    vars:
+      app_name: "{{ APP_NAME | default('fintools-ib') }}"
