@@ -27,7 +27,7 @@
   git:
     repo: https://gitlab.com/konradp/fintools-ib.git
     dest: "{{ app_dir }}"
-    version: 2-add-config-and-pipeline
+    version: master
 - name: Set perms to app dir to www-data:www-data
   file:
     path: "{{ app_dir }}"
