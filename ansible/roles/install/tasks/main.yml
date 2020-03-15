@@ -56,7 +56,7 @@
   copy:
     dest: "{{ app_dir }}/data/quotes/AAPL.json"
     content: |
-      { "o": "2", "c": 1 }
+      { "o": 1, "c": 2, "v": 3 }
   when: dir_found.matched == 0
 - name: Run downloader on cron
   cron:
