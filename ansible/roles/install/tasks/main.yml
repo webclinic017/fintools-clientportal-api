@@ -1,0 +1,139 @@
+---
+# Install app:
+# - app
+# - uwsgi
+# - nginx
+
+- name: Check variables
+  fail:
+    msg: "Variable {{ item }} is not defined"
+  when: item | default("") == ""
+  with_items:
+  - app_name
+
+- set_fact:
+    app_name: fintools-ib
+    app_dir: "/opt/{{ app_name }}"
+
+# OS prerequisites
+- name: Install python3 and pip3
+  package:
+    name:
+    - python3
+    - python3-pip
+
+# Install app code and config
+- name: Install app code
+  git:
+    repo: https://gitlab.com/konradp/fintools-ib.git
+    dest: "{{ app_dir }}"
+    version: master
+- name: Set perms to app dir to www-data:www-data
+  file:
+    path: "{{ app_dir }}"
+    owner: www-data
+    group: www-data
+- name: Create config dir
+  file:
+    path: "/etc/{{ app_name }}"
+    state: directory
+- name: Upload config
+  copy:
+    src: config.sh
+    dest: "/etc/{{ app_name }}/"
+- name: Create data dir
+  file:
+    path: "{{ app_dir }}/{{ item }}"
+    state: directory
+    owner: www-data
+    group: www-data
+  with_items: [ data, data/quotes ]
+- name: Check if data dir empty
+  find:
+    paths: "{{ app_dir }}/data/quotes"
+  register: dir_found
+- name: Upload test data
+  copy:
+    dest: "{{ app_dir }}/data/quotes/AAPL.json"
+    content: |
+      { "o": "2", "c": 1 }
+  when: dir_found.matched == 0
+- name: Run downloader on cron
+  cron:
+    name: "daily downloader {{ item }}"
+    weekday: "*"
+    minute: "0"
+    hour: "{{ item }}"
+    user: root
+    job: "bash {{ app_dir }}/cron/daily.sh >> /var/log/daily.log 2>&1"
+  with_items: [ 12, 18 ]
+- name: Run tickle keepalive on cron
+  cron:
+    name: tickle keepalive
+    user: root
+    job: "bash {{ app_dir }}/cron/tickle.sh"
+
+# Virtualenv
+- name: Install virtualenv
+  pip: name="virtualenv==20.0.10"
+- name: Create virtualenv
+  command:
+    cmd: "virtualenv {{ app_dir }}/venv -p python3"
+    creates: "{{ app_dir}}/venv"
+
+# App server prerequisites
+- name: Install app server prerequisites
+  pip:
+    requirements: "{{ app_dir }}/requirements.py"
+    virtualenv: "{{ app_dir }}/venv"
+
+# Uwsgi
+- name: Install uwsgi
+  pip:
+    name: uwsgi==2.0.18
+    virtualenv: "{{ app_dir }}/venv"
+- name: Install uwsgi config
+  template:
+    src: files/uwsgi.ini.j2
+    dest: "/etc/{{ app_name }}/uwsgi.ini"
+- name: Create uwsgi log dir
+  file:
+    path: "/var/log/uwsgi"
+    state: directory
+    owner: www-data
+    group: www-data
+- name: Install app uwsgi service
+  template:
+    src: files/service.j2
+    dest: /etc/systemd/system/{{ app_name }}.service
+  notify: Reload systemd
+- name: Enable and start app uwsgi service
+  systemd:
+    name: "{{ app_name }}"
+    state: started
+    enabled: yes
+
+# Nginx
+- name: Install nginx
+  package: name=nginx
+- name: Config nginx
+  template:
+    src: files/nginx.j2
+    dest: /etc/nginx/sites-available/{{ app_name }}
+  notify: Restart nginx
+- name: Remove default nginx app
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: Restart nginx
+- name: Enable nginx app symlink
+  file:
+    src: /etc/nginx/sites-available/{{ app_name }}
+    dest: /etc/nginx/sites-enabled/{{ app_name }}
+    state: link
+  notify: Restart nginx
+- name: Enable and start nginx
+  service:
+    name: nginx
+    state: started
+    enabled: yes

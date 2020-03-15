@@ -1,10 +1,10 @@
 [uwsgi]
-#application's base folder
-base = /opt/fintools-ib
+# App base dir
+base = {{ app_dir }}
 
 plugins = python3
 
-#python module to import
+# python module
 app = server
 module = %(app)
 
@@ -12,10 +12,10 @@ home = %(base)/venv
 pythonpath = %(base)
 
 #socket file's location
-socket = /opt/fintools-ib/%n.sock
+socket = %(base)/%n.sock
 
 #permissions for the socket file
-chmod-socket    = 666
+chmod-socket = 666
 
 #the variable that holds a flask application inside the module imported at line #6
 callable = app
