@@ -1,0 +1,24 @@
+stages:
+  - deploy
+
+variables:
+  PROJECT_NAME: "$CI_PROJECT_NAME"
+
+# Deploy to prod
+deploy:
+  stage: deploy
+  image: registry.gitlab.com/konradp/docker-alpine-ansible/alpine:ansible
+  only:
+  - master
+  script:
+  - echo Deploy to prod
+  - mkdir ~/.ssh
+  - echo "$PRIV_KEY" > ~/.ssh/id_rsa
+  - chmod 600 ~/.ssh/id_rsa
+  - cd ansible
+  - echo Run Ansible deploy playbook
+  - ANSIBLE_CONFIG=./ansible.cfg
+    ANSIBLE_HOST_KEY_CHECKING=False
+    ansible-playbook install.yml
+        --extra-vars "APP_NAME=$PROJECT_NAME"
+        --limit=prod
