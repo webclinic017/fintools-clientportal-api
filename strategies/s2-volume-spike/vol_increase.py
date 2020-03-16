@@ -26,12 +26,12 @@ class VolIncrease:
       ).data
       # Get just volume
       vol = [ p.to_dict()['v'] for p in points ]
-      # Min/max/mean volume points
+      # Min/max/mean volume points, perc increase from mean to hi
       lo = min(i for i in vol if i > 0)
       hi = max(vol)
       m = mean(vol)
-      # Perc increase from mean
       perc = ((hi-m)/m)*100
+      # Print stats
       print('LO: ' + str(lo))
       print('HI: ' + str(hi))
       print('ME: ' + str(round(m, 2)))
