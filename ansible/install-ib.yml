@@ -1,0 +1,8 @@
+---
+# Install the IB web API gateway. Only need to run this once
+
+- hosts: all
+  remote_user: root
+  tasks:
+  - include_role:
+      name: install-ib

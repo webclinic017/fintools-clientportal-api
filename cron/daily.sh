@@ -79,6 +79,7 @@ if [[ $COUNT == 0 ]]; then
   log Could not get quotes
   exit 1
 fi
+echo $COUNT
 [[ -d $D_QUOT ]] && rm -rf $D_QUOT
 mv $D_QUOT{.tmp,}
 
