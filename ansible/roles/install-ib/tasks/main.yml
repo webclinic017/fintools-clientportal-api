@@ -1,0 +1,37 @@
+---
+# Install IB web API gateway
+
+- set_fact:
+    app_dir: "/opt/ib-gw"
+
+# OS prerequisites
+- name: Install prerequisites
+  package:
+    name:
+    - default-jre-headless
+    - jq
+    - unzip
+
+# Install gateway
+- name: Create dir for ib-gw
+  file: path="{{ app_dir }}" state=directory
+- name: Download ib api gateway
+  unarchive:
+    src: "https://download2.interactivebrokers.com/portal\
+        /clientportal.beta.gw.zip"
+    dest: "{{ app_dir }}"
+    remote_src: yes
+
+# Run gateway
+- name: Check if gateway already running
+  shell: pidof java
+  register: pidof
+  changed_when: false
+  failed_when: pidof.stderr != ""
+- name: Run ib gateway in background
+  shell: ./bin/run.sh root/conf.yaml >> /var/log/ib-gw.log &
+  args:
+    chdir: "{{ app_dir }}"
+  async: 45
+  poll: 0
+  when: pidof.rc == 1
