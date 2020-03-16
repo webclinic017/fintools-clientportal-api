@@ -10,7 +10,7 @@ URL="https://localhost:5000\
 /v1/portal/iserver/marketdata/history\
 ?conid=$CONID\
 &period=3d&bar=1d"
-DATA=$(curl -sk -X GET $URL \
+DATA=$(curl -sk --connect-timeout=2 -X GET $URL \
   -H 'Content-Type: application/x-www-form-urlencoded')
 POINT=$(jq -r '.points' <<< $DATA)
 LAST_DATA=$(jq ".data[$POINT]" <<< $DATA)
