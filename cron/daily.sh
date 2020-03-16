@@ -21,11 +21,6 @@ cd ..
 ./bin/supress_source_me.sh
 export PYTHONWARNINGS="ignore:Unverified HTTPS request"
 
-if [[ -d $D_DATA ]]; then
-  rm -r $D_DATA
-fi
-mkdir $D_DATA
-
 log Get NASDAQ tickers file
 curl --silent -o $D_DATA/nasdaq_file \
   ftp://ftp.nasdaqtrader.com/symboldirectory/nasdaqlisted.txt
