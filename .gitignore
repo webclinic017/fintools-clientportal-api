@@ -4,3 +4,4 @@ data
 venv
 nohup.out
 __pycache__
+ansible/*.retry
