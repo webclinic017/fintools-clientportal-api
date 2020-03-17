@@ -74,8 +74,8 @@ while read SYMB CONID; do
   $D_BIN/down_conid2quote.sh $CONID > $D_QUOT.tmp/$SYMB.json
   [[ $? != 0 ]] && log Could not get ticker $SYMB \($CONID\)
 done < $IN_FILE
-COUNT=$($D_QUOT.tmp | wc -l)
-if [[ $COUNT == 0 ]]; then
+COUNT=$(ls $D_QUOT.tmp | wc -l)
+if [[ $COUNT ==  0 ]]; then
   log Could not get quotes
   exit 1
 fi
