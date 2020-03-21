@@ -1,0 +1,100 @@
+# Get conid from company, and vice versa
+import ib_web_api
+import os
+from ib_web_api import ContractApi
+from ib_web_api import MarketDataApi
+from ib_web_api.rest import ApiException
+
+f_conids = 'data/nasdaq_symbols_ib_conids'
+
+class ICompany:
+  # Properties
+  conid = None
+  symbol = None
+
+  # Constructor
+  def __init__(self, info):
+    if isinstance(info, int):
+      self.conid = info
+    else:
+      self.symbol = info
+
+  # PUBLIC METHODS
+  def get_conid(self):
+    if self.conid is None:
+      self.conid = self.down_conid()
+    return self.conid
+
+  def get_quote(self):
+    try:
+      # Get conid
+      if self.conid is None:
+        self.get_conid()
+    except ApiException as e:
+      # Could not get conid
+      raise Exception('Could not get conid: %s\n' % e)
+    try:
+      # Get quote
+      return self.conid_to_quote(self.conid)
+    except ApiException as e:
+      # Could not get quote
+      raise Exception('Could not get conid: %s\n' % e)
+
+  def get_symbol(self):
+    if self.symbol is None:
+      return find_by('conid', self.conid)
+    else:
+      return self.symbol
+
+
+  # PRIVATE
+  def down_conid(self):
+    if self.conid is None:
+      # Download conid
+      config = ib_web_api.Configuration()
+      config.verify_ssl = False
+      client = ib_web_api.ApiClient(config)
+      api = ContractApi(client)
+      # Main
+      try:
+          # Get conid
+          conid = int
+          response = api.iserver_secdef_search_post({ "symbol": self.symbol })
+          for item in response:
+              if item.description == 'NASDAQ':
+                  self.conid = item.conid
+      except ApiException as e:
+          # Could not get conid, skip for now
+          raise Exception("Could not get conid: %s\n" % e)
+          #return self.symbol
+    return self.conid
+
+  def conid_to_quote(self, conid):
+    try:
+      # Download conid
+      config = ib_web_api.Configuration()
+      config.verify_ssl = False
+      client = ib_web_api.ApiClient(config)
+      api = MarketDataApi(client)
+      res = api.iserver_marketdata_history_get(conid, period='3d', bar='1d')
+      point = int(res.points)
+      res = res.data[point].to_dict()
+    except ApiException as e:
+      # Could not get quote
+      raise Exception("Could not get quote: %s\n" % e)
+    return res
+
+  def find_by(self, kind, value):
+    # Convert symbol to conid or conid to symbol
+    # kind: conid or symbol
+    # value: e.g. 1234 or AAPL
+    # data_format = [ 'symbol', 'conid' ]
+    if kind == 'symbol':
+      idx_kind = 0
+      idx_val = 1
+    else:
+      idx_kind = 1
+      idx_val = 0
+    with open(f_conids) as f:
+      lines = [line.rstrip().split(' ') for line in f]
+      return next(line[idx_val] for line in lines if line[idx_kind] == value)
