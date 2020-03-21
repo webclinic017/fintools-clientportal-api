@@ -1,7 +1,8 @@
 # Get conid from company, and vice versa
+import json
 import os
 
-f_conids = 'data/nasdaq_symbols_ib_conids'
+f_conids = '/opt/fintools-ib/data/conids.json'
 
 class Company:
   # Properties
@@ -33,13 +34,14 @@ class Company:
     # Convert symbol to conid or conid to symbol
     # kind: conid or symbol
     # value: e.g. 1234 or AAPL
-    # data_format = [ 'symbol', 'conid' ]
-    if kind == 'symbol':
-      idx_kind = 0
-      idx_val = 1
-    else:
-      idx_kind = 1
-      idx_val = 0
     with open(f_conids) as f:
-      lines = [line.rstrip().split(' ') for line in f]
-      return next(line[idx_val] for line in lines if line[idx_kind] == value)
+      f = json.load(f)
+      if kind == 'symbol':
+        if value in f:
+          return f[value]
+        else:
+          raise Exception('Symbol %s not found' % value)
+      else:
+        for symbol, conid in f.items():
+          if conid == value:
+            return symbol
