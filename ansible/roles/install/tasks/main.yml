@@ -65,7 +65,7 @@
     minute: "0"
     hour: "{{ item }}"
     user: root
-    job: "bash {{ app_dir }}/cron/daily.sh >> /var/log/daily.log 2>&1"
+    job: "bash {{ app_dir }}/cron/downloader.py >> /var/log/daily.log 2>&1"
   with_items: [ 12, 18 ]
 - name: Run tickle keepalive on cron
   cron:
