@@ -26,9 +26,9 @@ def to_hour(timestamp):
   return datetime.datetime.fromtimestamp(timestamp/1000).strftime('%H%M')
 
 
-class FourPerc:
+class Perc:
   # Given a list of tickers, return tickers which ...
-  def run(self):
+  def run(self, perc):
     # Get day cheap symbols
     i = 0
     ret = {}
@@ -49,7 +49,7 @@ class FourPerc:
           hi = get(point, 'h')
           if point['l'] < lo['value']:
             lo = get(point, 'l')
-          if hi['value']/lo['value'] > 104/100:
+          if hi['value']/lo['value'] > (100+perc)/100:
             if hi['t'] == lo ['t']:
               extra = '*'
             else:

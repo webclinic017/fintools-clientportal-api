@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # Given a list of tickers, return tickers which spiked X% volume within last
 # Y time, e.g. 15% increase from the lowest volume over last 15min.
+import argparse
 import concurrent.futures
 import glob
 import ib_web_api
@@ -41,13 +42,24 @@ def get_quote(symbol):
     return { symbol: response.data }
 
 # Main
+# Parse args
+parser = argparse.ArgumentParser(description='Download today\'s data')
+parser.add_argument('symbols',
+  metavar='S',
+  type=str,
+  nargs='*',
+  help='List of symbols, e.g. AAPL AMZN'
+)
+args = parser.parse_args()
+
 # Get Get cheap symbols
 with urllib.request.urlopen(url_cheap_symbols) as response:
   symbols = json.loads(response.read().decode('utf-8'))
   day_quotes = {}
   if debug is True:
     symbols = { key: symbols[key] for key in list(symbols)[0:5] }
-    print(symbols)
+  if args.symbols:
+    symbols = args.symbols
   with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
     future_to_data = {
       executor.submit(get_quote, symbol): symbol
