@@ -23,11 +23,15 @@ TODO:
 - how long wait?
 
 # Pre playbook
-- 13:20 Sign in
-- 13:25 Run downloader.py
+- 09:00 Sign in, check health http://5.152.176.191/health
+- 09:01 Run downloader.py
+- ...
+- 13:20 Sign in, check health http://5.152.176.191/health
+- 13:20 https://degiro.co.uk/
 - 13:30 Market open
-- 13:31 Run download-day.py
-- 13:40 Run download-day.py
+- 13:45 Run download-day.py (15 min delay)
+- 13:50 Run download-day.py (15 min delay)
+- 13:51 Run download-day.py (with tickers)
 - 14:00 Captured data. By now should have:
   - two symbols max <- at least once featured
   - entry price <- ?
