@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-# Given a list of tickers, return tickers which spiked X% volume within last
-# Y time, e.g. 15% increase from the lowest volume over last 15min.
+# Download today's data for tickers under $1/share
+# Optionally, supply list of tickers, e.g.
+# ./$0 AAPL AMZN
 import argparse
 import concurrent.futures
 import glob
