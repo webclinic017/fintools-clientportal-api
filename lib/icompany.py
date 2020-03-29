@@ -69,9 +69,11 @@ class ICompany:
           if item.description == 'NASDAQ':
             self.conid = item.conid
       except ApiException as e:
-        # Could not get conid, skip for now
-        raise Exception("Could not download conid.")
-        #return self.symbol
+        if self.conid is not None:
+          detail = self.conid
+        else:
+          detail = self.symbol
+        raise Exception('Could not download conid %s.' % detail)
     return self.conid
 
   def conid_to_quote(self, conid, period, bar):
