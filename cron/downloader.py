@@ -30,6 +30,7 @@ def log(msg):
 def get_quote(symbol):
   # Download conid and quote from IB
   global count_done
+  global count_perc
   global count_total
   ret = {}
   c = ICompany(symbol)
