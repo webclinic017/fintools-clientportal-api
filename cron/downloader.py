@@ -66,7 +66,7 @@ with urllib.request.urlopen(url_nasdaq_list) as response:
         quotes.update(future.result())
       except Exception as e:
         # Failed to get conid, skip
-        log('EXC: %s' % e)
+        log('Could no get conid: %s' % e)
         pass
   if len(quotes) == 0:
     log('Could not get quotes')

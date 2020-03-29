@@ -66,7 +66,7 @@ class ICompany:
             self.conid = item.conid
       except ApiException as e:
         # Could not get conid, skip for now
-        raise Exception("Could not download conid: %s\n" % e)
+        raise Exception("Could not download conid.")
         #return self.symbol
     return self.conid
 
