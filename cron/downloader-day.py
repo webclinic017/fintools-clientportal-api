@@ -22,10 +22,6 @@ debug = False
 
 def get_quote(symbol):
   # Init client
-  config = ib_web_api.Configuration()
-  config.verify_ssl = False
-  client = ib_web_api.ApiClient(config)
-  api = MarketDataApi(client)
   conid = Company(symbol).get_conid()
   company = ICompany(conid)
   try:
