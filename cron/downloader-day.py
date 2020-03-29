@@ -70,8 +70,7 @@ with urllib.request.urlopen(url_cheap_symbols) as response:
     f_path = dir_day + '/' + symbol + '.json'
     with open(f_path, 'w') as f:
       if day_quotes[symbol] is not None:
-        data = [ point.to_dict() for point in day_quotes[symbol]]
-        f.write(json.dumps(data))
+        f.write(json.dumps(day_quotes[symbol]))
       else:
         print(f'No data for {symbol}')
         os.remove(f_path)
