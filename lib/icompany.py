@@ -33,7 +33,11 @@ class ICompany:
       if self.conid is None:
         self.get_conid()
     except ApiException as e:
-      raise Exception('Could not get conid: %s\n' % e)
+      if self.conid is not None:
+        detail = self.conid
+      else:
+        detail = self.symbol
+      raise Exception('Could not get conid: %s\n' % symbol)
     try:
       # Get quote
       return self.conid_to_quote(self.conid, '3d', '1d')
