@@ -38,7 +38,7 @@ class ICompany:
       # Get quote
       return self.conid_to_quote(self.conid, '3d', '1d')
     except ApiException as e:
-      raise Exception('Could not get conid: %s\n' % e)
+      raise Exception('Could not get quote: %s\n' % self.conid)
 
   def get_symbol(self):
     if self.symbol is None:
@@ -66,7 +66,7 @@ class ICompany:
             self.conid = item.conid
       except ApiException as e:
         # Could not get conid, skip for now
-        raise Exception("Could not get conid: %s\n" % e)
+        raise Exception("Could not download conid: %s\n" % e)
         #return self.symbol
     return self.conid
 
