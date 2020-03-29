@@ -19,6 +19,7 @@ quote_dir = '/opt/fintools-ib/data/quotes'
 conids_file = '/opt/fintools-ib/data/conids.json'
 count_total = 0
 count_done = 0
+count_perc = 0
 
 def log(msg):
   print('%s: %s' %(
@@ -35,7 +36,9 @@ def get_quote(symbol):
   quote = c.get_quote('3d', '1d')
   conid = c.get_conid()
   count_done += 1
-  log(str(count_done) + '/' + str(count_total))
+  #log(str(count_done) + '/' + str(count_total))
+  if (count_done/count_total)*10 >= count perc:
+    log(str(count_perc*10))
   return {
     symbol: {
       'conid': conid,
