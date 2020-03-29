@@ -12,6 +12,7 @@ import pprint
 import urllib3
 import urllib.request
 from lib.company import Company
+from lib.company import ICompany
 from ib_web_api import MarketDataApi
 
 dir_quote = '/opt/fintools-ib/data/quotes'
