@@ -38,3 +38,7 @@ TODO:
   - exit price (+4%)
 - 14:01 Buy order
 - 14:02 Limit sell order (+4%)
+
+# Playbook
+- test cases
+- run downloader

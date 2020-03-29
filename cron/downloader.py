@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+# Run this once a day
+# It does:
+# - download nasdaq symbols
+# - download quotes
+# - download conids
 import concurrent.futures
 import datetime
 import glob
@@ -22,11 +27,12 @@ def log(msg):
   ))
 
 def get_quote(symbol):
+  # Download conid and quote from IB
   global count_done
   global count_total
   ret = {}
   c = ICompany(symbol)
-  quote = c.get_quote()
+  quote = c.get_quote('3d', '1d')
   conid = c.get_conid()
   count_done += 1
   log(str(count_done) + '/' + str(count_total))

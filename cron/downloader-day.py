@@ -21,26 +21,18 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 debug = False
 
 def get_quote(symbol):
-  for i in range(1, 6):
-    try:
-      # Init client
-      config = ib_web_api.Configuration()
-      config.verify_ssl = False
-      client = ib_web_api.ApiClient(config)
-      api = MarketDataApi(client)
-      conid = Company(symbol).get_conid()
-      response = api.iserver_marketdata_history_get(
-        conid,
-        '1d',
-        bar='1min'
-      )
-    except Exception as e:
-      if i == 6:
-        raise Exception('Could not get symbol %s' % symbol)
-      else:
-        print('Retry %s' % symbol)
-        continue
-    return { symbol: response.data }
+  # Init client
+  config = ib_web_api.Configuration()
+  config.verify_ssl = False
+  client = ib_web_api.ApiClient(config)
+  api = MarketDataApi(client)
+  conid = Company(symbol).get_conid()
+  company = ICompany(conid)
+  try:
+    quote = ICompany(conid).get_quote('1d', '1m')
+  except Exception as e:
+    raise Exception('Could not get symbol %s' % symbol)
+  return { symbol: quote }
 
 # Main
 # Parse args
@@ -53,7 +45,7 @@ parser.add_argument('symbols',
 )
 args = parser.parse_args()
 
-# Get Get cheap symbols
+# Get cheap symbols
 with urllib.request.urlopen(url_cheap_symbols) as response:
   symbols = json.loads(response.read().decode('utf-8'))
   day_quotes = {}

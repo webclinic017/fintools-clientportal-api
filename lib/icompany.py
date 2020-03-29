@@ -1,4 +1,5 @@
 # Get conid from company, and vice versa
+# This downloads the data from IB
 import ib_web_api
 import os
 from ib_web_api import ContractApi
@@ -25,19 +26,18 @@ class ICompany:
       self.conid = self.down_conid()
     return self.conid
 
-  def get_quote(self):
+  def get_quote(self, period, bar):
+    # Get conid, then quote
     try:
       # Get conid
       if self.conid is None:
         self.get_conid()
     except ApiException as e:
-      # Could not get conid
       raise Exception('Could not get conid: %s\n' % e)
     try:
       # Get quote
-      return self.conid_to_quote(self.conid)
+      return self.conid_to_quote(self.conid, '3d', '1d')
     except ApiException as e:
-      # Could not get quote
       raise Exception('Could not get conid: %s\n' % e)
 
   def get_symbol(self):
@@ -45,6 +45,7 @@ class ICompany:
       return find_by('conid', self.conid)
     else:
       return self.symbol
+
 
 
   # PRIVATE
@@ -57,31 +58,43 @@ class ICompany:
       api = ContractApi(client)
       # Main
       try:
-          # Get conid
-          conid = int
-          response = api.iserver_secdef_search_post({ "symbol": self.symbol })
-          for item in response:
-              if item.description == 'NASDAQ':
-                  self.conid = item.conid
+        # Get conid
+        conid = int
+        response = api.iserver_secdef_search_post({ "symbol": self.symbol })
+        for item in response:
+          if item.description == 'NASDAQ':
+            self.conid = item.conid
       except ApiException as e:
-          # Could not get conid, skip for now
-          raise Exception("Could not get conid: %s\n" % e)
-          #return self.symbol
+        # Could not get conid, skip for now
+        raise Exception("Could not get conid: %s\n" % e)
+        #return self.symbol
     return self.conid
 
-  def conid_to_quote(self, conid):
-    try:
-      # Download conid
-      config = ib_web_api.Configuration()
-      config.verify_ssl = False
-      client = ib_web_api.ApiClient(config)
-      api = MarketDataApi(client)
-      res = api.iserver_marketdata_history_get(conid, period='3d', bar='1d')
+  def conid_to_quote(self, conid, period, bar):
+    # TODO: Does this need to download 3 days?
+    config = ib_web_api.Configuration()
+    config.verify_ssl = False
+    client = ib_web_api.ApiClient(config)
+    api = MarketDataApi(client)
+    for i in range(1, 6):
+      try:
+        # Download conid
+        res = api.iserver_marketdata_history_get(
+          conid,
+          period=period,
+          bar=bar
+        )
+      except Exception as e:
+        if i == 6:
+          raise Exception('Could not get quote: %s\n' % e)
+        else:
+          continue
+    # If more than one day, pick the last day
+    if period == '3d' and bar == '1d':
       point = int(res.points)
       res = res.data[point].to_dict()
-    except ApiException as e:
-      # Could not get quote
-      raise Exception("Could not get quote: %s\n" % e)
+    else:
+      res = res.data
     return res
 
   def find_by(self, kind, value):
