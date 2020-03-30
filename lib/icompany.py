@@ -40,7 +40,7 @@ class ICompany:
       raise Exception('Could not get conid: %s\n' % symbol)
     try:
       # Get quote
-      return self.conid_to_quote(self.conid, '3d', '1d')
+      return self.conid_to_quote(self.conid, period, bar)
     except ApiException as e:
       raise Exception('Could not get quote: %s\n' % self.conid)
 
@@ -100,7 +100,7 @@ class ICompany:
       point = int(res.points)
       res = res.data[point].to_dict()
     else:
-      res = res.data
+      res = [ i.to_dict() for i in res.data ]
     return res
 
   def find_by(self, kind, value):

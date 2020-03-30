@@ -26,7 +26,7 @@ def get_quote(symbol):
   conid = Company(symbol).get_conid()
   company = ICompany(conid)
   try:
-    quote = ICompany(conid).get_quote('1d', '1m')
+    quote = ICompany(conid).get_quote('1d', '1min')
   except Exception as e:
     raise Exception('Could not get symbol %s' % symbol)
   return { symbol: quote }
