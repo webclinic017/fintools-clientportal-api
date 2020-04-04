@@ -9,6 +9,7 @@ import datetime
 import glob
 import json
 import os
+import skip_quotes
 import urllib.request
 import urllib3
 from lib.icompany import ICompany
@@ -55,10 +56,16 @@ with urllib.request.urlopen(url_nasdaq_list) as response:
   symb_nasdaq = [ line.split('|')[0]
     for line in response.read().decode('utf-8').splitlines()[1:-1]
   ]
+  # Skip bad symbols
+  symb_nasdaq = [
+    symbol
+    for symbol in symb_nasdaq
+    if symbol not in skip_quotes.symbols
+  ]
   count_total = len(symb_nasdaq)
-  ## DEBUG: Reduce
-  #symb_nasdaq = symb_nasdaq[4:6]
-  ## END DEBUG
+  # DEBUG: Get only few symbols
+  #symb_nasdaq = symb_nasdaq[1:50]
+  # END DEBUG
   with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
     future_to_data = {
       executor.submit(get_quote, symbol): symbol
@@ -70,7 +77,7 @@ with urllib.request.urlopen(url_nasdaq_list) as response:
         quotes.update(future.result())
       except Exception as e:
         # Failed to get conid, skip
-        log('Could no get conid: %s' % e)
+        log('Could not get conid: %s' % e)
         pass
   if len(quotes) == 0:
     log('Could not get quotes')
