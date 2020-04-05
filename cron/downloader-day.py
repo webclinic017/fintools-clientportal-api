@@ -2,6 +2,7 @@
 # Download today's data for tickers under $1/share
 # Optionally, supply list of tickers, e.g.
 # ./$0 AAPL AMZN
+# 6min25s with 100 workers, price 3
 import argparse
 import concurrent.futures
 import glob
@@ -17,14 +18,24 @@ from ib_web_api import MarketDataApi
 
 dir_quote = '/opt/fintools-ib/data/quotes'
 dir_day = '/opt/fintools-ib/data/day'
-url_cheap_symbols = 'http://5.152.176.191/lt/1'
+url_cheap_symbols = 'http://5.152.176.191/lt/3'
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 debug = False
+count_total = 0
+count_progress = 0
+count_perc = 0
 
 def get_quote(symbol):
-  # Init client
+  global count_total
+  global count_progress
+  global count_perc
   conid = Company(symbol).get_conid()
   company = ICompany(conid)
+  # Log progress
+  count_progress += 1
+  if (count_progress/count_total)*10 >= count_perc:
+    print(str(count_perc*10) + '%')
+    count_perc = count_perc + 1
   try:
     quote = ICompany(conid).get_quote('1d', '1min')
   except Exception as e:
@@ -50,7 +61,8 @@ with urllib.request.urlopen(url_cheap_symbols) as response:
     symbols = { key: symbols[key] for key in list(symbols)[0:5] }
   if args.symbols:
     symbols = args.symbols
-  with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+  count_total = len(symbols)
+  with concurrent.futures.ThreadPoolExecutor(max_workers=400) as executor:
     future_to_data = {
       executor.submit(get_quote, symbol): symbol
       for symbol in symbols
