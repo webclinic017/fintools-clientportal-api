@@ -70,29 +70,17 @@ class Perc:
       i += 1
     # Print
     print('Found %i symbols' % len(ret))
-    out = {}
     for symbol in ret:
-      out[symbol] = {}
-      #out[symbol]['len'] = len(ret[symbol])
-      out[symbol].update({
-        'len': len(ret[symbol]),
-        'data': [],
-      })
       print('%s: %i' % (symbol, len(ret[symbol])))
       for p in ret[symbol]:
-        out[symbol]['data'].append({
-          'time': {
-            't0': to_hour(p['t0']),
-            't1': to_hour(p['t1']),
-          },
-          'price': {
-            'y0': p['y0'],
-            'y1': p['y1'],
-          },
-          'perc': round(p['perc']*100 - 100, 2),
-          'volume': {
-            'v0': p['v0'],
-            'v1': p['v1'],
-          },
-        })
-    print(json.dumps(out, indent=2))
+        print('%s: %s-%s: %.4f - %.4f %6.2f%% %3i - %3i %s' % (
+          to_date(p['t0']),
+          to_hour(p['t0']),
+          to_hour(p['t1']),
+          p['y0'],
+          p['y1'],
+          round(p['perc']*100 - 100, 2),
+          p['v0'],
+          p['v1'],
+          '*' if p['t0'] == p['t1'] else ''
+        ))
