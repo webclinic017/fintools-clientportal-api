@@ -18,10 +18,6 @@ def get(point, kind):
   # type = 'h' or 'l'
   return { 't': point['t'], 'value': point[kind], 'v': point['v'] }
 
-def to_time(timestamp):
-  return datetime.datetime.fromtimestamp(timestamp/1000).strftime('%Y%m%d %H%M')
-def to_date(timestamp):
-  return datetime.datetime.fromtimestamp(timestamp/1000).strftime('%Y%m%d')
 def to_hour(timestamp):
   return datetime.datetime.fromtimestamp(timestamp/1000).strftime('%H%M')
 
