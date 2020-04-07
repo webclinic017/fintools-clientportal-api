@@ -31,13 +31,13 @@ def get_quote(symbol):
   global count_perc
   conid = Company(symbol).get_conid()
   company = ICompany(conid)
-  # Log progress
-  count_progress += 1
-  if (count_progress/count_total)*10 >= count_perc:
-    print(str(count_perc*10) + '%')
-    count_perc = count_perc + 1
   try:
     quote = ICompany(conid).get_quote('1d', '1min')
+    # Log progress
+    count_progress += 1
+    if (count_progress/count_total)*10 >= count_perc:
+      print(str(count_perc*10) + '%')
+      count_perc = count_perc + 1
   except Exception as e:
     raise Exception('Could not get symbol %s' % symbol)
   return { symbol: quote }
