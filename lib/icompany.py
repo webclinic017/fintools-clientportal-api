@@ -87,6 +87,7 @@ class ICompany:
         # Download conid
         res = api.iserver_marketdata_history_get(
           conid,
+          exchange="NASDAQ",
           period=period,
           bar=bar
         )
