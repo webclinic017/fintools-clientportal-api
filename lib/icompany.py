@@ -82,12 +82,12 @@ class ICompany:
     config.verify_ssl = False
     client = ib_web_api.ApiClient(config)
     api = MarketDataApi(client)
+    res = None
     for i in range(1, 6):
       try:
         # Download conid
         res = api.iserver_marketdata_history_get(
           conid,
-          exchange="NASDAQ",
           period=period,
           bar=bar
         )
@@ -101,7 +101,10 @@ class ICompany:
       point = int(res.points)
       res = res.data[point].to_dict()
     else:
-      res = [ i.to_dict() for i in res.data ]
+      if res is not None:
+        res = [ i.to_dict() for i in res.data ]
+      else:
+        raise Exception('Could not get quote', self.conid)
     return res
 
   def find_by(self, kind, value):
