@@ -2,11 +2,15 @@
 # This downloads the data from IB
 import ib_web_api
 import os
+import urllib3
+import urllib.request
 from ib_web_api import ContractApi
 from ib_web_api import MarketDataApi
 from ib_web_api.rest import ApiException
 
+# Config
 f_conids = 'data/nasdaq_symbols_ib_conids'
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 class ICompany:
   # Properties
