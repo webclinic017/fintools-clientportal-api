@@ -77,7 +77,6 @@ class ICompany:
     return self.conid
 
   def conid_to_quote(self, conid, period, bar):
-    # TODO: Does this need to download 3 days?
     config = ib_web_api.Configuration()
     config.verify_ssl = False
     client = ib_web_api.ApiClient(config)
@@ -96,7 +95,8 @@ class ICompany:
           raise Exception('Could not get quote: %s\n' % e)
         else:
           continue
-    # If more than one day, pick the last day
+    # If three days, pick the last day
+    # TODO: Do we need it like this?
     if period == '3d' and bar == '1d':
       point = int(res.points)
       res = res.data[point].to_dict()
