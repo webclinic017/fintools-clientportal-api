@@ -2,13 +2,8 @@
 # Get ohlc history for given symbol
 # Run as:  ./$0 TICKERS
 # Example: ./$0 HTBX
-
 import argparse
-import ib_web_api
-import json
-import os
 import pprint
-from datetime import datetime
 from lib.icompany import ICompany
 
 # Parse args
@@ -26,4 +21,4 @@ symbol = args.symbol
 
 ## MAIN
 history = ICompany(symbol).get_quote('1m', '5min')
-print(history)
+pprint.pprint(history)
