@@ -3,7 +3,7 @@
 # Run as:  ./$0 TICKERS
 # Example: ./$0 HTBX
 import argparse
-import pprint
+import json
 from lib.icompany import ICompany
 
 # Parse args
@@ -21,4 +21,4 @@ symbol = args.symbol
 
 ## MAIN
 history = ICompany(symbol).get_quote('1m', '5min')
-pprint.pprint(history)
+print(json.dumps(history, indent=2))
