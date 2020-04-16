@@ -50,6 +50,10 @@ def str_range(data):
   # Simply return low price
   return min([ l['l'] for l in data ])
 
+def str_max(data):
+  # Simply return low price
+  return min([ l['h'] for l in data ])
+
 def get_buy_price(kind, data):
   # Return buy price: wrapper
   # Call other methods depending on 'kind'/strategy
@@ -65,6 +69,7 @@ def get_count_from_price(buy_price, data):
   # Given 'prices' range, { 'buy': 1, 'sell': 2 }
   # gives count of how often able to buy and sell at given prices
   count = 0
+  print('-----------')
   # Sort data by timestamp
   data = sorted(data, key=lambda k: k['t'])
   if buy_price is None:
@@ -72,6 +77,7 @@ def get_count_from_price(buy_price, data):
     return
   find_buy = True
   for point in data:
+    print(point['l'])
     if find_buy:
       if point['l'] <= buy_price:
         find_buy = False
@@ -83,7 +89,7 @@ def get_count_from_price(buy_price, data):
 
 ###### MAIN
 if test:
-  data = test_data.data
+  data = test_data.get_history()
 else:
   # TODO: Get IB data here
   data = []
@@ -103,15 +109,17 @@ del data
 
 # Run each strategy
 strategy_count = {}
-for kind in ['perc', 'range' ]:
-  strategy_count[kind] = { 'total': 0, 'day': 0 }
+for kind in ['perc', 'max', 'range' ]:
+  strategy_count[kind] = { 'total': 0, 'successful_days': 0 }
   print('====', kind)
   prev = None
   for date, points in sorted(data_by_date.items()):
     if prev is not None:
-      print('Search', prev)
-      strategy_count[kind]['total'] += get_count_from_price(prev, points)
-      strategy_count[kind]['day'] += 1
+      print('Search', round(prev, 2), 'and', get_price_plus_perc(prev, 4))
+      day_count = get_count_from_price(prev, points)
+      strategy_count[kind]['total'] += day_count
+      if day_count > 0:
+        strategy_count[kind]['successful_days'] += 1
     else:
       print('No prev data')
       pass
