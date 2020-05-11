@@ -21,12 +21,7 @@ day1, after close:
   - record close price
   - data:
     prev_signals: {
-      YYYYMMDD: {
-        open:
-        high:
-        low:
-        close:
-        volume:
+      YYYYMMDD: { open:, high:, low:, close:, volume:,
         perc: [
           {
             buy: { price:, open:,high:, low:, close:, volume: },
@@ -44,7 +39,10 @@ day2:
   - input: { symbol: price, symbol: price }
   - how many symbols allowed? just one per day, or all?
     just one to begin with, ensure in aboe
-  - put in limit order
-    - loop, for symbol:
-      - is order filled
-
+    - loop, for symbol, STATES:
+      - put in limit order
+      - wait for fill, check portfolio
+      - filled: exit strategy:
+        - sell limit order for +4%
+        - if 30 min before end of market day, cancel order, sell market
+        - wait for fill
