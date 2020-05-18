@@ -1,0 +1,20 @@
+version: '3'
+services:
+  ib:
+    build: ib
+    container_name: ib
+    hostname: ib
+    volumes:
+      - ./ib/src:/app
+  degiro:
+    build: degiro
+    container_name: degiro
+    hostname: degiro
+    volumes:
+      - ./degiro/src:/app
+  client:
+    build: client
+    container_name: client
+    hostname: client
+    volumes:
+      - ./client/src:/app

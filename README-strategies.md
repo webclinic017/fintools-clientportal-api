@@ -15,8 +15,8 @@ goal: trade $1 every day
 
 day1, after close:
   - goal/summary: find s to trade, get buy price
-  - get s under $2
-  - for each, find 4% increases
+  - API PRIV: get s under $2
+  - API PRIV: for each, find 4% increases
   - choose s where count(4%) > 0
   - record close price
   - data:
