@@ -13,7 +13,7 @@ TODO, components:
 deadline: end of April  
 goal: trade $1 every day
 
-day1, after close:
+day0, after close:
   - goal/summary: find s to trade, get buy price
   - API PRIV: get s under $2
   - API PRIV: for each, find 4% increases
@@ -35,7 +35,7 @@ day1, after close:
       YYYYMMDD: {...}
     }
   - chose SINGLE stock (e.g. chose highest vol)
-day2:
+day1:
   - input: { symbol: price, symbol: price }
   - how many symbols allowed? just one per day, or all?
     just one to begin with, ensure in aboe
