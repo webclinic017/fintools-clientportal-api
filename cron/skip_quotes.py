@@ -1,3 +1,4 @@
+# A list of tickers which we will not download
 symbols = [
   'ACAMW',
   'ACTTW',
