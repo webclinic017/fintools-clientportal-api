@@ -30,23 +30,27 @@ def log(msg):
 
 def get_quote(symbol):
   # Download conid and quote from IB
-  global count_done
-  global count_perc
-  global count_total
-  ret = {}
-  c = ICompany(symbol)
-  quote = c.get_quote('3d', '1d')
-  conid = c.get_conid()
-  count_done += 1
-  if (count_done/count_total)*10 >= count_perc:
-    log(str(count_perc*10) + '%')
-    count_perc = count_perc + 1
-  return {
-    symbol: {
-      'conid': conid,
-      'quote': quote
+  try:
+    global count_done
+    global count_perc
+    global count_total
+    ret = {}
+    c = ICompany(symbol)
+    quote = c.get_quote('3d', '1d')
+    conid = c.get_conid()
+    count_done += 1
+    if (count_done/count_total)*10 >= count_perc:
+      log(str(count_perc*10) + '%')
+      count_perc = count_perc + 1
+    return {
+      symbol: {
+        'conid': conid,
+        'quote': quote
+      }
     }
-  }
+  except Exception as e:
+    # Failed to get conid, print the ticker
+    raise Exception('symbol: %s: %s' %(symbol, e))
 
 # Get NASDAQ symbols
 log('Starting')
