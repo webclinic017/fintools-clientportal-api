@@ -17,6 +17,7 @@ symbols = [
   'ARTLW',
   'ARYAW',
   'ATCXW',
+  'AVCTW',
   'BCDAW',
   'BLNKW',
   'BNGOW',
