@@ -9,9 +9,13 @@ import ib_web_api
 import json
 import os
 import pprint
+import urllib3
 from datetime import datetime
 from ib_web_api import ContractApi
 from ib_web_api.rest import ApiException
+
+# Config
+urllib3.disable_warnings()
 
 # Parse args
 parser = argparse.ArgumentParser(
