@@ -1,6 +1,5 @@
 [prod]
-prod.lon-b ansible_host=5.152.176.191
-prod.lax-p ansible_host=107.6.13.74
+banana ansible_host=192.168.0.100
 
 [prod:vars]
 ansible_python_interpreter=/usr/bin/python3

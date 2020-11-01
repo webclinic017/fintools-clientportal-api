@@ -1,5 +1,5 @@
 ---
-# Deploy the app
+# Deploy the fintools-ib app (data gatherer)
 # INPUT:
 # APP_NAME: (optiona) Name of the app, likely the name of GitLab project
 

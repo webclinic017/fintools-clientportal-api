@@ -33,6 +33,7 @@
     path: "{{ app_dir }}"
     owner: www-data
     group: www-data
+  when: not ansible_check_mode
 - name: Create config dir
   file:
     path: "/etc/{{ app_name }}"
@@ -74,6 +75,8 @@
     job: "bash {{ app_dir }}/cron/tickle.sh"
 
 # Virtualenv
+- name: Install python3-setuptools
+  package: name="python3-setuptools" state="latest"
 - name: Install virtualenv
   pip: name="virtualenv==20.0.10"
 - name: Create virtualenv

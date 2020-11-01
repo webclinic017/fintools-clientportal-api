@@ -7,5 +7,5 @@ sudo apt-get install python3
 
 Run playbook.
 ```
-ansible-playbook install.yml
+ansible-playbook install-app.yml
 ```

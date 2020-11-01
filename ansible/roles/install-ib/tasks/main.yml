@@ -10,6 +10,7 @@
     name:
     - default-jre-headless
     - jq
+    - tightvncserver
     - unzip
 
 # Install gateway
