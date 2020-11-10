@@ -9,6 +9,7 @@ cd ansible
 ansible-playbook install-ib.yml
 ```
 
+
 ## Prerequisite on nodes (likely not needed)
 /* NOT TRUE
 On Debian.
@@ -25,3 +26,5 @@ NOT TRUE */
 # Operation
 downloader.py downloads data for all tickers.  
 then we can find cheap tickers
+
+# IB

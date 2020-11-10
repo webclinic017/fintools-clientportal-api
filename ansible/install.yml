@@ -1,11 +1,10 @@
 ---
-# Deploy the fintools-ib app (data gatherer)
-# INPUT:
-# APP_NAME: (optiona) Name of the app, likely the name of GitLab project
-
+# Install the IB web API gateway and the fintools-ib app
 - hosts: all
   remote_user: root
   tasks:
+  - include_role:
+      name: install-ib
   - include_role:
       name: install-app
     vars:
