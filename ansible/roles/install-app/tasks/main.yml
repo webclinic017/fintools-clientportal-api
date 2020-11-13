@@ -21,6 +21,7 @@
     name:
     - python3
     - python3-pip
+    - libpython3.6-dev
 
 # Install app code and config
 - name: Install app code
@@ -90,10 +91,18 @@
     requirements: "{{ app_dir }}/requirements.py"
     virtualenv: "{{ app_dir }}/venv"
 
+# Upgrade pip
+# /opt/fintools-ib/venv/bin/python -m pip install --upgrade pip
+- name: Upgrade pip
+  pip:
+    name: pip
+    state: latest
+    virtualenv: "{{ app_dir }}/venv"
+
 # Uwsgi
 - name: Install uwsgi
   pip:
-    name: uwsgi==2.0.18
+    name: uwsgi
     virtualenv: "{{ app_dir }}/venv"
 - name: Install uwsgi config
   template:

@@ -28,3 +28,8 @@ downloader.py downloads data for all tickers.
 then we can find cheap tickers
 
 # IB
+
+# App
+```
+curl http://app-addr/lt/10 | jq '.'
+```
