@@ -27,6 +27,7 @@ class Company:
       self.conid = self.disk_find_by('symbol', self.symbol)
     except Exception as e:
       # Download from API as not in cache
+      print('Get conid for %s' % symbol)
       self.conid = self.down_conid()
 
   # PUBLIC METHODS
