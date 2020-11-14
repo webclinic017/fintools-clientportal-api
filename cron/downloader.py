@@ -3,7 +3,8 @@
 # It does:
 # - download nasdaq symbols
 # - download quotes
-# - download conids
+# - download conids. TODO: Only if don't yet have it
+# 45 min running time
 import atexit
 import concurrent.futures
 import config
@@ -15,8 +16,7 @@ import skip_quotes
 import urllib.request
 import urllib3
 import util
-from lib.icompany import ICompany
-
+from lib.company import Company
 
 # Config
 pidfile = '/var/run/downloader.pid'
@@ -39,6 +39,14 @@ def log(msg):
     msg
   ))
 
+def get_conid(symbol):
+  # Get conid:
+  # - if in cache, get from cache
+  # - if not in cache, get from API, add to cache
+  c = Company(symbol)
+  conid = c.get_conid()
+  print(conid)
+
 def get_quote(symbol):
   # Download conid and quote from IB
   try:
@@ -46,19 +54,14 @@ def get_quote(symbol):
     global count_perc
     global count_total
     ret = {}
-    c = ICompany(symbol)
+    conid = self.get_conid(symbol)
+    c = Company(symbol)
     quote = c.get_quote('3d', '1d')
-    conid = c.get_conid()
     count_done += 1
     if (count_done/count_total)*10 >= count_perc:
       log(str(count_perc*10) + '%')
       count_perc = count_perc + 1
-    return {
-      symbol: {
-        'conid': conid,
-        'quote': quote
-      }
-    }
+    return quote
   except Exception as e:
     # Failed to get conid, print the ticker
     raise Exception('symbol: %s: %s' %(symbol, e))
@@ -115,6 +118,8 @@ with urllib.request.urlopen(config.url_nasdaq_list) as response:
     with open(config.dir_quote + '/' + symbol + '.json', 'w') as f:
       f.write(json.dumps((quotes[symbol])['quote']))
   # Save conids
+  # TODO: This should not happen here, but earlier by updating conids
+  # TODO: file as we go
   conids = { symbol: quotes[symbol]['conid'] for symbol in quotes }
   with open(config.file_conids, 'w') as f:
     f.write(json.dumps(conids))
