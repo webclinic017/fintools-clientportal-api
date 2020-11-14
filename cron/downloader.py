@@ -12,15 +12,22 @@ import os
 import skip_quotes
 import urllib.request
 import urllib3
+import util
 from lib.icompany import ICompany
 
-url_nasdaq_list = 'ftp://ftp.nasdaqtrader.com/symboldirectory/nasdaqlisted.txt'
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-quote_dir = '/opt/fintools-ib/data/quotes'
+# Config
 conids_file = '/opt/fintools-ib/data/conids.json'
-count_total = 0
+pidfile = '/var/run/downloader.pid'
+quote_dir = '/opt/fintools-ib/data/quotes'
+url_nasdaq_list = 'ftp://ftp.nasdaqtrader.com/symboldirectory/nasdaqlisted.txt'
+
+# Settings
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+# Vars
 count_done = 0
 count_perc = 0
+count_total = 0
 
 def log(msg):
   print('%s: %s' %(
@@ -51,6 +58,13 @@ def get_quote(symbol):
   except Exception as e:
     # Failed to get conid, print the ticker
     raise Exception('symbol: %s: %s' %(symbol, e))
+
+## MAIN
+if util.is_running(pidfile):
+  print('Already running')
+  os.exit(1)
+else:
+  util.create_pid(pidfile)
 
 # Get NASDAQ symbols
 log('Starting')
@@ -99,3 +113,4 @@ with urllib.request.urlopen(url_nasdaq_list) as response:
     f.write(json.dumps(conids))
   log(conids)
 log('Finished')
+util.remove_pid(pidfile)
