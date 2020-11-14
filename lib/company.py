@@ -9,6 +9,10 @@ import urllib.request
 from ib_web_api import ContractApi
 from ib_web_api import MarketDataApi
 from ib_web_api.rest import ApiException
+# Local
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../'))
+import config
 
 # Config
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -111,18 +115,7 @@ class Company:
     # kind: conid or symbol
     # value: e.g. 1234 or AAPL
     # NOTE: Usually used to get conid from symbol
-    # data_format = [ 'symbol', 'conid' ]
-    # Throw exception if data not on disk
-    #if kind == 'symbol':
-    #  idx_kind = 0
-    #  idx_val = 1
-    #else:
-    #  idx_kind = 1
-    #  idx_val = 0
-    #with open(f_conids) as f:
-    #  lines = [line.rstrip().split(' ') for line in f]
-    #  return next(line[idx_val] for line in lines if line[idx_kind] == value)
-    with open(file_conids) as f:
+    with open(config.file_conids) as f:
       f = json.load(f)
       if kind == 'symbol':
         if value in f:
