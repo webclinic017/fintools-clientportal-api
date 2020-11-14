@@ -4,6 +4,7 @@
 # - download nasdaq symbols
 # - download quotes
 # - download conids
+import atexit
 import concurrent.futures
 import datetime
 import glob
@@ -14,6 +15,7 @@ import urllib.request
 import urllib3
 import util
 from lib.icompany import ICompany
+
 
 # Config
 conids_file = '/opt/fintools-ib/data/conids.json'
@@ -28,6 +30,10 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 count_done = 0
 count_perc = 0
 count_total = 0
+
+def exit_handler():
+  util.remove_pid(pidfile)
+atexit.register(exit_handler)
 
 def log(msg):
   print('%s: %s' %(
@@ -113,4 +119,3 @@ with urllib.request.urlopen(url_nasdaq_list) as response:
     f.write(json.dumps(conids))
   log(conids)
 log('Finished')
-util.remove_pid(pidfile)
