@@ -73,6 +73,7 @@ log('Starting')
 log('Get NASDAQ symbols and their quotes')
 quotes = {}
 with urllib.request.urlopen(config.url_nasdaq_list) as response:
+  # Get NASDAQ symbols
   symb_nasdaq = [ line.split('|')[0]
     for line in response.read().decode('utf-8').splitlines()[1:-1]
   ]

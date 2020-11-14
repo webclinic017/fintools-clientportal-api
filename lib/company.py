@@ -22,20 +22,14 @@ class Company:
   # Constructor
   def __init__(self, symbol):
     self.symbol = symbol
+    try:
+      # Get conid from cache
+      self.conid = self.disk_find_by('symbol', self.symbol)
+    except Exception as e:
+      # Download from API as not in cache
+      self.conid = self.down_conid()
 
   # PUBLIC METHODS
-  def get_conid(self):
-    # Get conid from cache, or from API if not known
-    # TODO: Get conid here from disk
-    if self.conid is None:
-      try:
-        # Try to get from disk
-        return self.find_by('symbol', self.symbol)
-      except Exception as e:
-        # Download from API as not in cache
-        self.conid = self.down_conid()
-        return self.conid
-
   def get_quote(self, period, bar):
     # Get conid, then quote
     try:
