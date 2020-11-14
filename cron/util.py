@@ -8,7 +8,7 @@ def is_running(pidfile):
     return False
 
 def create_pid(pidfile):
-  file(pidfile, 'w').write(os.getpid())
+  open(pidfile, 'w').write(os.getpid())
 
 def remove_pid(pidfile):
   os.unlink(pidfile)
