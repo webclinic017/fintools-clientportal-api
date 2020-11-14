@@ -7,6 +7,7 @@
 # Could not get symbol BURG only
 import argparse
 import concurrent.futures
+import config
 import glob
 import ib_web_api
 import json
@@ -18,9 +19,6 @@ from lib.company import Company
 from lib.icompany import ICompany
 from ib_web_api import MarketDataApi
 
-dir_quote = '/opt/fintools-ib/data/quotes'
-dir_day = '/opt/fintools-ib/data/day'
-url_cheap_symbols = 'http://5.152.176.191/lt/3'
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 debug = False
 count_total = 0
@@ -56,7 +54,7 @@ parser.add_argument('symbols',
 args = parser.parse_args()
 
 # Get cheap symbols
-with urllib.request.urlopen(url_cheap_symbols) as response:
+with urllib.request.urlopen(config.url_cheap_symbols) as response:
   symbols = json.loads(response.read().decode('utf-8'))
   day_quotes = {}
   if debug is True:
@@ -78,10 +76,10 @@ with urllib.request.urlopen(url_cheap_symbols) as response:
         pass
   # Save to day dir
   print('Got %i quotes' % len(day_quotes))
-  for f in glob.glob(dir_day + '/*.json'):
+  for f in glob.glob(config.dir_day + '/*.json'):
     os.remove(f)
   for symbol in day_quotes:
-    f_path = dir_day + '/' + symbol + '.json'
+    f_path = config.dir_day + '/' + symbol + '.json'
     with open(f_path, 'w') as f:
       if day_quotes[symbol] is not None:
         f.write(json.dumps(day_quotes[symbol]))

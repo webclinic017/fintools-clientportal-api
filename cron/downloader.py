@@ -6,6 +6,7 @@
 # - download conids
 import atexit
 import concurrent.futures
+import config
 import datetime
 import glob
 import json
@@ -18,10 +19,7 @@ from lib.icompany import ICompany
 
 
 # Config
-conids_file = '/opt/fintools-ib/data/conids.json'
 pidfile = '/var/run/downloader.pid'
-quote_dir = '/opt/fintools-ib/data/quotes'
-url_nasdaq_list = 'ftp://ftp.nasdaqtrader.com/symboldirectory/nasdaqlisted.txt'
 
 # Settings
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -76,7 +74,7 @@ else:
 log('Starting')
 log('Get NASDAQ symbols and their quotes')
 quotes = {}
-with urllib.request.urlopen(url_nasdaq_list) as response:
+with urllib.request.urlopen(config.url_nasdaq_list) as response:
   symb_nasdaq = [ line.split('|')[0]
     for line in response.read().decode('utf-8').splitlines()[1:-1]
   ]
@@ -108,14 +106,14 @@ with urllib.request.urlopen(url_nasdaq_list) as response:
     exit(1)
   # Save to quotes dir
   log('Save quotes to dir')
-  for f in glob.glob(quote_dir + '/*.json'):
+  for f in glob.glob(config.dir_quote + '/*.json'):
     os.remove(f)
   for symbol in quotes:
-    with open(quote_dir + '/' + symbol + '.json', 'w') as f:
+    with open(config.dir_quote + '/' + symbol + '.json', 'w') as f:
       f.write(json.dumps((quotes[symbol])['quote']))
   # Save conids
   conids = { symbol: quotes[symbol]['conid'] for symbol in quotes }
-  with open(conids_file, 'w') as f:
+  with open(config.file_conids, 'w') as f:
     f.write(json.dumps(conids))
   log(conids)
 log('Finished')
