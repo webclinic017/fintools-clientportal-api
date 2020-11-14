@@ -30,8 +30,15 @@ class Company:
       self.conid = self.disk_find_by('symbol', self.symbol)
     except Exception as e:
       # Download from API as not in cache
+      # NOTE: This should be rare, so print it
       print('Get conid for %s' % symbol)
       self.conid = self.down_conid()
+      # Save newly found conid to disk
+      with open(config.file_conids, 'w') as f:
+        conids = json.loads(f.read())
+        conids[symbol] = self.conid
+        f.write(json.dumps(conids))
+
 
   # PUBLIC METHODS
   def get_quote(self, period, bar):
