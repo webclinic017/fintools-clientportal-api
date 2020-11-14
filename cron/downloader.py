@@ -62,7 +62,7 @@ def get_quote(symbol):
 ## MAIN
 if util.is_running(pidfile):
   print('Already running')
-  os.exit(1)
+  exit(1)
 else:
   util.create_pid(pidfile)
 
