@@ -5,9 +5,9 @@
 # - download quotes
 # - download conids. TODO: Only if don't yet have it
 # 45 min running time
+# OS
 import atexit
 import concurrent.futures
-import config
 import datetime
 import glob
 import json
@@ -17,6 +17,10 @@ import urllib.request
 import urllib3
 import util
 from lib.company import Company
+# Local
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../'))
+import config
 
 # Config
 pidfile = '/var/run/downloader.pid'
@@ -67,6 +71,7 @@ if util.is_running(pidfile):
   exit(1)
 else:
   util.create_pid(pidfile)
+
 
 # Get NASDAQ symbols
 log('Starting')
