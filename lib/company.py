@@ -11,7 +11,6 @@ from ib_web_api import MarketDataApi
 from ib_web_api.rest import ApiException
 
 # Config
-f_conids = 'data/conids.json'
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 class Company:
@@ -123,7 +122,7 @@ class Company:
     #with open(f_conids) as f:
     #  lines = [line.rstrip().split(' ') for line in f]
     #  return next(line[idx_val] for line in lines if line[idx_kind] == value)
-    with open(f_conids) as f:
+    with open(file_conids) as f:
       f = json.load(f)
       if kind == 'symbol':
         if value in f:
