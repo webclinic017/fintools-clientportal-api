@@ -54,7 +54,7 @@ def get_quote(symbol):
     global count_perc
     global count_total
     ret = {}
-    conid = self.get_conid(symbol)
+    conid = get_conid(symbol)
     c = Company(symbol)
     quote = c.get_quote('3d', '1d')
     count_done += 1
