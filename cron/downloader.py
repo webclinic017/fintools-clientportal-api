@@ -29,9 +29,11 @@ count_done = 0
 count_perc = 0
 count_total = 0
 
+
 def exit_handler():
   util.remove_pid(pidfile)
 atexit.register(exit_handler)
+
 
 def log(msg):
   print('%s: %s' %(
@@ -39,13 +41,6 @@ def log(msg):
     msg
   ))
 
-def get_conid(symbol):
-  # Get conid:
-  # - if in cache, get from cache
-  # - if not in cache, get from API, add to cache
-  c = Company(symbol)
-  conid = c.get_conid()
-  print(conid)
 
 def get_quote(symbol):
   # Download conid and quote from IB
@@ -54,7 +49,6 @@ def get_quote(symbol):
     global count_perc
     global count_total
     ret = {}
-    conid = get_conid(symbol)
     c = Company(symbol)
     quote = c.get_quote('3d', '1d')
     count_done += 1
@@ -65,6 +59,7 @@ def get_quote(symbol):
   except Exception as e:
     # Failed to get conid, print the ticker
     raise Exception('symbol: %s: %s' %(symbol, e))
+
 
 ## MAIN
 if util.is_running(pidfile):
@@ -101,7 +96,7 @@ with urllib.request.urlopen(config.url_nasdaq_list) as response:
       try:
         quotes.update(future.result())
       except Exception as e:
-        # Failed to get conid, skip
+        # Failed to get quote for conid: add conid to skip list, and skip
         if "'NoneType' object has no attribute points" in e \
           and 'W:' in e:
           print('Add conid %s to skip list' % symbol)
