@@ -99,8 +99,11 @@ with urllib.request.urlopen(config.url_nasdaq_list) as response:
         quotes.update(future.result())
       except Exception as e:
         # Failed to get conid, skip
-        log('Could not get conid: %s' % e)
-        pass
+        if "'NoneType' object has no attribute points" in e \
+          and 'W:' in e:
+          print('Add conid %s to skip list' % symbol)
+        else:
+          log('Could not get conid: %s' % e)
   if len(quotes) == 0:
     log('Could not get quotes')
     exit(1)
