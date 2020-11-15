@@ -72,7 +72,11 @@ if util.is_running(pidfile):
 else:
   util.create_pid(pidfile)
 
-util.check_ib_connectivity()
+try:
+  util.check_ib_connectivity()
+except Exception as e:
+  print('No IB connectivity')
+  exit(1)
 
 
 # Get NASDAQ symbols

@@ -30,10 +30,12 @@ def check_conidsfile(file_conids):
       f.write(json.dumps(conids))
 
 def check_ib_connectivity():
-  # Instantiate API class
-  config = ib_web_api.Configuration()
-  config.verify_ssl = False
-  client = ib_web_api.ApiClient(config)
-  api = SessionApi(client)
-  res = api.iserver_auth_status_post()
-  print('RES', res)
+  try:
+    # Instantiate API class
+    config = ib_web_api.Configuration()
+    config.verify_ssl = False
+    client = ib_web_api.ApiClient(config)
+    api = SessionApi(client)
+    res = api.iserver_auth_status_post()
+  except Exception as e:
+    raise('No IB connectivity')
