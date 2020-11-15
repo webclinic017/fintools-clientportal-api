@@ -8,11 +8,34 @@
 - name: Install prerequisites
   apt:
     pkg:
+    - arora # browser
     - default-jre-headless
+    - i3
+    - i3status
+    - j4-dmenu-desktop
     - jq
+    - network-manager
+    - suckless-tools
+    - surf # browser
+    - tigervnc-common
     - unzip
-    - tigervnc-standalone-server
+    - x11-xserver-utils
+    - xss-lock
+    - xterm
     update_cache: yes
+
+# Install VNC config
+- name: Install VNC config
+  copy:
+    src: xstartup
+    dest: '/home/konrad/.vnc/xstartup'
+    owner: konrad
+    group: konrad
+
+- name: Touch xresources
+  file:
+    path: /home/konrad/.Xresources
+    state: touch
 
 # Install gateway
 - name: Create dir for ib-gw

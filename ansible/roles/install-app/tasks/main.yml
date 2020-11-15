@@ -91,6 +91,11 @@
     requirements: "{{ app_dir }}/requirements.py"
     virtualenv: "{{ app_dir }}/venv"
 
+- name: Install other prerequisites (useful for testing)
+  pip:
+    name:
+      - git+https://gitlab.com/konradp/ib_web_api.git
+
 # Upgrade pip
 # /opt/fintools-ib/venv/bin/python -m pip install --upgrade pip
 - name: Upgrade pip
@@ -119,11 +124,10 @@
     src: files/service.j2
     dest: /etc/systemd/system/{{ app_name }}.service
   notify: Reload systemd
+- name: Force handler reload systemd
+  meta: flush_handlers
 - name: Enable and start app uwsgi service
-  systemd:
-    name: "{{ app_name }}"
-    state: started
-    enabled: yes
+  shell: "systemctl enable {{ app_name }}; systemctl start {{ app_name }}"
 
 # Nginx
 - name: Install nginx
@@ -145,7 +149,4 @@
     state: link
   notify: Restart nginx
 - name: Enable and start nginx
-  service:
-    name: nginx
-    state: started
-    enabled: yes
+  shell: "systemctl enable nginx; systemctl start nginx"
