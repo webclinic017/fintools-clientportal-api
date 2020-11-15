@@ -35,7 +35,7 @@ class Company:
       self.conid = self.down_conid()
       print(self.symbol, self.conid)
       # Save newly found conid to disk
-      with open(config.file_conids, 'w') as f:
+      with open(config.file_conids, 'r+') as f:
         conids = json.loads(f.read())
         conids[symbol] = self.conid
         f.write(json.dumps(conids))
