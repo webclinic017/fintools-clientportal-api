@@ -81,9 +81,6 @@ except Exception as e:
 
 # Get NASDAQ symbols
 log('Starting')
-log('Init')
-util.check_conidsfile(config.file_conids)
-
 log('Get NASDAQ symbols and their quotes')
 quotes = {}
 with urllib.request.urlopen(config.url_nasdaq_list) as response:

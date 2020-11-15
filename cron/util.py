@@ -20,16 +20,6 @@ def create_pid(pidfile):
 def remove_pid(pidfile):
   os.unlink(pidfile)
 
-def check_conidsfile(file_conids):
-  try:
-    with open(config.file_conids, 'r') as f:
-      f = json.load(f)
-  except Exception as e:
-    # File in bad format, create empty
-    print('Bad conids file. Creating empty')
-    with open(config.file_conids, 'w') as f:
-      f.write(json.dumps({}))
-
 def check_ib_connectivity():
   try:
     # Instantiate API class

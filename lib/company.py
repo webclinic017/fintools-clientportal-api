@@ -35,12 +35,8 @@ class Company:
         print('Get conid for %s' % symbol)
         self.conid = self.down_conid()
         print(self.symbol, self.conid)
-        with open(config.file_conids, 'r') as f:
-          # Save newly found conid to disk
-          conids = json.loads(f.read())
-          with open(config.file_conids, 'w') as f:
-            conids[self.symbol] = self.conid
-            f.write(json.dumps(conids))
+        with open(config.file_conids, 'w') as f:
+          f.write(self.conid)
       except Exception as e:
         print('Could not save conid: %s' % e)
 
@@ -126,14 +122,13 @@ class Company:
     # kind: conid or symbol
     # value: e.g. 1234 or AAPL
     # NOTE: Usually used to get conid from symbol
-    with open(config.file_conids) as f:
-      f = json.load(f)
-      if kind == 'symbol':
-        if value in f:
-          return f[value]
-        else:
-          raise Exception('Symbol %s not found' % value)
-      else:
-        for symbol, conid in f.items():
-          if conid == value:
-            return symbol
+    f = json.load(f)
+    if kind == 'symbol':
+      symbol = value
+      try:
+        with open(config.dir_conids + '/' + symbol, 'r') as f:
+          return f.read()
+      except Exception as e:
+        raise Exception('Symbol %s not found' % symbol)
+    else:
+      raise Exception('Search by conids not yet implemented')
