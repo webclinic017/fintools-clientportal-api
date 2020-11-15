@@ -29,17 +29,20 @@ class Company:
       # Get conid from cache
       self.conid = self.disk_find_by('symbol', self.symbol)
     except Exception as e:
-      # Download from API as not in cache
-      # NOTE: This should be rare, so print it
-      print('Get conid for %s' % symbol)
-      self.conid = self.down_conid()
-      print(self.symbol, self.conid)
-      # Save newly found conid to disk
-      with open(config.file_conids, 'r+') as f:
-        conids = json.loads(f.read())
-        conids[symbol] = self.conid
-        f.write(json.dumps(conids))
-
+      try:
+        # Download from API as not in cache
+        # NOTE: This should be rare, so print it
+        print('Get conid for %s' % symbol)
+        self.conid = self.down_conid()
+        print(self.symbol, self.conid)
+        with open(config.file_conids, 'r') as f:
+          # Save newly found conid to disk
+          conids = json.loads(f.read())
+          with open(config.file_conids, 'w') as f:
+            conids[self.symbol] = self.conid
+            f.write(json.dumps(conids))
+      except Exception as e:
+        print('Could not save conid: %s' % e)
 
   # PUBLIC METHODS
   def get_quote(self, period, bar):
