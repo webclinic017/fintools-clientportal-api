@@ -1,5 +1,8 @@
+import json
 import os
 import sys
+# Local
+import config
 
 def is_running(pidfile):
   if os.path.isfile(pidfile):
@@ -19,5 +22,5 @@ def check_conidsfile(file_conids):
       f = json.load(f)
     except Exception as e:
       # File in bad format, create empty
-      conids = []
+      conids = {}
       f.write(json.dumps(conids))
