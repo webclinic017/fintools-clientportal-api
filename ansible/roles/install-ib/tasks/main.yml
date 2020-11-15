@@ -6,12 +6,13 @@
 
 # OS prerequisites
 - name: Install prerequisites
-  package:
-    name:
+  apt:
+    pkg:
     - default-jre-headless
     - jq
     - unzip
     - x11vnc
+    update_cache: yes
 
 # Install gateway
 - name: Create dir for ib-gw
