@@ -11,7 +11,7 @@
     - default-jre-headless
     - jq
     - unzip
-    - x11vnc
+    - tigervnc-standalone-server
     update_cache: yes
 
 # Install gateway
