@@ -1,6 +1,9 @@
 import json
 import os
 import sys
+# IB
+from ib_web_api import SessionApi
+from ib_web_api.rest import ApiException
 # Local
 import config
 
@@ -24,3 +27,12 @@ def check_conidsfile(file_conids):
       # File in bad format, create empty
       conids = {}
       f.write(json.dumps(conids))
+
+def check_ib_connectivity():
+  # Instantiate API class
+  config = ib_web_api.Configuration()
+  config.verify_ssl = False
+  client = ib_web_api.ApiClient(config)
+  api = SessionApi(client)
+  res = api.iserver_auth_status_post()
+  print('RES', res)

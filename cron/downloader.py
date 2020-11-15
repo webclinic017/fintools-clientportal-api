@@ -72,6 +72,8 @@ if util.is_running(pidfile):
 else:
   util.create_pid(pidfile)
 
+util.check_ib_connectivity()
+
 
 # Get NASDAQ symbols
 log('Starting')
