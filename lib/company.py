@@ -33,6 +33,7 @@ class Company:
       # NOTE: This should be rare, so print it
       print('Get conid for %s' % symbol)
       self.conid = self.down_conid()
+      print(self.symbol, self.conid)
       # Save newly found conid to disk
       with open(config.file_conids, 'w') as f:
         conids = json.loads(f.read())
