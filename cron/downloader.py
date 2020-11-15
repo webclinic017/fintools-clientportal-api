@@ -15,12 +15,12 @@ import os
 import skip_quotes
 import urllib.request
 import urllib3
-import util
-from lib.company import Company
 # Local
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../'))
 import config
+import util
+from lib.company import Company
 
 # Config
 pidfile = '/var/run/downloader.pid'
@@ -75,6 +75,9 @@ else:
 
 # Get NASDAQ symbols
 log('Starting')
+log('Init')
+util.check_conidsfile(config.file_conids)
+
 log('Get NASDAQ symbols and their quotes')
 quotes = {}
 with urllib.request.urlopen(config.url_nasdaq_list) as response:
