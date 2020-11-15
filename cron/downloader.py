@@ -18,7 +18,7 @@ import urllib3
 # Local
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../'))
-import cron.config
+import config
 import util
 from lib.company import Company
 
