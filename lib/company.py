@@ -35,7 +35,7 @@ class Company:
         print('Get conid for %s' % symbol)
         self.conid = self.down_conid()
         print(self.symbol, self.conid)
-        with open(config.file_conids, 'w') as f:
+        with open(config.dir_conids + '/' + symbol, 'w') as f:
           f.write(self.conid)
       except Exception as e:
         print('Could not save conid: %s' % e)
