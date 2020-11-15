@@ -21,12 +21,13 @@ def remove_pid(pidfile):
   os.unlink(pidfile)
 
 def check_conidsfile(file_conids):
-  with open(config.file_conids, 'r+') as f:
-    try:
+  try:
+    with open(config.file_conids, 'r+') as f:
       f = json.load(f)
-    except Exception as e:
-      # File in bad format, create empty
-      print('Bad conids file. Creating empty')
+  except Exception as e:
+    # File in bad format, create empty
+    print('Bad conids file. Creating empty')
+    with open(config.file_conids, 'a') as f:
       conids = {}
       f.write(json.dumps(conids))
 
