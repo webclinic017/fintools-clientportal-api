@@ -10,8 +10,8 @@
     name:
     - default-jre-headless
     - jq
-    - tightvncserver
     - unzip
+    - x11vnc
 
 # Install gateway
 - name: Create dir for ib-gw
