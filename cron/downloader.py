@@ -48,6 +48,7 @@ def log(msg):
 
 def get_quote(symbol):
   # Download conid and quote from IB
+  # Also, update count percentage
   try:
     global count_done
     global count_perc
@@ -95,9 +96,6 @@ with urllib.request.urlopen(config.url_nasdaq_list) as response:
     if symbol not in skip_quotes.symbols
   ]
   count_total = len(symb_nasdaq)
-  # DEBUG: Get only few symbols
-  #symb_nasdaq = symb_nasdaq[1:50]
-  # END DEBUG
   with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
     future_to_data = {
       executor.submit(get_quote, symbol): symbol
