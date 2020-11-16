@@ -12,10 +12,10 @@ ansible-playbook install-ib.yml
 # Operation
 Consists of:
 
-- downloader.py: download symbols, conids, quotes (3679 of them)
-    - conids are fast to download
-    - quotes are for today's price: quotes should be previous day price, generate them after market close
-- downloader-day.py: for cheap tickers (defined in config, e.g. less than $3/share, download today's data)
+- **downloader.py**: download symbols, conids, quotes (3679 of them)
+    - conids: fast to download
+    - quotes: for today's price: quotes should be previous day price, generate them after market close
+- **downloader-day.py**: for cheap tickers (defined in config, e.g. less than $3/share, download today's data)
 
 ## downloader.py
 Run this once a day or less.  
