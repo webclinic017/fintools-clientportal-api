@@ -9,20 +9,6 @@ cd ansible
 ansible-playbook install-ib.yml
 ```
 
-
-## Prerequisite on nodes (likely not needed)
-/* NOT TRUE
-On Debian.
-```
-apt-get install -y python-minimal
-```
-On CentOS it's more involved.
-```
-sudo yum -y install https://centos7.iuscommunity.org/ius-release.rpm
-sudo yum -y install python36u
-```
-NOT TRUE */
-
 # Operation
 Consists of:
 
