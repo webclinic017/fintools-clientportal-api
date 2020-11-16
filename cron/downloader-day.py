@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-# Download today's data for tickers under $1/share
+# Download today's data for cheap tickers (defined elsewhere)
 # Optionally, supply list of tickers, e.g.
 # ./$0 AAPL AMZN
-# 6min25s with 100 workers, price 3
-# 7min7s with 400 wokers, price 3
+# Running time:
+# - 6 min 25s with 100 workers, price 3
+# - 7 min 7s with 400 wokers, price 3
 # Could not get symbol BURG only
 import argparse
 import concurrent.futures

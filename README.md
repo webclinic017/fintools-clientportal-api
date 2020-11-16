@@ -24,8 +24,27 @@ sudo yum -y install python36u
 NOT TRUE */
 
 # Operation
-downloader.py downloads data for all tickers.  
-then we can find cheap tickers
+Consists of:
+
+- downloader.py: download symbols, conids, quotes
+- downloader-day.py: for cheap tickers (defined in config, e.g. less than $3/share, download today's data)
+
+## downloader.py
+Run this once a day or less.  
+
+It does:
+- get NASDAQ tickers
+- download cnids: convert tickers to conids
+- download quotes
+
+Conids are saved to:
+
+- /opt/fintools-ib/data/conids
+
+The conids are what IB uses instead of tickers, such as AAPL.
+
+## downloader-day.py
+?
 
 # IB
 
