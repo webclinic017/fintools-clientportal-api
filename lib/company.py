@@ -34,7 +34,6 @@ class Company:
         # NOTE: This should be rare, so print it
         print('Get conid for %s: %s' % (symbol, e))
         self.conid = self.down_conid()
-        print(self.symbol, self.conid)
         with open(config.dir_conids + '/' + symbol, 'w') as f:
           f.write(str(self.conid))
       except Exception as e:
@@ -58,7 +57,6 @@ class Company:
       return self.down_quote(self.conid, period, bar)
     except ApiException as e:
       raise Exception('Could not get quote: %s\n' % self.conid)
-
 
 
   # PRIVATE
