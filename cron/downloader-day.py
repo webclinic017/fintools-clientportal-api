@@ -8,7 +8,6 @@
 # Could not get symbol BURG only
 import argparse
 import concurrent.futures
-import config
 import glob
 import ib_web_api
 import json
@@ -19,6 +18,11 @@ import urllib.request
 from lib.company import Company
 from lib.icompany import ICompany
 from ib_web_api import MarketDataApi
+# Local
+# Local
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../'))
+import config
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 debug = False
