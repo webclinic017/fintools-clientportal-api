@@ -1,0 +1,32 @@
+---
+# Install app:
+# - app
+
+# OS prerequisites
+- name: Install node and npm
+  package:
+    name:
+    - nodejs
+    - npm
+
+- name: Install app code
+  git:
+    repo: https://gitlab.com/konradp/fintools-ib.git
+    dest: "{{ dir_parent }}"
+    version: master
+
+# Install app
+- name: Install app
+  npm:
+    path: "{{ dir_app }}"
+
+# Service
+- name: Install app service
+  template:
+    src: files/service.j2
+    dest: /etc/systemd/system/{{ app_name }}.service
+  notify: Reload systemd
+- name: Force handler reload systemd
+  meta: flush_handlers
+- name: Enable and start app uwsgi service
+  shell: "systemctl enable {{ app_name }}; systemctl start {{ app_name }}"

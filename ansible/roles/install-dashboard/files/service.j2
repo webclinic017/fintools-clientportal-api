@@ -1,0 +1,17 @@
+[Unit]
+Description=fintools-ib dashboard
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/node {{ dir_app }}/server.js
+Restart=always
+#User=www-data
+#Group=www-data
+User=nobody
+Group=nogroup
+WorkingDirectory={{ dir_app }}
+Environment=PATH=/usr/bin:/usr/local/bin
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target

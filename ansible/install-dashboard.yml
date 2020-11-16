@@ -1,0 +1,10 @@
+---
+# Deploy the fintools-ib dashboard
+# INPUT:
+# APP_NAME: (optiona) Name of the app, likely the name of GitLab project
+
+- hosts: all
+  remote_user: root
+  tasks:
+  - include_role:
+      name: install-dashboard

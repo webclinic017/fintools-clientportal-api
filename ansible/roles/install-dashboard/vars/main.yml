@@ -1,0 +1,4 @@
+---
+app_name: fintools-ib-dashboard
+dir_parent: '/opt/fintools-ib'
+dir_app: "{{ dir_parent }}/dashboard"

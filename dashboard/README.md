@@ -1,8 +1,20 @@
-# fintools-ib
+# fintools-ib-dashboard
 
-Replacement for fintools, using IB Client API beta.
+A dashboard which shows graphs and auth status.
 
-# Quickstart
+WORK IN PROGRESS.  
+Run the install-dashboard.yml playbook.  
+npm start  
+Then go to  
+http://localhost:8080
+
+
+
+# Old: Quickstart
+This was for when I would start this app from a shell script.  
+It has now been converted do systemd services.
+
+
 Run IB gateway, keepalive, and start the client.
 ```
 ./start.sh
