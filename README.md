@@ -22,7 +22,7 @@ Run this once a day or less.
 
 It does:
 - get NASDAQ tickers
-- download cnids: convert tickers to conids
+- download conids: convert tickers to conids
 - download quotes
 
 Conids are saved to:
