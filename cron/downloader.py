@@ -55,7 +55,7 @@ def get_quote(symbol):
     global count_total
     ret = {}
     c = Company(symbol)
-    quote = c.get_quote('3d', '1d')
+    quote = c.get_quote(period='3d', bar='1d')
     count_done += 1
     if (count_done/count_total)*10 >= count_perc:
       log(str(count_perc*10) + '%')

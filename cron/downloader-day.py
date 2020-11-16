@@ -16,7 +16,6 @@ import pprint
 import urllib3
 import urllib.request
 from lib.company import Company
-from lib.icompany import ICompany
 from ib_web_api import MarketDataApi
 # Local
 # Local
@@ -34,10 +33,8 @@ def get_quote(symbol):
   global count_total
   global count_progress
   global count_perc
-  conid = Company(symbol).get_conid()
-  company = ICompany(conid)
   try:
-    quote = ICompany(conid).get_quote('1d', '1min')
+    quote = Company(symbol).get_quote(period='1d', bar='1min')
     # Log progress
     count_progress += 1
     if (count_progress/count_total)*10 >= count_perc:
