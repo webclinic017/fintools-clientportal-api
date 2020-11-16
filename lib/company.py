@@ -32,7 +32,7 @@ class Company:
       try:
         # Download from API as not in cache
         # NOTE: This should be rare, so print it
-        print('Get conid for %s' % symbol)
+        print('Get conid for %s: %s' % (symbol, e))
         self.conid = self.down_conid()
         print(self.symbol, self.conid)
         with open(config.dir_conids + '/' + symbol, 'w') as f:
@@ -122,11 +122,11 @@ class Company:
     # kind: conid or symbol
     # value: e.g. 1234 or AAPL
     # NOTE: Usually used to get conid from symbol
-    f = json.load(f)
     if kind == 'symbol':
       symbol = value
       try:
-        with open(config.dir_conids + '/' + symbol, 'r') as f:
+        file_conid = config.dir_conids + '/' + symbol
+        with open(file_conid, 'r') as f:
           return f.read()
       except Exception as e:
         raise Exception('Symbol %s not found' % symbol)
