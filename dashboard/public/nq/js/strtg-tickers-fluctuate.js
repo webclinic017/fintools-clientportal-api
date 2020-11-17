@@ -1,7 +1,7 @@
 // Load API token
 var debug = false;
 var base = location.href.substring(0, location.href.lastIndexOf("/"));
-var kUrlIb = 'http://localhost:8080/';
+var kUrlIb = '/';
 var missedTickers = [];
 var data = {};
 var tickerCount = 0;

@@ -2,7 +2,7 @@
 var debug = false;
 var base = location.href.substring(0, location.href.lastIndexOf("/"));
 var kUrlBase = 'https://cloud.iexapis.com/stable/';
-var kUrlIb = 'http://localhost:8080/';
+var kUrlIb = '/';
 
 // CORS Request
 function createRequest(method, url) {
