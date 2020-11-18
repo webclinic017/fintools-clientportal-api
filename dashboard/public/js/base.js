@@ -1,46 +1,41 @@
 var base = location.href.substring(0, location.href.lastIndexOf("/"));
 
 // Menu
-items = {
-  nasdaq: [
-    [ 'demo',                    'Demo: finplots chart' ],
-    [ 'ticker-to-conid',         'ticker  -> conid' ],
-    [ 'ticker-to-chart',         'ticker  -> chart' ],
-    [ 'chart-day',               'ticker  -> chart (day)' ],
-    [ 'chart-list',              'tickers -> chart' ],
-    [ 'strtg-tickers-fluctuate', 'Strategy: tickers -> fluctuate' ],
-    [ 'scan-top-gain',           'Scanner: Top gainers' ]
-  ],
-};
+items = [
+  [ 'demo',                    'Demo: finplots chart' ],
+  [ 'ticker-to-conid',         'ticker  -> conid' ],
+  [ 'ticker-to-chart',         'ticker  -> chart' ],
+  [ 'chart-day',               'ticker  -> chart (day)' ],
+  [ 'chart-list',              'tickers -> chart' ],
+  [ 'strtg-tickers-fluctuate', 'Strategy: tickers -> fluctuate' ],
+  [ 'scan-top-gain',           'Scanner: Top gainers' ]
+];
 var d = document;
-var menu = d.getElementById('menu');
-Array('nasdaq').forEach((exch) => {
-  var div = d.createElement('div')
-  div.style = 'display: inline-block;';
-  var h3 = d.createElement('h3')
-  h3.innerHTML = exch.toUpperCase();
-  div.appendChild(h3);
-  menu.appendChild(div);
-  var ul = d.createElement('ul')
-  // Home
-  var li = d.createElement('li');
-  var a = d.createElement('a');
-  a.href = '/';
-  a.innerHTML = 'Home';
+var menu = d.getElementById('other-tools');
+var div = d.createElement('div')
+div.style = 'display: inline-block;';
+var h3 = d.createElement('h1')
+menu.appendChild(div);
+var ul = d.createElement('ul')
+// Home
+var li = d.createElement('li');
+var a = d.createElement('a');
+a.href = '/';
+a.innerHTML = 'Home';
+li.appendChild(a);
+ul.appendChild(li);
+for (i in items) {
+  li = d.createElement('li');
+  a = d.createElement('a');
+  // href
+  var item = items[i];
+  a.href = 'nq-' + item[0] + ".html";
+  a.innerHTML = item[1];
   li.appendChild(a);
   ul.appendChild(li);
-  for (i in items[exch]) {
-    li = d.createElement('li');
-    a = d.createElement('a');
-    var item = items[exch][i];
-    a.href = item[0] + ".html";
-    a.innerHTML = item[1];
-    li.appendChild(a);
-    ul.appendChild(li);
-  }
-  div.appendChild(ul);
-  menu.appendChild(div);
-})
+}
+div.appendChild(ul);
+menu.appendChild(div);
 
 window.addEventListener('load', function() {
   if (typeof main === 'function') {
