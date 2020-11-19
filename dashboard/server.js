@@ -137,7 +137,7 @@ function getChartTwoDay(ticker, exchange) {
 // Serve rest from 'public' dir
 app.use(express.static('public'))
 
-app.get('/status', (res) => {
+app.get('/status', (req,res) => {
   // Need to call this twice
   var url = '/v1/portal/iserver/auth/status';
   ibRequest('GET', url)
