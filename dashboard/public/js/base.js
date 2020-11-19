@@ -118,7 +118,7 @@ function getStatus() {
         }
       })
       .catch((err) => {
-        stat.innerHTML = 'FAIL';
+        stat.innerHTML = 'FAIL. Try <a href="https://192.168.0.100:5000">auth</a>, or if not working, checkc ib-gw service';
         reject(err);
       });
   })

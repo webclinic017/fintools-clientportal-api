@@ -41,6 +41,12 @@ The conids are what IB uses instead of tickers, such as AAPL.
 ?
 
 # IB
+Check service running, or run it
+TODO: Make this a service.
+```
+cd /opt/ib-gw
+./bin/run.sh root/conf.yaml >> /var/log/ib-gw.log &
+```
 
 # App
 ```
