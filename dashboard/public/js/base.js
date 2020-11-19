@@ -110,8 +110,12 @@ function getStatus() {
     const stat = document.getElementById('status');
     createRequest('GET', '/status')
       .then((res) => {
-        stat.innerHTML = 'Success';
-        resolve(res);
+        if (res['authenticated'] == true && res['connected'] == true) {
+          stat.innerHTML = 'Success';
+          resolve(res);
+        } else {
+          throw 'IB says we are either not authenticated or not connected';
+        }
       })
       .catch((err) => {
         stat.innerHTML = 'FAIL';
