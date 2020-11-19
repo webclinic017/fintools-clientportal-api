@@ -137,6 +137,24 @@ function getChartTwoDay(ticker, exchange) {
 // Serve rest from 'public' dir
 app.use(express.static('public'))
 
+app.get('/status', (res) => {
+  // Need to call this twice
+  var url = '/v1/portal/iserver/auth/status';
+  ibRequest('GET', url)
+  .then((s) => {
+    debug = true;
+    if (debug) console.log(s);
+    if (s.data.error != null) throw s.data.error;
+    var ret = [];
+    var s = s.data;
+    res.setHeader('Content-Type', 'application/json');
+    res.send(s);
+  }).catch((err) => {
+    res.status(400).json({ error: err });
+    console.log('ERROR: ' + err);
+  }) //ibRequest
+});
+
 app.get('/snapshot/:tickers', (req,res) => {
   // tickers = list of conids, coma separated
   // Need to call this twice
