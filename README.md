@@ -17,6 +17,12 @@ Consists of:
     - quotes: for today's price: quotes should be previous day price, generate them after market close
 - **downloader-day.py**: for cheap tickers (defined in config, e.g. less than $3/share, download today's data)
 
+## dashboard
+http://fintools-ib:8080/
+```
+service fintools-ib-dashboard status
+```
+
 ## downloader.py
 Run this once a day or less.  
 
