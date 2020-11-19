@@ -151,7 +151,7 @@ app.get('/status', (req,res) => {
     res.send(s);
   }).catch((err) => {
     res.status(400).json({ error: err });
-    console.log('ERROR: ' + err);
+    console.log('ERROR: Unauthenticated')
   }) //ibRequest
 });
 
