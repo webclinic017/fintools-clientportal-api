@@ -48,7 +48,7 @@ cd /opt/ib-gw
 ./bin/run.sh root/conf.yaml >> /var/log/ib-gw.log &
 ```
 
-# App
+# fintools-ib: App (API)
 ```
-curl http://app-addr/lt/10 | jq '.'
+curl http://app-addr:80/lt/10 | jq '.'
 ```
