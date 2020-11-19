@@ -106,16 +106,14 @@ function getWinners() {
 function getStatus() {
   console.log('Check IB connectivity status on load');
   //return new Promise((resolve, reject) => {
+  const stat = document.getElementById('status');
   createRequest('GET', '/status')
     .then((res) => {
-      console.log('YESS');
-      //resolve(res);
+      stat.innerHTML = 'Success';
     })
     .catch((err) => {
-      console.log('NOOOO');
-      //reject(err);
+      stat.innerHTML = 'FAIL';
     });
-  //})
 };
 
 function main() {
