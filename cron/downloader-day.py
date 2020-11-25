@@ -92,4 +92,4 @@ try:
 except urllib.error.URLError as e:
   print('Failed getting %s: %s %s' % (e.url, e.code, e.msg))
 except Exception as e:
-  print('Failed getting cheap symbols')
+  print('Failed getting cheap symbols', e)
