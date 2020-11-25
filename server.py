@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # Taken from https://en.wikipedia.org/wiki/Flask_(web_framework)
+# This is the API
 import json
 import os
 import requests
