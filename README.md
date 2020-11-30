@@ -1,6 +1,14 @@
 # Overview
 Latest work in 'trader'.
 
+# Quick urls
+These are for my own use.
+
+- dashboard: http://192.168.0.100:8080: `cd /opt/fintools-ib/dashboard; node server.js &`
+- API: http://192.168.0.100/
+- IB-gw service: `cd /opt/ib-gw; ./bin/run.sh root/conf.yaml >> /var/log/ib-gw.log &`
+
+
 # Ansible deployment
 
 Run the playbook
@@ -22,6 +30,20 @@ http://fintools-ib:8080/
 ```
 service fintools-ib-dashboard status
 ```
+
+## Docker
+Start services.
+```
+dc build
+dc up
+dc down -v
+docker system prune --force --volumes
+```
+
+The urls:  
+- API: http://localhost:8000/
+- Grafana: http://localhost:8001/
+
 
 ## downloader.py
 Run this once a day or less.  

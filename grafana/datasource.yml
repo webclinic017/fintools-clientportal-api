@@ -1,0 +1,9 @@
+apiVersion: 1
+ 
+datasources:
+  - name: mysql
+    type: mysql
+    url: db:3306
+    database: fintools-ib
+    user: root
+    password: Password123

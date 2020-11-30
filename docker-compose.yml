@@ -1,0 +1,74 @@
+version: '3'
+
+services:
+  api:
+    build: api
+    container_name: fintools-ib-api
+    hostname: fintools-ib-api
+    working_dir: /app/api
+    entrypoint:
+      - flask
+      - run
+      - --host=0.0.0.0
+    environment:
+      FLASK_DEBUG: 1
+      FLASK_APP: server.py
+    ports:
+      - "8000:5000"
+    volumes:
+      - .:/app
+      - ./config.cfg.dev:/config.cfg
+    depends_on:
+      - db
+
+  grafana:
+    image: grafana/grafana
+    container_name: fintools-ib-grafana
+    hostname: grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    ports:
+      - "8001:3000"
+    volumes:
+      - ./grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
+
+#  snow:
+#    build: snow_mock
+#    container_name: snow-api-snow-mock
+#    hostname: snow-api-snow-mock
+#    working_dir: /app/snow_mock
+#    entrypoint:
+#      - flask
+#      - run
+#      - --host=0.0.0.0
+#    environment:
+#      FLASK_DEBUG: 1
+#      FLASK_APP: server.py
+#    volumes:
+#      - .:/app
+#    depends_on:
+#      - mongo
+#
+
+  db:
+    image: mysql:5.7
+    container_name: fintools-ib-db
+    hostname: db
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "3306:3306"
+
+  # It initialises the DB also via a Python client
+  client:
+    build: client
+    container_name: fintools-ib-client
+    working_dir: /app/client
+    entrypoint: /app/client/wait_for_db.sh 30 db 3306 python /app/client/init_db.py
+    volumes:
+      - .:/app
+      - ./config.cfg.dev:/config.cfg
+    depends_on:
+      - db
