@@ -107,7 +107,7 @@ with urllib.request.urlopen(config.url_nasdaq_list) as response:
 
   # Download conids and quotes
   count_total = len(symb_nasdaq)
-  with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+  with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
     future_to_data = {
       executor.submit(get_quote, symbol): symbol
       for symbol in symb_nasdaq
