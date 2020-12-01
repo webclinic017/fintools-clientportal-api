@@ -97,7 +97,7 @@ with urllib.request.urlopen(config.url_nasdaq_list) as response:
   ]
   # Take only N symbols (test)
   if config.debug:
-    symb_nasdaq = symb_nasdaq[0:config.downloader_limit]
+    symb_nasdaq = symb_nasdaq[0:int(config.downloader_limit)]
 
   # Download conids and quotes
   count_total = len(symb_nasdaq)
