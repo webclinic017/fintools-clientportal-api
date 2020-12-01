@@ -47,7 +47,6 @@ def log(msg):
 
 
 def get_quote(symbol):
-  print('.')
   # Download conid and quote from IB
   # Also, update count percentage
   try:
