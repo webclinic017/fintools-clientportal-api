@@ -61,7 +61,9 @@ def get_quote(symbol):
     if (count_done/count_total)*10 >= count_perc:
       log(str(count_perc*10) + '%')
       count_perc = count_perc + 1
-    print('--')
+    with open(config.dir_quote + '/' + symbol + '.json', 'w') as f:
+      # Save quote to dir
+      f.write(json.dumps(quote))
     return {
       'symbol': symbol,
       'data': quote,
@@ -115,11 +117,7 @@ with urllib.request.urlopen(config.url_nasdaq_list) as response:
       res = future_to_data[future]
       try:
         res = future.result()
-        symbol = res['symbol']
-        quotes.append(symbol)
-        with open(config.dir_quote + '/' + symbol + '.json', 'w') as f:
-          # Save quote to dir
-          f.write(json.dumps(res['data']))
+        quotes.append(res['symbol'])
       except Exception as e:
         # Failed to get quote for conid: add conid to skip list, and skip
         # TODO: Add to skip list
