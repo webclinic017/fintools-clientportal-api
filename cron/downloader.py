@@ -47,6 +47,7 @@ def log(msg):
 
 
 def get_quote(symbol):
+  print('.')
   # Download conid and quote from IB
   # Also, update count percentage
   try:
@@ -60,6 +61,7 @@ def get_quote(symbol):
     if (count_done/count_total)*10 >= count_perc:
       log(str(count_perc*10) + '%')
       count_perc = count_perc + 1
+    print('--')
     return {
       'symbol': symbol,
       'data': quote,
@@ -113,9 +115,14 @@ with urllib.request.urlopen(config.url_nasdaq_list) as response:
       res = future_to_data[future]
       try:
         res = future.result()
-        quotes[res['symbol']] = res['data']
+        symbol = res['symbol']
+        quotes.append(symbol)
+        with open(config.dir_quote + '/' + symbol + '.json', 'w') as f:
+          # Save quote to dir
+          f.write(json.dumps(res['data']))
       except Exception as e:
         # Failed to get quote for conid: add conid to skip list, and skip
+        # TODO: Add to skip list
         if "'NoneType' object has no attribute points" in e \
           and 'W:' in e:
           print('Add conid %s to skip list' % symbol)
@@ -125,12 +132,9 @@ with urllib.request.urlopen(config.url_nasdaq_list) as response:
     log('Could not get quotes')
     exit(1)
   print('Got %i quotes' % len(quotes))
-  # Save to quotes dir
   # TODO: Why save them at the end??? Save them as we go, above
-  log('Save quotes to dir')
-  for f in glob.glob(config.dir_quote + '/*.json'):
-    os.remove(f)
-  for symbol in quotes:
-    with open(config.dir_quote + '/' + symbol + '.json', 'w') as f:
-      f.write(json.dumps((quotes[symbol])))
+  # TODO: Remove here the quotes which could not find this time round
+  # TODO: (delisted)
+  #for f in glob.glob(config.dir_quote + '/*.json'):
+  #  os.remove(f)
 log('Finished')
