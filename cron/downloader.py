@@ -60,7 +60,10 @@ def get_quote(symbol):
     if (count_done/count_total)*10 >= count_perc:
       log(str(count_perc*10) + '%')
       count_perc = count_perc + 1
-    return quote
+    return {
+      'symbol': symbol,
+      'data': quote,
+    }
   except Exception as e:
     # Failed to get conid, print the ticker
     raise Exception('symbol: %s: %s' %(symbol, e))
@@ -109,7 +112,8 @@ with urllib.request.urlopen(config.url_nasdaq_list) as response:
     for future in concurrent.futures.as_completed(future_to_data):
       res = future_to_data[future]
       try:
-        quotes.update(future.result())
+        quote = future.result()
+        quotes.update({ 'symbol': quote['data']})
       except Exception as e:
         # Failed to get quote for conid: add conid to skip list, and skip
         if "'NoneType' object has no attribute points" in e \
