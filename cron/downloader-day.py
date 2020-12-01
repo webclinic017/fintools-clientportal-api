@@ -57,6 +57,7 @@ args = parser.parse_args()
 
 try:
   # Get cheap symbols
+  print('Get cheap symbols')
   with urllib.request.urlopen(config.url_cheap_symbols) as response:
     symbols = json.loads(response.read().decode('utf-8'))
     day_quotes = {}
