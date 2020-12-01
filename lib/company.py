@@ -56,7 +56,7 @@ class Company:
       # Get quote
       return self.down_quote(self.conid, period, bar)
     except ApiException as e:
-      raise Exception('Could not get quote: %s\n' % self.conid)
+      raise Exception('Could not download quote: %s\n' % self.conid)
 
 
   # PRIVATE
@@ -106,8 +106,11 @@ class Company:
     # If three days, pick the last day
     # TODO: Do we need it like this?
     if period == '3d' and bar == '1d':
-      point = int(res.points)
-      res = res.data[point].to_dict()
+      if hasattr(res, 'points'):
+        point = int(res.points)
+        res = res.data[point].to_dict()
+      else:
+        raise Exception('Missing "points" for %s', % self.conid)
     else:
       if res is not None:
         res = [ i.to_dict() for i in res.data ]
