@@ -13,7 +13,7 @@ import strategies
 # CONFIG
 syncFieldsFile = '../lib/ci_get_fields.yaml'
 
-# LOAD ALL STRATEGIES
+# LOAD ALL STRATEGIES: out: strategies
 # TODO: This is barely working, duplicate name == BaseStrategy
 # TODO: Fix this
 print('Import strategies')
@@ -51,27 +51,71 @@ for strategy_name in strategies:
 
 # MAIN
 cfg = Config()
+db_name = 'fintools'
+
 
 try:
-  # Connect to DB server
-  print('Initialise database')
+  # Connect to DB server and create database
+  # TODO: Skip if already exists
+  print('Create database')
   db_connection = mysql.connector.connect(
     host = cfg['db']['host'],
     user = cfg['db']['user'],
-    passwd = cfg['db']['password']
+    passwd = cfg['db']['password'],
   )
   db_cursor = db_connection.cursor()
 
   # Create DB
-  db_cursor.execute('CREATE DATABASE fintools')
-  # List databases
-  db_cursor.execute("SHOW DATABASES")
-  for db in db_cursor:
-    print(db)
+  db_cursor.execute('CREATE DATABASE ' + db_name)
+except Exception as e:
+  print('Unable to create database:', e)
+  exit(1)
 
-  # Create tables
 
-  # TODO: Add strategies to DB
+try:
+  # Reconnect to database
+  # TODO: Skip if already exists
+  db_connection = mysql.connector.connect(
+    host = cfg['db']['host'],
+    user = cfg['db']['user'],
+    passwd = cfg['db']['password'],
+    database = db_name,
+  )
+  db_cursor = db_connection.cursor()
+except Exception as e:
+  print('Unable to reconnect to database:', e)
+  exit(1)
+
+
+try:
+  # Create strategy table
+  # TODO: Skip if already exists
+  print('CREATE TABLE strategies')
+  db_cursor.execute('''
+    CREATE TABLE strategies (
+      name VARCHAR(255),
+      address VARCHAR(255)
+    )
+  ''')
+  # TODO: What it should have:
+  # - description
+  # - enabled: bool
+except Exception as e:
+  print(e)
+  exit(1)
+
+try:
+  # Add each strategy to DB
+  # TODO: Skip if already exists
+  print('Add strategies to database')
+  #db_cursor.execute("""
+  #  CREATE TABLE strategies (
+  #    name VARCHAR(255),
+  #    address VARCHAR(255)
+  #  )
+  #""")
+  #for strategy in strategies:
+  #  print('CREATE:', strategy)
 except Exception as e:
   print(e)
   exit(1)
