@@ -110,7 +110,7 @@ class Company:
         point = int(res.points)
         res = res.data[point].to_dict()
       else:
-        raise Exception('Missing "points" for %s', % self.conid)
+        raise Exception('Missing "points" for %s' % self.conid)
     else:
       if res is not None:
         res = [ i.to_dict() for i in res.data ]
