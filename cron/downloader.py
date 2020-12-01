@@ -112,8 +112,8 @@ with urllib.request.urlopen(config.url_nasdaq_list) as response:
     for future in concurrent.futures.as_completed(future_to_data):
       res = future_to_data[future]
       try:
-        quote = future.result()
-        quotes.update({ 'symbol': quote['data']})
+        res = future.result()
+        quotes[res['symbol']] = res['data']
       except Exception as e:
         # Failed to get quote for conid: add conid to skip list, and skip
         if "'NoneType' object has no attribute points" in e \
@@ -131,12 +131,5 @@ with urllib.request.urlopen(config.url_nasdaq_list) as response:
     os.remove(f)
   for symbol in quotes:
     with open(config.dir_quote + '/' + symbol + '.json', 'w') as f:
-      f.write(json.dumps((quotes[symbol])['quote']))
-  # Save conids
-  # TODO: This should not happen here, but earlier by updating conids
-  # TODO: file as we go
-  conids = { symbol: quotes[symbol]['conid'] for symbol in quotes }
-  with open(config.file_conids, 'w') as f:
-    f.write(json.dumps(conids))
-  log(conids)
+      f.write(json.dumps((quotes[symbol])))
 log('Finished')
