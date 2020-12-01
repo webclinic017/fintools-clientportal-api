@@ -32,7 +32,7 @@ class Company:
       try:
         # Download from API as not in cache
         # NOTE: This should be rare, so print it
-        print('Get conid for %s: %s' % (symbol, e))
+        print('Not found in cache, download conid for %s: %s' % (symbol, e))
         self.conid = self.down_conid()
         with open(config.dir_conids + '/' + symbol, 'w') as f:
           f.write(str(self.conid))
