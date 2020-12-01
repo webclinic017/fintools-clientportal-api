@@ -95,6 +95,10 @@ with urllib.request.urlopen(config.url_nasdaq_list) as response:
     for symbol in symb_nasdaq
     if symbol not in skip_quotes.symbols
   ]
+  # Take only N symbols (test)
+  if config.debug:
+    symb_nasdaq = symb_nasdaq[0:config.downloader_limit]
+
   # Download conids and quotes
   count_total = len(symb_nasdaq)
   with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
