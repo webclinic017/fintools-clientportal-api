@@ -116,6 +116,7 @@ with urllib.request.urlopen(config.url_nasdaq_list) as response:
   if len(quotes) == 0:
     log('Could not get quotes')
     exit(1)
+  print('Got %i quotes' % len(quotes))
   # Save to quotes dir
   log('Save quotes to dir')
   for f in glob.glob(config.dir_quote + '/*.json'):
