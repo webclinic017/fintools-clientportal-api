@@ -32,9 +32,8 @@ api = ContractApi(client)
 try:
   # Get cheap symbols
   print('Get cheap symbols')
-  with urllib.request.urlopen(config.url_cheap_symbols) as response:
-    symbols = json.loads(response.read().decode('utf-8'))
-    print('Got symbols:', len(symbols))
+  symbols = filters.get_symbols_cheaper_than(price)
+  print('Got symbols:', len(symbols))
 except Exception as e:
   print('ERROR:', e)
 
