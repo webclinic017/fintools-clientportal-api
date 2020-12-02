@@ -8,6 +8,12 @@ import urllib3
 from flask import Flask
 from requests.exceptions import HTTPError
 
+# Local
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../'))
+import lib.filters
+
+
 app = Flask(__name__)
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -40,24 +46,8 @@ def health():
 
 @app.route('/lt/<price>')
 def lt(price):
-  res = {}
-  # Get files
-  for s_file in os.listdir(dir_path):
-    try:
-      s = s_file.split('.')[0]
-      fname = dir_path + '/' + s_file
-      if os.stat(fname).st_size > 1:
-        with open(fname) as f:
-          p = json.load(f)['c']
-          if float(p) <= float(price):
-            res[s] = p
-      res_sorted = {}
-    except Exception as e:
-      print('Unable to read %s' % s_file)
-    for k, v in sorted(res.items()):
-      # Sort by symbol
-      res_sorted[k] = v
-  return json.dumps(res_sorted), 200, {'Content-Type': 'application/json'}
+  res = filters.get_symbols_cheaper_than(price)
+  return json.dumps(res), 200, {'Content-Type': 'application/json'}
 
 if __name__ == '__main__':
   app.run(port=80)
