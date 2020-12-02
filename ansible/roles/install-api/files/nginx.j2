@@ -5,6 +5,6 @@ server {
   location / { try_files $uri @app; }
   location @app {
     include uwsgi_params;
-    uwsgi_pass unix:{{ app_dir }}/uwsgi.sock;
+    uwsgi_pass unix:{{ dir_app }}/uwsgi.sock;
   }
 }

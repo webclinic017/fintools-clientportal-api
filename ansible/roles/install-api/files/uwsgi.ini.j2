@@ -1,6 +1,6 @@
 [uwsgi]
 # App base dir
-base = {{ dir_app }}/api
+base = {{ dir_app }}
 
 # python module
 app = server
@@ -11,7 +11,7 @@ pythonpath = %(base)
 
 #socket file's location
 #socket = %(base)/%n.sock
-socket = /var/lock/%n.sock
+socket = {{ dir_app }}/%n.sock
 
 #permissions for the socket file
 chmod-socket = 666
