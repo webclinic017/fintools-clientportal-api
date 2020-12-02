@@ -18,7 +18,7 @@ from ib_web_api.rest import ApiException
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../'))
 import config
-import lib.filters
+from lib import filters
 
 # lt/2
 

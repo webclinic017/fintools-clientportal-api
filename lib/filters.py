@@ -5,7 +5,6 @@ import json
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../'))
 import config
-from lib import filters
 
 
 def get_symbols_cheaper_than(price):
