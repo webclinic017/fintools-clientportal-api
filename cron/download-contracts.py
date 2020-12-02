@@ -32,7 +32,7 @@ api = ContractApi(client)
 try:
   # Get cheap symbols
   print('Get cheap symbols')
-  symbols = filters.get_symbols_cheaper_than(price)
+  symbols = filters.get_symbols_cheaper_than(2)
   print('Got symbols:', len(symbols))
 except Exception as e:
   print('ERROR:', e)
