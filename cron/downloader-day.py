@@ -18,7 +18,6 @@ import urllib.request
 from lib.company import Company
 from ib_web_api import MarketDataApi
 # Local
-# Local
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../'))
 import config

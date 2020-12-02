@@ -8,6 +8,8 @@ import ib_web_api
 import json
 import os
 import pprint
+import urllib3
+import urllib.request
 from datetime import datetime
 from ib_web_api import ContractApi
 from ib_web_api.rest import ApiException
@@ -20,9 +22,9 @@ import config
 # lt/2
 
 # Instantiate API class
-config = ib_web_api.Configuration()
-config.verify_ssl = False
-client = ib_web_api.ApiClient(config)
+ib_cfg = ib_web_api.Configuration()
+ib_cfg.verify_ssl = False
+client = ib_web_api.ApiClient(ib_cfg)
 api = ContractApi(client)
 
 # Main
@@ -31,7 +33,10 @@ try:
   print('Get cheap symbols')
   with urllib.request.urlopen(config.url_cheap_symbols) as response:
     symbols = json.loads(response.read().decode('utf-8'))
-    print(symbols)
+    print('Got symbols:', len(symbols))
+except Exception as e:
+  print('ERROR:', e)
+
 exit(0)
 
 
