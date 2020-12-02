@@ -5,8 +5,12 @@ Latest work in 'trader'.
 These are for my own use.
 
 - dashboard: http://192.168.0.100:8080: `cd /opt/fintools-ib/dashboard; node server.js &`
-- API: http://192.168.0.100/
+- API: http://192.168.0.100/, service fintools-ib, logs in /var/log/uwsgi. flask + uwsgi + nginx
 - IB-gw service: `cd /opt/ib-gw; ./bin/run.sh root/conf.yaml >> /var/log/ib-gw.log &`
+
+Useful urls
+- http://192.168.0.100/health
+- http://192.168.0.100/lt/3
 
 
 # Ansible deployment
