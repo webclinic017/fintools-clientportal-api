@@ -45,10 +45,8 @@ def get_contract(symbol):
     raise 'Could not get contract: ' + e
 
   try:
-    # TODO: Save contract to disk
-    print(contract)
+    # Save contract to disk
     with open(dir_contracts + '/' + symbol + '.json', 'w') as f:
-      # Save quote to dir
       f.write(json.dumps(contract))
   except ApiException as e:
     raise 'Could not save contract: ' + e
