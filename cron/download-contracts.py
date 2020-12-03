@@ -30,13 +30,13 @@ def get_contract(symbol):
     # Get conid from disk
     conid = Company(symbol).conid
   except ApiException as e:
-    raise 'Could not get conid for', symbol
+    raise 'Could not get conid for' + symbol
 
   try:
     # Get contract info (name, industry, etc)
     ret = api.iserver_contract_conid_info_get(conid)
   except ApiException as e:
-    raise 'Could not get contract:', e
+    raise 'Could not get contract: ' + e
 
 
 # Main
