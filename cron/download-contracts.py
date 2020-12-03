@@ -37,9 +37,9 @@ def get_contract(symbol):
     contract = api.iserver_contract_conid_info_get(conid)
     # Remove unnecessary data
     contract = {
-      'conid': contract['con_id'],
-      'category': contract['category'],
-      'industry': contract['industry'],
+      'conid': contract.con_id,
+      'category': contract.category,
+      'industry': contract.industry,
     }
   except ApiException as e:
     raise 'Could not get contract: ' + e
