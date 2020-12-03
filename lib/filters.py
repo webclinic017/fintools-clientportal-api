@@ -28,7 +28,7 @@ def get_symbols_cheaper_than(price):
       res[k] = v
   return res
 
-def get_categories_cheaper_than(price, redownload=False):
+def get_contracts_cheaper_than(price, redownload=False):
   symbols = get_symbols_cheaper_than(price)
   res = {}
   for symbol, price in symbols:

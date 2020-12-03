@@ -49,9 +49,9 @@ def lt(price):
   res = filters.get_symbols_cheaper_than(price)
   return json.dumps(res), 200, {'Content-Type': 'application/json'}
 
-@app.route('/ltcategories/<price>')
+@app.route('/ltcontracts/<price>')
 def lt(price):
-  res = filters.get_categories_cheaper_than(price)
+  res = filters.get_contracts_cheaper_than(price)
   return json.dumps(res), 200, {'Content-Type': 'application/json'}
 
 
