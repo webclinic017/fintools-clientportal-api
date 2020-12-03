@@ -36,8 +36,6 @@ class Company:
         # NOTE: This should be rare, so print it
         print('Not found in cache, download conid for %s: %s' % (symbol, e))
         self.conid = self.down_conid()
-        with open(config.dir_conids + '/' + symbol, 'w') as f:
-          f.write(str(self.conid))
       except Exception as e:
         print('Could not save conid: %s' % e)
 
@@ -53,12 +51,16 @@ class Company:
 
   def get_contract(self):
     # Get contract
-    # TODO: Get from cache if already there
     try:
-     return self.down_contract()
-    except ApiException as e:
-      raise Exception('Could not download contract: %s (%s): %s\n'
-        % (self.symbol, self.conid, e))
+      # Get contract from cache
+      self.contract = self.disk_find_contract()
+    except Exception as e:
+      # Not in cache
+      try:
+        return self.down_contract()
+      except ApiException as e:
+        raise Exception('Could not download contract: %s (%s): %s\n'
+          % (self.symbol, self.conid, e))
 
 
   # PRIVATE
@@ -84,6 +86,9 @@ class Company:
         else:
           detail = self.symbol
         raise Exception('Could not download conid %s.' % detail)
+    # Save conid to disk
+    with open(config.dir_conids + '/' + self.symbol, 'w') as f:
+      f.write(str(self.conid))
     return self.conid
 
   def down_quote(self, conid, period, bar):
@@ -167,17 +172,11 @@ class Company:
       raise Exception('Search by conids not yet implemented')
 
   def disk_find_contract(self):
-    # Convert symbol to conid or conid to symbol
-    # kind: conid or symbol
-    # value: e.g. 1234 or AAPL
-    # NOTE: Usually used to get conid from symbol
-    if kind == 'symbol':
-      symbol = value
-      try:
-        file_conid = config.dir_conids + '/' + symbol
-        with open(file_conid, 'r') as f:
-          return f.read()
-      except Exception as e:
-        raise Exception('Symbol %s not found' % symbol)
-    else:
-      raise Exception('Search by conids not yet implemented')
+    # Find contract in cache, to decide if we need to download it again
+    # TODO: Finish this
+    try:
+      file_contract = config.dir_contracts + '/' + symbol + '.json'
+      with open(file_contract, 'r') as f:
+        return f.read()
+    except Exception as e:
+      raise Exception('Symbol %s not found' % symbol)
