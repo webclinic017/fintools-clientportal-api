@@ -49,5 +49,11 @@ def lt(price):
   res = filters.get_symbols_cheaper_than(price)
   return json.dumps(res), 200, {'Content-Type': 'application/json'}
 
+@app.route('/ltcategories/<price>')
+def lt(price):
+  res = filters.get_categories_cheaper_than(price)
+  return json.dumps(res), 200, {'Content-Type': 'application/json'}
+
+
 if __name__ == '__main__':
   app.run(port=80)
