@@ -54,6 +54,7 @@ class Company:
     try:
       # Get contract from cache
       self.contract = self.disk_find_contract()
+      return self.contract
     except Exception as e:
       # Not in cache
       print('Contract not in cache. Downloading %s: %s' % (self.symbol, e))
@@ -178,6 +179,6 @@ class Company:
     try:
       file_contract = config.dir_contracts + '/' + self.symbol + '.json'
       with open(file_contract, 'r') as f:
-        return f.read()
+        return json.load(f)
     except Exception as e:
       raise Exception('Symbol %s not found' % self.symbol)
