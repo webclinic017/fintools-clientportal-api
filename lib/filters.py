@@ -29,9 +29,16 @@ def get_symbols_cheaper_than(price):
   return res
 
 def get_contracts_cheaper_than(price, redownload=False):
-  symbols = get_symbols_cheaper_than(price)
+  try:
+    # Get cheap symbols
+    symbols = get_symbols_cheaper_than(price)
+  except Exception as e:
+    raise 'Could not get cheap symbols:', e
+
   res = {}
   for symbol, price in symbols:
+    # Get contracts
+    try:
     company = Company(symbol)
     contract = company.get_contract()
     res['symbol'] = {
@@ -39,4 +46,6 @@ def get_contracts_cheaper_than(price, redownload=False):
       'category': contract['category'],
       'industry': contract['industry'],
     }
+    except Exception as e:
+      print('Could not get contract', symbol, ':', e)
   return res
