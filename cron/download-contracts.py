@@ -42,7 +42,7 @@ def get_contract(symbol):
       'industry': contract.industry,
     }
   except ApiException as e:
-    raise 'Could not get contract: ' + e
+    raise e
 
   try:
     # Save contract to disk
@@ -67,9 +67,9 @@ except Exception as e:
   print('ERROR: Could not get cheap symbols:', e)
   exit(1)
 
-try:
-  for symbol in symbols:
+for symbol in symbols:
+  try:
     contract = get_contract(symbol)
-except Exception as e:
-  print('ERROR: Could not get contracts:', e)
+  except Exception as e:
+    print('ERROR: Could not get contract', symbol, ':', e)
 
