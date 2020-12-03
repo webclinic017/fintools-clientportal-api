@@ -16,13 +16,13 @@ import config
 
 # Config
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+dir_contracts = config.dir_contracts
 
 class Company:
   # Properties
   conid = None
   contract = None
   symbol = None
-  dir_contracts = config.dir_contracts
 
   # Constructor
   def __init__(self, symbol):
@@ -55,7 +55,7 @@ class Company:
     # Get contract
     # TODO: Get from cache if already there
     try:
-     return self.down_contract(self.conid)
+     return self.down_contract()
     except ApiException as e:
       raise Exception('Could not download contract: %s (%s)\n'
         % (self.symbol, self.conid))
@@ -87,9 +87,9 @@ class Company:
     return self.conid
 
   def down_quote(self, conid, period, bar):
-    cfg = ib_web_api.Configuration()
-    cfg.verify_ssl = False
-    api = MarketDataApi(ib_web_api.ApiClient(cfg))
+    ib_cfg = ib_web_api.Configuration()
+    ib_cfg.verify_ssl = False
+    api = MarketDataApi(ib_web_api.ApiClient(ib_cfg))
     res = None
     for i in range(1, 6):
       try:
@@ -126,10 +126,10 @@ class Company:
       # Init API
       ib_cfg = ib_web_api.Configuration()
       ib_cfg.verify_ssl = False
-      api = ContractApi(ib_web_api.ApiClient(cfg))
+      api = ContractApi(ib_web_api.ApiClient(ib_cfg))
 
       # Get contract (name, industry, etc)
-      contract = api.iserver_contract_conid_info_get(conid)
+      contract = api.iserver_contract_conid_info_get(self.conid)
       # Remove unnecessary data
       contract = {
         'conid': contract.con_id,
@@ -142,7 +142,7 @@ class Company:
 
     try:
       # Save contract to disk
-      with open(dir_contracts + '/' + symbol + '.json', 'w') as f:
+      with open(dir_contracts + '/' + self.symbol + '.json', 'w') as f:
         f.write(json.dumps(contract))
     except ApiException as e:
       raise 'Could not save contract: ' + e
