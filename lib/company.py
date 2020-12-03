@@ -56,7 +56,7 @@ class Company:
       self.contract = self.disk_find_contract()
     except Exception as e:
       # Not in cache
-      print('Contract not in cache. Downloading %s' % self.symbol)
+      print('Contract not in cache. Downloading %s: %s' % (self.symbol, e))
       try:
         return self.down_contract()
       except ApiException as e:
