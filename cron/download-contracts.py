@@ -20,12 +20,12 @@ import config
 from lib.company import Company
 from lib.filters import get_symbols_cheaper_than
 
+dir_contracts = config.dir_contracts
+
 # Helpers
 def get_contract(symbol):
+  # Download contract from IB and save it to disk
   print('Get contract', symbol)
-  # get conid from disk (lib.company)
-  # get contract
-  # save to disk
   try:
     # Get conid from disk
     conid = Company(symbol).conid
@@ -33,10 +33,25 @@ def get_contract(symbol):
     raise 'Could not get conid for' + symbol
 
   try:
-    # Get contract info (name, industry, etc)
-    return api.iserver_contract_conid_info_get(conid)
+    # Get contract (name, industry, etc)
+    contract = api.iserver_contract_conid_info_get(conid)
+    # Remove unnecessary data
+    contract = {
+      'conid': contract['con_id'],
+      'category': contract['category'],
+      'industry': contract['industry'],
+    }
   except ApiException as e:
     raise 'Could not get contract: ' + e
+
+  try:
+    # TODO: Save contract to disk
+    print(contract)
+    with open(dir_contracts + '/' + symbol + '.json', 'w') as f:
+      # Save quote to dir
+      f.write(json.dumps(contract))
+  except ApiException as e:
+    raise 'Could not save contract: ' + e
 
 
 # Main
@@ -57,7 +72,6 @@ except Exception as e:
 try:
   for symbol in symbols:
     contract = get_contract(symbol)
-    print(symbol, contract)
 except Exception as e:
   print('ERROR: Could not get contracts:', e)
 
