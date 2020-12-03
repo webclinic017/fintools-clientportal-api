@@ -20,7 +20,9 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 class Company:
   # Properties
   conid = None
+  contract = None
   symbol = None
+  dir_contracts = config.dir_contracts
 
   # Constructor
   def __init__(self, symbol):
@@ -41,22 +43,22 @@ class Company:
 
   # PUBLIC METHODS
   def get_quote(self, period, bar):
-    # Get conid, then quote
+    # Get quote
+    # Note, we already have conid from constructor
+    # TODO: Get from cache maybe if not yet have it
     try:
-      # Get conid
-      if self.conid is None:
-        self.get_conid()
-    except ApiException as e:
-      if self.conid is not None:
-        detail = self.conid
-      else:
-        detail = self.symbol
-      raise Exception('Could not get conid: %s\n' % symbol)
-    try:
-      # Get quote
       return self.down_quote(self.conid, period, bar)
     except ApiException as e:
       raise Exception('Could not download quote: %s\n' % self.conid)
+
+  def get_contract(self):
+    # Get contract
+    # TODO: Get from cache if already there
+    try:
+     return self.down_contract(self.conid)
+    except ApiException as e:
+      raise Exception('Could not download contract: %s (%s)\n'
+        % (self.symbol, self.conid))
 
 
   # PRIVATE
@@ -85,10 +87,9 @@ class Company:
     return self.conid
 
   def down_quote(self, conid, period, bar):
-    config = ib_web_api.Configuration()
-    config.verify_ssl = False
-    client = ib_web_api.ApiClient(config)
-    api = MarketDataApi(client)
+    cfg = ib_web_api.Configuration()
+    cfg.verify_ssl = False
+    api = MarketDataApi(ib_web_api.ApiClient(cfg))
     res = None
     for i in range(1, 6):
       try:
@@ -117,6 +118,36 @@ class Company:
       else:
         raise Exception('Could not get quote', self.conid)
     return res
+
+  def down_contract(self):
+    # Download contract from IB and save it to disk
+    # Note: Already have conid from cache
+    try:
+      # Init API
+      ib_cfg = ib_web_api.Configuration()
+      ib_cfg.verify_ssl = False
+      api = ContractApi(ib_web_api.ApiClient(cfg))
+
+      # Get contract (name, industry, etc)
+      contract = api.iserver_contract_conid_info_get(conid)
+      # Remove unnecessary data
+      contract = {
+        'conid': contract.con_id,
+        'category': contract.category,
+        'industry': contract.industry,
+      }
+      self.contract = contract
+    except ApiException as e:
+      raise e
+
+    try:
+      # Save contract to disk
+      with open(dir_contracts + '/' + symbol + '.json', 'w') as f:
+        f.write(json.dumps(contract))
+    except ApiException as e:
+      raise 'Could not save contract: ' + e
+    return self.contract
+
 
   def disk_find_by(self, kind, value):
     # Convert symbol to conid or conid to symbol
