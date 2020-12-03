@@ -166,7 +166,7 @@ class Company:
     else:
       raise Exception('Search by conids not yet implemented')
 
-  def disk_find_contract(self)
+  def disk_find_contract(self):
     # Convert symbol to conid or conid to symbol
     # kind: conid or symbol
     # value: e.g. 1234 or AAPL
