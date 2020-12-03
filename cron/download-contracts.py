@@ -13,68 +13,51 @@ import urllib.request
 from datetime import datetime
 from ib_web_api import ContractApi
 from ib_web_api.rest import ApiException
-
 # Local
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../'))
 import config
-from lib import filters
+from lib.company import Company
+from lib.filters import get_symbols_cheaper_than
 
-# lt/2
+# Helpers
+def get_contract(symbol):
+  print('Get contract', symbol)
+  # get conid from disk (lib.company)
+  # get contract
+  # save to disk
+  try:
+    # Get conid from disk
+    conid = Company(symbol).conid
+  except ApiException as e:
+    raise 'Could not get conid for', symbol
 
+  try:
+    # Get contract info (name, industry, etc)
+    ret = api.iserver_contract_conid_info_get(conid)
+  except ApiException as e:
+    raise 'Could not get contract:', e
+
+
+# Main
 # Instantiate API class
 ib_cfg = ib_web_api.Configuration()
 ib_cfg.verify_ssl = False
-client = ib_web_api.ApiClient(ib_cfg)
-api = ContractApi(client)
+api = ContractApi(ib_web_api.ApiClient(ib_cfg))
 
-# Main
 try:
   # Get cheap symbols
   print('Get cheap symbols')
-  symbols = filters.get_symbols_cheaper_than(2)
+  symbols = get_symbols_cheaper_than(2)
   print('Got symbols:', len(symbols))
 except Exception as e:
-  print('ERROR:', e)
-
-exit(0)
-
-
-try:
-  # Get conids
-  if args.verbose:
-    print('Get conids')
-  conids = {}
-  for ticker in args.tickers:
-    conid = int
-    try:
-      response = api.iserver_secdef_search_post({ "symbol": ticker })
-    except Exception:
-      # Could not get conid, so skip it
-      continue
-    for item in response:
-      if item.description == 'NASDAQ':
-        conids[ticker] = item.conid
-except ApiException as e:
-  # Could not get conid, skip for now
-  print("Could not get conids: %s\n" % e)
-  exit(1)
-if len(conids) == 0:
-  # Terminate if no conids found
-  print('Could not find any conids')
+  print('ERROR: Could not get cheap symbols:', e)
   exit(1)
 
-# Print summary
-if args.verbose:
-  print('Conids found: %s/%s' % (len(conids), len(args.tickers)))
-
 try:
-  # Get market data for each conid
-  for symbol, conid in conids.items():
-    ret = api.iserver_contract_conid_info_get(conid)
-    if args.small:
-      print(ret.category)
-    else:
-      print(symbol, ret.category)
-except ApiException as e:
-  print("Exception: %s\n" % e)
+  for symbol in symbols:
+    contract = get_contract(symbol)
+    print(symbol, contract)
+except Excepion as e:
+  print('ERROR: Could not get contracts:', e)
+
