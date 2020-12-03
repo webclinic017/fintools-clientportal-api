@@ -176,8 +176,8 @@ class Company:
     # Find contract in cache, to decide if we need to download it again
     # TODO: Finish this
     try:
-      file_contract = config.dir_contracts + '/' + symbol + '.json'
+      file_contract = config.dir_contracts + '/' + self.symbol + '.json'
       with open(file_contract, 'r') as f:
         return f.read()
     except Exception as e:
-      raise Exception('Symbol %s not found' % symbol)
+      raise Exception('Symbol %s not found' % self.symbol)
