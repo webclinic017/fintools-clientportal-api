@@ -58,6 +58,6 @@ try:
   for symbol in symbols:
     contract = get_contract(symbol)
     print(symbol, contract)
-except Excepion as e:
+except Exception as e:
   print('ERROR: Could not get contracts:', e)
 
