@@ -57,8 +57,8 @@ class Company:
     try:
      return self.down_contract()
     except ApiException as e:
-      raise Exception('Could not download contract: %s (%s)\n'
-        % (self.symbol, self.conid))
+      raise Exception('Could not download contract: %s (%s): %s\n'
+        % (self.symbol, self.conid, e))
 
 
   # PRIVATE
@@ -150,6 +150,23 @@ class Company:
 
 
   def disk_find_by(self, kind, value):
+    # Convert symbol to conid or conid to symbol
+    # kind: conid or symbol
+    # value: e.g. 1234 or AAPL
+    # NOTE: Usually used to get conid from symbol
+    # TODO: Scrap this, just search by symbol
+    if kind == 'symbol':
+      symbol = value
+      try:
+        file_conid = config.dir_conids + '/' + symbol
+        with open(file_conid, 'r') as f:
+          return f.read()
+      except Exception as e:
+        raise Exception('Symbol %s not found' % symbol)
+    else:
+      raise Exception('Search by conids not yet implemented')
+
+  def disk_find_contract(self)
     # Convert symbol to conid or conid to symbol
     # kind: conid or symbol
     # value: e.g. 1234 or AAPL

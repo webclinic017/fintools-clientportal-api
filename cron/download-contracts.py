@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # Download contracts of cheap tickers
+# run time: 3m47s
 
 # Local
 import sys, os
