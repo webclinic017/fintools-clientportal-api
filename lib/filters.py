@@ -54,5 +54,7 @@ def get_winners_lt_perc(price, perc_increase):
   try:
     # Get cheap symbols
     symbols = get_symbols_cheaper_than(price)
+  except Exception as e:
+    print('Could not get winners', price, ',', perc_increase, ':', e)
 
   return symbols
