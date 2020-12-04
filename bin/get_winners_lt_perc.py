@@ -6,7 +6,7 @@ import os
 # Local
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../'))
-from lib.filters import get_contracts_cheaper_than
+from lib.filters import get_winners_lt_perc
 
 # Main
 try:
