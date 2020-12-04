@@ -41,7 +41,7 @@ def get_contracts_cheaper_than(price, redownload=False):
     try:
       company = Company(symbol)
       contract = company.get_contract()
-      res[self.symbol] = {
+      res[symbol] = {
         'price': price,
         'category': contract['category'],
         'industry': contract['industry'],
