@@ -4,13 +4,19 @@ import json
 # Local
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../'))
-import config
+from lib.config import Config
 from lib.company import Company
 
 
 def get_symbols_cheaper_than(price):
   res = {}
-  dir_quote = config.dir_quote
+  try:
+    cfg = Config()
+    dir_quote = cfg['paths']['quote']
+    symbols = os.listdir(dir_quote)
+  except Exception as e:
+    raise Exception('Could not read dir:', dir_quote)
+
   for s_file in os.listdir(dir_quote):
     # For each quote, find cheap ones
     try:
@@ -33,7 +39,7 @@ def get_contracts_cheaper_than(price, redownload=False):
     # Get cheap symbols
     symbols = get_symbols_cheaper_than(price)
   except Exception as e:
-    raise 'Could not get cheap symbols:' + e
+    raise Exception('Could not get cheap symbols:', e)
 
   res = {}
   for symbol, price in symbols.items():

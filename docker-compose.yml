@@ -62,13 +62,25 @@ services:
       - "3306:3306"
 
   # It initialises the DB also via a Python client
-  client:
-    build: client
-    container_name: fintools-ib-client
-    working_dir: /app/client
-    entrypoint: /app/client/wait_for_db.sh 30 db 3306 python /app/client/init_db.py
+  db-client:
+    build: db-client
+    container_name: fintools-ib-db-client
+    working_dir: /app/db-client
+    entrypoint: /app/db-client/wait_for_db.sh 30 db 3306 python /app/db-client/init_db.py
     volumes:
       - .:/app
       - ./config.cfg.dev:/config.cfg
+    depends_on:
+      - db
+
+  bin:
+    build: bin
+    container_name: fintools-ib-client
+    working_dir: /opt/fintools-ib/bin
+    entrypoint: sleep infinity
+    volumes:
+      - .:/opt/fintools-ib
+      - ./config.cfg.dev:/opt/fintools-ib/config.cfg
+      - ./test-data:/opt/fintools-ib/data
     depends_on:
       - db

@@ -8,3 +8,6 @@
 host: db
 user: root
 password: Password123
+
+[paths]
+base: /opt/fintools-ib
