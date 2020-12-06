@@ -38,8 +38,15 @@ class Company:
         self.conid = self.down_conid()
       except Exception as e:
         print('Could not save conid: %s' % e)
+    try:
+      # Get industry from cache
+      contract = self.disk_find_contract()
+      self.industry = contract['industry']
+    except Exception as e:
+      print('Could not get industry from cache %s: %s' % (symbol, e))
 
-  # PUBLIC METHODS
+
+  # PUBLIC METHODS: Aggregates
   def get_quote(self, period, bar):
     # Get quote
     # Note, we already have conid from constructor
@@ -59,10 +66,13 @@ class Company:
       # Not in cache
       print('Contract not in cache. Downloading %s: %s' % (self.symbol, e))
       try:
-        return self.down_contract()
+        self.contract = self.down_contract()
       except ApiException as e:
         raise Exception('Could not download contract: %s (%s): %s\n'
           % (self.symbol, self.conid, e))
+    # Populate data
+    self.industry = self.contract['industry']
+    return self.contract
 
 
   # PRIVATE

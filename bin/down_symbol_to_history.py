@@ -4,7 +4,7 @@
 # Example: ./$0 HTBX
 import argparse
 import json
-from lib.icompany import ICompany
+from lib.company import Company
 
 # Parse args
 parser = argparse.ArgumentParser(
@@ -20,5 +20,5 @@ args = parser.parse_args()
 symbol = args.symbol
 
 ## MAIN
-history = ICompany(symbol).get_quote('1m', '5min')
+history = Company(symbol).get_quote('1m', '5min')
 print(json.dumps(history, indent=2))
