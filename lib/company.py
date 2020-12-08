@@ -13,6 +13,7 @@ from ib_web_api.rest import ApiException
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../'))
 import config
+from lib.util import error
 
 # Config
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -22,6 +23,7 @@ class Company:
   # Properties
   conid = None
   contract = None
+  industry = None
   symbol = None
 
   # Constructor
@@ -40,10 +42,10 @@ class Company:
         print('Could not save conid: %s' % e)
     try:
       # Get industry from cache
-      contract = self.disk_find_contract()
+      contract = self.disk_find(kind='contract')
       self.industry = contract['industry']
     except Exception as e:
-      print('Could not get industry from cache %s: %s' % (symbol, e))
+      error('Could not get industry from cache %s: %s' % (symbol, e))
 
 
   # PUBLIC METHODS: Aggregates
@@ -56,11 +58,21 @@ class Company:
     except ApiException as e:
       raise Exception('Could not download quote: %s\n' % self.conid)
 
+  def get_quote_single(self):
+    # Get quote for one day
+    period = '1d'
+    bar = '1d'
+    # TODO: Get from cache maybe if not yet have it
+    try:
+      return self.disk_find('quote')
+    except ApiException as e:
+      raise Exception('Could not find quote in cache: %s\n' % self.conid)
+
   def get_contract(self):
     # Get contract
     try:
       # Get contract from cache
-      self.contract = self.disk_find_contract()
+      self.contract = self.disk_find(kind='contract')
       return self.contract
     except Exception as e:
       # Not in cache
@@ -183,12 +195,22 @@ class Company:
     else:
       raise Exception('Search by conids not yet implemented')
 
-  def disk_find_contract(self):
-    # Find contract in cache, to decide if we need to download it again
-    # TODO: Finish this
+  def disk_find(self, kind='contract'):
+    # Find contract or quote in cache, to decide if we need to download it
+    # again
+    # kind: contract, quote, day
+    if kind == 'contract':
+      path = config.dir_contracts
+    elif kind == 'quote':
+      path = config.dir_quote
+    elif kind == 'day':
+      path = config.dir_day
+    else:
+      raise Exception('Invalid kind specified')
     try:
-      file_contract = config.dir_contracts + '/' + self.symbol + '.json'
-      with open(file_contract, 'r') as f:
+      # Find in cache
+      fpath = path + '/' + self.symbol + '.json'
+      with open(fpath, 'r') as f:
         return json.load(f)
     except Exception as e:
       raise Exception('Symbol %s not found' % self.symbol)

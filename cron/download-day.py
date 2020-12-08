@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # Download today's data for cheap tickers (defined elsewhere)
+# This is fine-grained data, e.g. 1 minute bar width
 # Optionally, supply list of tickers, e.g.
 # ./$0 AAPL AMZN
 # Running time:

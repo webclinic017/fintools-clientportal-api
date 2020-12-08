@@ -1,6 +1,10 @@
 # Utilities
 import datetime
 import json
+import sys
+
+def error(msg):
+  print(msg, file=sys.stderr)
 
 def get(point, kind):
   # point = { o, c, h, l, v, t }

@@ -57,9 +57,21 @@ def get_contracts_cheaper_than(price, redownload=False):
   return res
 
 def get_winners_lt_perc(price, perc_increase):
+  # Winners price less than PRICE, increase higher than PERC
+  # TODO: Finish this
+  # Return: { symbol: { price, perc }, ... }
+  out = {}
   try:
     # Get cheap symbols
     symbols = get_symbols_cheaper_than(price)
   except Exception as e:
     print('Could not get winners', price, ',', perc_increase, ':', e)
+  # TODO: Get here the difference, perc, hi/lo
+  # Wrong. Need to use the day data
+  for symbol in symbols:
+    company = Company(symbol)
+    quote = company.get_quote_single()
+    print('l', quote['l'])
+    print('h', quote['h'])
+    pass
   return symbols
