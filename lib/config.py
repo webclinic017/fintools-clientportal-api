@@ -7,7 +7,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../')
 from lib.constants import FILE_CFG
 
 path_defaults = {
-  'conids': '/conids',
+  'conids': '/data/conids',
   'contracts': '/data/contracts',
   'day': '/data/day',
   'quotes': '/data/quotes',
