@@ -10,7 +10,7 @@ path_defaults = {
   'conids': '/conids',
   'contracts': '/data/contracts',
   'day': '/data/day',
-  'quote': '/data/quotes',
+  'quotes': '/data/quotes',
 }
 
 class Config(ConfigParser):
