@@ -34,6 +34,8 @@ count_done = 0
 count_perc = 0
 count_total = 0
 dir_quote = None
+url_nasdaq_list = None
+debug = None
 
 
 def exit_handler():
@@ -76,6 +78,7 @@ def get_quote(symbol):
 
 
 ## MAIN
+
 if util.is_running(pidfile):
   print('Already running')
   exit(1)
@@ -83,9 +86,14 @@ else:
   util.create_pid(pidfile)
 
 # Read config
+print('Start')
 cfg = Config()
 dir_quote = cfg['paths']['quote']
+url_nasdaq_list = cfg['urls']['nasdaq_list']
+debug = cfg['main']['debug']
+download_conids_quotes_limit = cfg['main']['download_conids_quotes_limit']
 print('Will save quotes to', dir_quote)
+
 
 try:
   util.check_ib_connectivity()
@@ -93,12 +101,10 @@ except Exception as e:
   print('No IB connectivity')
   exit(1)
 
-
 # Get NASDAQ symbols
-log('Starting')
 log('Get NASDAQ symbols and their quotes')
 quotes = {}
-with urllib.request.urlopen(config.url_nasdaq_list) as response:
+with urllib.request.urlopen(url_nasdaq_list) as response:
   # Get NASDAQ symbols
   symb_nasdaq = [ line.split('|')[0]
     for line in response.read().decode('utf-8').splitlines()[1:-1]
@@ -110,8 +116,8 @@ with urllib.request.urlopen(config.url_nasdaq_list) as response:
     if symbol not in skip_quotes.symbols
   ]
   # Take only N symbols (test)
-  if config.debug:
-    symb_nasdaq = symb_nasdaq[0:int(config.download_conids_quotes_limit)]
+  if debug:
+    symb_nasdaq = symb_nasdaq[0:int(download_conids_quotes_limit)]
 
   # Download conids and quotes
   count_total = len(symb_nasdaq)
@@ -140,6 +146,6 @@ with urllib.request.urlopen(config.url_nasdaq_list) as response:
   # TODO: Why save them at the end??? Save them as we go, above
   # TODO: Remove here the quotes which could not find this time round
   # TODO: (delisted)
-  #for f in glob.glob(config.dir_quote + '/*.json'):
+  #for f in glob.glob(dir_quote + '/*.json'):
   #  os.remove(f)
-log('Finished')
+log('Finish')
