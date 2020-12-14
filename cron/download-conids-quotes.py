@@ -88,7 +88,7 @@ else:
 # Read config
 print('Start')
 cfg = Config()
-dir_quote = cfg['paths']['quote']
+dir_quote = cfg['paths']['quotes']
 url_nasdaq_list = cfg['urls']['nasdaq_list']
 debug = cfg['main']['debug']
 download_conids_quotes_limit = cfg['main']['download_conids_quotes_limit']
