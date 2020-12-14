@@ -103,7 +103,7 @@ except Exception as e:
 
 # Get NASDAQ symbols
 log('Get NASDAQ symbols and their quotes')
-quotes = {}
+quotes = []
 with urllib.request.urlopen(url_nasdaq_list) as response:
   # Get NASDAQ symbols
   symb_nasdaq = [ line.split('|')[0]
@@ -143,7 +143,6 @@ with urllib.request.urlopen(url_nasdaq_list) as response:
     log('Could not get quotes')
     exit(1)
   print('Got %i quotes' % len(quotes))
-  # TODO: Why save them at the end??? Save them as we go, above
   # TODO: Remove here the quotes which could not find this time round
   # TODO: (delisted)
   #for f in glob.glob(dir_quote + '/*.json'):
