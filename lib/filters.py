@@ -50,7 +50,7 @@ def get_contracts_cheaper_than(price, redownload=False):
     # Get contracts
     try:
       company = Company(symbol)
-      contract = company.get_contract()
+      contract = company.get_contract(redownload=redownload)
       res[symbol] = {
         'price': price,
         'category': contract['category'],

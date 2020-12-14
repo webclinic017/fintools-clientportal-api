@@ -79,20 +79,23 @@ class Company:
     except ApiException as e:
       raise Exception('Could not find quote in cache: %s\n' % self.conid)
 
-  def get_contract(self):
+  def get_contract(self, redownload=False):
     # Get contract
-    try:
-      # Get contract from cache
-      self.contract = self.disk_find(kind='contract')
-      return self.contract
-    except Exception as e:
-      # Not in cache
-      print('Contract not in cache. Downloading %s: %s' % (self.symbol, e))
+    if not redownload:
       try:
-        self.contract = self.down_contract()
-      except ApiException as e:
-        raise Exception('Could not download contract: %s (%s): %s\n'
-          % (self.symbol, self.conid, e))
+        # Get contract from cache
+        self.contract = self.disk_find(kind='contract')
+        self.industry = self.contract['industry']
+        return self.contract
+      except Exception as e:
+        # Not in cache, redownload
+        print('Contract not in cache. Download %s: %s' % (self.symbol, e))
+    try:
+      # Re-download: Not in cache, or redownload=True
+      self.contract = self.down_contract()
+    except ApiException as e:
+      raise Exception('Could not download contract: %s (%s): %s\n'
+        % (self.symbol, self.conid, e))
     # Populate data
     self.industry = self.contract['industry']
     return self.contract
