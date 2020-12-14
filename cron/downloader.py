@@ -15,10 +15,11 @@ import os
 import skip_quotes
 import urllib.request
 import urllib3
+
 # Local
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../'))
-import config
+from lib.config import Config
 import util
 from lib.company import Company
 
@@ -32,6 +33,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 count_done = 0
 count_perc = 0
 count_total = 0
+dir_quote = None
 
 
 def exit_handler():
@@ -53,6 +55,7 @@ def get_quote(symbol):
     global count_done
     global count_perc
     global count_total
+    global dir_quote
     ret = {}
     c = Company(symbol)
     quote = c.get_quote(period='3d', bar='1d')
@@ -60,7 +63,7 @@ def get_quote(symbol):
     if (count_done/count_total)*10 >= count_perc:
       log(str(count_perc*10) + '%')
       count_perc = count_perc + 1
-    with open(config.dir_quote + '/' + symbol + '.json', 'w') as f:
+    with open(dir_quote + '/' + symbol + '.json', 'w') as f:
       # Save quote to dir
       f.write(json.dumps(quote))
     return {
@@ -78,6 +81,11 @@ if util.is_running(pidfile):
   exit(1)
 else:
   util.create_pid(pidfile)
+
+# Read config
+cfg = Config()
+dir_quote = cfg['paths']['quote']
+print('Will save quotes to', dir_quote)
 
 try:
   util.check_ib_connectivity()
