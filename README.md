@@ -12,6 +12,19 @@ Useful urls
 - http://192.168.0.100/health
 - http://192.168.0.100/lt/3
 
+## Docker
+Start services.
+```
+dc build
+dc up
+./docker-stop.sh
+```
+
+The urls:  
+- API: http://localhost:8000/
+- Grafana: http://localhost:8001/
+- dashboard: http://localhost:8002/
+- db: localhost:8003
 
 # Ansible deployment
 
@@ -35,18 +48,6 @@ http://fintools-ib:8080/
 service fintools-ib-dashboard status
 ```
 
-## Docker
-Start services.
-```
-dc build
-dc up
-dc down -v
-docker system prune --force --volumes
-```
-
-The urls:  
-- API: http://localhost:8000/
-- Grafana: http://localhost:8001/
 
 
 ## downloader.py

@@ -34,6 +34,23 @@ services:
     volumes:
       - ./grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
 
+  dashboard:
+    build: dashboard
+    container_name: fintools-ib-dashboard
+    hostname: fintools-ib-dashboard
+    working_dir: /app/dashboard
+    entrypoint:
+      - node
+      - server.js
+    ports:
+      - "8002:8080"
+    volumes:
+      - .:/app
+      - ./config.cfg.dev:/config.cfg
+#    depends_on:
+#      - db
+
+
 #  snow:
 #    build: snow_mock
 #    container_name: snow-api-snow-mock
@@ -59,7 +76,7 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     ports:
-      - "3306:3306"
+      - "8003:3306"
 
   # It initialises the DB also via a Python client
   db-client:

@@ -1,7 +1,9 @@
 // See public dir
 var express = require('express');
 var app = express();
+var fs = require('fs');
 var https = require('https');
+var ini = require('ini');
 var path = require('path');
 var port = 8080;
 var iburl = 'localhost';
@@ -133,12 +135,11 @@ function getChartTwoDay(ticker, exchange) {
   }) // Promise
 }
 
-///////////////////// ENDPOINTS ///////////////////////
+///////////////////// ROUTER ///////////////////////
 // Serve rest from 'public' dir
 app.use(express.static('public'))
 
 app.get('/status', (req,res) => {
-  // Need to call this twice
   var url = '/v1/portal/iserver/auth/status';
   ibRequest('GET', url)
   .then((s) => {
@@ -368,5 +369,8 @@ app.get('/chartDemo/:time', (req,res) => {
   res.send(c);
 });
 
+
+////// MAIN //////
 console.log('Listening on port', port);
+var config = ini.parse(fs.readFileSync('./config.cfg', 'utf-8'))
 app.listen(8080);

@@ -50,7 +50,7 @@ def lt(price):
   return json.dumps(res), 200, {'Content-Type': 'application/json'}
 
 @app.route('/ltcontracts/<price>')
-def lt(price):
+def ltcontracts(price):
   res = filters.get_contracts_cheaper_than(price)
   return json.dumps(res), 200, {'Content-Type': 'application/json'}
 

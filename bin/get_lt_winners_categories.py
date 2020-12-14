@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 # Get cheap symbols, and their categories
+# How is this different than get_ltcategories.py?
+# This also shows winners (most importantly)
+# Work in progress
 
 import json
 import os

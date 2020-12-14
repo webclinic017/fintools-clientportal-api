@@ -37,6 +37,10 @@ def get_symbols_cheaper_than(price):
 def get_contracts_cheaper_than(price, redownload=False):
   try:
     # Get cheap symbols
+    # returns:
+    # - price
+    # - category
+    # - industry
     symbols = get_symbols_cheaper_than(price)
   except Exception as e:
     raise Exception('Could not get cheap symbols:', e)
