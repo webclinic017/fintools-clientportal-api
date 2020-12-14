@@ -18,10 +18,6 @@ from lib.util import error
 
 # Config
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-dir_conids = None
-dir_contracts = None
-dir_day = None
-dir_quotes = None
 
 class Company:
   # Properties
@@ -29,6 +25,7 @@ class Company:
   contract = None
   industry = None
   symbol = None
+  cfg = {}
 
   # Constructor
   def __init__(self, symbol):
@@ -36,10 +33,12 @@ class Company:
 
     # Config
     cfg = Config()
-    dir_conids = cfg['paths']['conids']
-    dir_contracts = cfg['paths']['contracts']
-    dir_day = cfg['paths']['day']
-    dir_quotes = cfg['paths']['quotes']
+    self.cfg = {
+      'dir_conids': cfg['paths']['conids'],
+      'dir_contracts': cfg['paths']['contracts'],
+      'dir_day': cfg['paths']['day'],
+      'dir_quotes': cfg['paths']['quotes'],
+    }
 
     try:
       # Get conid from cache
@@ -122,7 +121,7 @@ class Company:
           detail = self.symbol
         raise Exception('Could not download conid %s.' % detail)
     # Save conid to disk
-    with open(dir_conids + '/' + self.symbol, 'w') as f:
+    with open(self.cfg['dir_conids'] + '/' + self.symbol, 'w') as f:
       f.write(str(self.conid))
     return self.conid
 
@@ -182,7 +181,7 @@ class Company:
 
     try:
       # Save contract to disk
-      with open(dir_contracts + '/' + self.symbol + '.json', 'w') as f:
+      with open(self.cfg['dir_contracts'] + '/' + self.symbol + '.json', 'w') as f:
         f.write(json.dumps(contract))
     except ApiException as e:
       raise 'Could not save contract: ' + e
@@ -198,7 +197,7 @@ class Company:
     if kind == 'symbol':
       symbol = value
       try:
-        file_conid = dir_conids + '/' + symbol
+        file_conid = self.cfg['dir_conids'] + '/' + symbol
         with open(file_conid, 'r') as f:
           return f.read()
       except Exception as e:
@@ -211,11 +210,11 @@ class Company:
     # again
     # kind: contract, quote, day
     if kind == 'contract':
-      path = dir_contracts
+      path = self.cfg['dir_contracts']
     elif kind == 'quote':
-      path = dir_quotes
+      path = self.cfg['dir_quotes']
     elif kind == 'day':
-      path = dir_day
+      path = self.cfg['dir_day']
     else:
       raise Exception('Invalid kind specified')
     try:
