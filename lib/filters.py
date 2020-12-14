@@ -12,7 +12,7 @@ def get_symbols_cheaper_than(price):
   res = {}
   try:
     cfg = Config()
-    dir_quote = cfg['paths']['quote']
+    dir_quote = cfg['paths']['quotes']
     symbols = os.listdir(dir_quote)
   except Exception as e:
     raise Exception('Could not read dir:', dir_quote)

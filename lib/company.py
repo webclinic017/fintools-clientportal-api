@@ -9,15 +9,19 @@ import urllib.request
 from ib_web_api import ContractApi
 from ib_web_api import MarketDataApi
 from ib_web_api.rest import ApiException
+
 # Local
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../'))
-import config
+from lib.config import Config
 from lib.util import error
 
 # Config
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-dir_contracts = config.dir_contracts
+dir_conids = None
+dir_contracts = None
+dir_day = None
+dir_quotes = None
 
 class Company:
   # Properties
@@ -29,6 +33,14 @@ class Company:
   # Constructor
   def __init__(self, symbol):
     self.symbol = symbol
+
+    # Config
+    cfg = Config()
+    dir_conids = cfg['paths']['conids']
+    dir_contracts = cfg['paths']['contracts']
+    dir_day = cfg['paths']['day']
+    dir_quotes = cfg['paths']['quotes']
+
     try:
       # Get conid from cache
       self.conid = self.disk_find_by('symbol', self.symbol)
@@ -94,8 +106,7 @@ class Company:
       # Download conid
       config = ib_web_api.Configuration()
       config.verify_ssl = False
-      client = ib_web_api.ApiClient(config)
-      api = ContractApi(client)
+      api = ContractApi(ib_web_api.ApiClient(config))
       # Main
       try:
         # Get conid
@@ -111,7 +122,7 @@ class Company:
           detail = self.symbol
         raise Exception('Could not download conid %s.' % detail)
     # Save conid to disk
-    with open(config.dir_conids + '/' + self.symbol, 'w') as f:
+    with open(dir_conids + '/' + self.symbol, 'w') as f:
       f.write(str(self.conid))
     return self.conid
 
@@ -187,7 +198,7 @@ class Company:
     if kind == 'symbol':
       symbol = value
       try:
-        file_conid = config.dir_conids + '/' + symbol
+        file_conid = dir_conids + '/' + symbol
         with open(file_conid, 'r') as f:
           return f.read()
       except Exception as e:
@@ -200,11 +211,11 @@ class Company:
     # again
     # kind: contract, quote, day
     if kind == 'contract':
-      path = config.dir_contracts
+      path = dir_contracts
     elif kind == 'quote':
-      path = config.dir_quote
+      path = dir_quotes
     elif kind == 'day':
-      path = config.dir_day
+      path = dir_day
     else:
       raise Exception('Invalid kind specified')
     try:
