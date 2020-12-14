@@ -7,4 +7,4 @@ url_cheap_symbols = 'http://localhost/lt/3'
 url_nasdaq_list = 'ftp://ftp.nasdaqtrader.com/symboldirectory/nasdaqlisted.txt'
 # For test
 debug = False
-downloader_limit = '10'
+download_conids_quotes_limit = '10'

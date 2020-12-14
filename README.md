@@ -37,10 +37,10 @@ ansible-playbook install-ib.yml
 # Operation
 Consists of:
 
-- **downloader.py**: download symbols, conids, quotes (3679 of them)
+- **download-conids-quotes.py**: download symbols, conids, quotes (3679 of them)
     - conids: fast to download
     - quotes: for today's price: quotes should be previous day price, generate them after market close
-- **downloader-day.py**: for cheap tickers (defined in config, e.g. less than $3/share, download today's data)
+- **download-day.py**: for cheap tickers (defined in config, e.g. less than $3/share, download today's data/prices)
 
 ## dashboard
 http://fintools-ib:8080/
@@ -50,7 +50,7 @@ service fintools-ib-dashboard status
 
 
 
-## downloader.py
+## download-conids-quotes.py
 Run this once a day or less.  
 
 It does:
@@ -64,7 +64,7 @@ Conids are saved to:
 
 The conids are what IB uses instead of tickers, such as AAPL.
 
-## downloader-day.py
+## download-day.py
 ?
 
 # IB

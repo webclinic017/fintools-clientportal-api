@@ -24,7 +24,7 @@ import util
 from lib.company import Company
 
 # Config
-pidfile = '/var/run/downloader.pid'
+pidfile = '/var/run/download-conids-quotes.pid'
 
 # Settings
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -111,7 +111,7 @@ with urllib.request.urlopen(config.url_nasdaq_list) as response:
   ]
   # Take only N symbols (test)
   if config.debug:
-    symb_nasdaq = symb_nasdaq[0:int(config.downloader_limit)]
+    symb_nasdaq = symb_nasdaq[0:int(config.download_conids_quotes_limit)]
 
   # Download conids and quotes
   count_total = len(symb_nasdaq)

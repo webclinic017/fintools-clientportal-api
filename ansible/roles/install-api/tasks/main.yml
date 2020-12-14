@@ -60,14 +60,14 @@
     content: |
       { "o": 1, "c": 2, "v": 3 }
   when: dir_found.matched == 0
-- name: Run downloader on cron
+- name: Run download_conids_days on cron
   cron:
-    name: "daily downloader {{ item }}"
+    name: "download-conids-quotes {{ item }}"
     weekday: "*"
     minute: "0"
     hour: "{{ item }}"
     user: root
-    job: "python3 {{ app_dir }}/cron/downloader.py >> /var/log/daily.log 2>&1"
+    job: "python3 {{ app_dir }}/cron/download-conids-quotes.py >> /var/log/download-conids-quotes.log 2>&1"
   with_items: [ 12, 18 ]
 - name: Run tickle keepalive on cron
   cron:

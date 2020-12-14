@@ -5,7 +5,7 @@ Given a list of tickers, return tickers which spiked X% at some time.
 - Add watcher script
 - Add autotrade
 - download-day.py should write json data out
-- downloader.py should save data to date dir
+- download-conids-quotes.py should save data to date dir
 - new download-day.py for one or two stocks only
 
 # Playbook
@@ -24,7 +24,7 @@ TODO:
 
 # Pre playbook
 - 09:00 Sign in, check health http://5.152.176.191/health
-- 09:01 Run downloader.py
+- 09:01 Run download-conids-quotes.py
 - ...
 - 13:20 Sign in, check health http://5.152.176.191/health
 - 13:20 https://degiro.co.uk/
@@ -41,4 +41,4 @@ TODO:
 
 # Playbook
 - test cases
-- run downloader
+- run download-conids-quotes.py
