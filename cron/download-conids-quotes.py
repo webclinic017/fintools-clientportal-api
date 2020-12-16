@@ -96,8 +96,7 @@ dir_quote = cfg['paths']['quotes']
 url_nasdaq_list = cfg['urls']['nasdaq_list']
 debug = cfg['main']['debug']
 download_conids_quotes_limit = cfg['main']['download_conids_quotes_limit']
-download_conid_limit_enable = cfg['main']['download_conid_enable']
-download_conid_limit_enable = False
+download_conid_limit_enable = cfg['main']['download_conid_limit_enable']
 if download_conid_limit_enable:
   download_conid_limit_symbol = cfg['main']['download_conid_limit_symbol']
 print('Will save quotes to', dir_quote)
