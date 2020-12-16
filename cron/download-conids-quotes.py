@@ -127,7 +127,7 @@ with urllib.request.urlopen(url_nasdaq_list) as response:
     symb_nasdaq = symb_nasdaq[0:int(download_conids_quotes_limit)]
   # Take only one symbol if specified
   if download_conid_limit_enable:
-    symb_nasdaq = download_conid_limit_symbol
+    symb_nasdaq = [ download_conid_limit_symbol ]
 
   # Download conids and quotes
   count_total = len(symb_nasdaq)
