@@ -144,8 +144,8 @@ with urllib.request.urlopen(url_nasdaq_list) as response:
       except Exception as e:
         # Failed to get quote for conid: add conid to skip list, and skip
         # TODO: Add to skip list
-        if "'NoneType' object has no attribute points" in e \
-          and 'W:' in e:
+        if "'NoneType' object has no attribute points" in str(e) \
+          and 'W:' in str(e):
           print('Add conid %s to skip list' % symbol)
         else:
           log('Could not get conid: %s' % e)
