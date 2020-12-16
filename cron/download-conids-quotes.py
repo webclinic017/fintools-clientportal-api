@@ -96,6 +96,10 @@ dir_quote = cfg['paths']['quotes']
 url_nasdaq_list = cfg['urls']['nasdaq_list']
 debug = cfg['main']['debug']
 download_conids_quotes_limit = cfg['main']['download_conids_quotes_limit']
+download_conid_limit_enable = cfg['main']['download_conid_enable']
+download_conid_limit_enable = False
+if download_conid_limit_enable:
+  download_conid_limit_symbol = cfg['main']['download_conid_limit_symbol']
 print('Will save quotes to', dir_quote)
 
 
@@ -122,6 +126,9 @@ with urllib.request.urlopen(url_nasdaq_list) as response:
   # Take only N symbols (test)
   if debug:
     symb_nasdaq = symb_nasdaq[0:int(download_conids_quotes_limit)]
+  # Take only one symbol if specified
+  if download_conid_limit_enable:
+    symb_nasdaq = download_conid_limit_symbol
 
   # Download conids and quotes
   count_total = len(symb_nasdaq)
