@@ -53,6 +53,8 @@ def log(msg):
 def get_quote(symbol):
   # Download conid and quote from IB
   # Also, update count percentage
+  if debug:
+    log('Start', symbol)
   try:
     global count_done
     global count_perc
@@ -68,6 +70,8 @@ def get_quote(symbol):
     with open(dir_quote + '/' + symbol + '.json', 'w') as f:
       # Save quote to dir
       f.write(json.dumps(quote))
+    if debug:
+      log('End', symbol)
     return {
       'symbol': symbol,
       'data': quote,
