@@ -19,6 +19,7 @@ except Exception as e:
 try:
   print('Get contracts')
   for symbol in symbols:
+    c = Company(symbol)
     print(symbol)
 except Exception as e:
   print('ERROR: Could not get contracts:', e)
