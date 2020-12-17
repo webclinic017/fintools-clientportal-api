@@ -26,7 +26,7 @@ def get_symbols():
     cfg = Config()
   except Exception as e:
     raise Exception('Could not read config')
-  return os.listdir(cfg['paths']['conids'])
+  return sorted(os.listdir(cfg['paths']['conids']))
 
 def get_perc_from_history(data, perc):
   # data = {
