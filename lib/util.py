@@ -11,6 +11,11 @@ def get(point, kind):
   # kind = 'h' or 'l'
   return { 't': point['t'], 'value': point[kind], 'v': point['v'] }
 
+def get_conids():
+  # List conids from disk
+  # TODO
+  return [ 'AAPL', 'AMZN' ]
+
 def get_perc_from_history(data, perc):
   # data = {
   #  { 'o': 1, 'h': 2, 'l': 3, 'c': 4 },
