@@ -19,7 +19,7 @@ def get_symbols():
   try:
     cfg = Config()
   except Exception as e:
-    raise Exception('Could not read dir:', dir_quote)
+    raise Exception('Could not read config')
   return os.listdir(cfg['paths']['conids'])
 
 def get_perc_from_history(data, perc):
