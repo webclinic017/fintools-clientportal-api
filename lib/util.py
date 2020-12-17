@@ -1,9 +1,15 @@
 # Utilities
+
+# OS
 import datetime
 import json
 import sys
+# Local
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../'))
+from lib.config import Config
 
-# Main
+# HELPERS
 
 def error(msg):
   print(msg, file=sys.stderr)
