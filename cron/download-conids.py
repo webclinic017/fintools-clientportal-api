@@ -1,50 +1,28 @@
 #!/usr/bin/env python3
-# Run this once a day
-# It does:
-# - download nasdaq symbols
-# - download quotes
-# - download conids. TODO: Only if don't yet have it
-# 45 min running time
+# Download nasdaq symbols (their conids)
+# Run once a week
+
 # OS
-import atexit
-import concurrent.futures
-import datetime
-import glob
-import json
-import os
 import urllib.request
-import urllib3
+import concurrent.futures
+
 
 # Local
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../'))
 from cron import skip_quotes
+from lib.company import Company
 from lib.config import Config
 from lib.util import log
-import util
-from lib.company import Company
 
-# Config
-pidfile = '/var/run/download-conids-quotes.pid'
-
-# Settings
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
-# Vars
+# Vars (get later from config)
 count_done = 0
 count_perc = 0
 count_total = 0
-dir_quote = None
-url_nasdaq_list = None
 debug = None
+url_nasdaq_list = None
 
-
-def exit_handler():
-  util.remove_pid(pidfile)
-atexit.register(exit_handler)
-
-
-def get_quote(symbol):
+def get_conid(symbol):
   # Download conid and quote from IB
   # Also, update count percentage
   if debug:
@@ -56,7 +34,6 @@ def get_quote(symbol):
     global dir_quote
     ret = {}
     c = Company(symbol)
-    quote = c.get_quote(period='3d', bar='1d')
     count_done += 1
     if (count_done/count_total)*10 >= count_perc:
       log(str(count_perc*10) + '%')
@@ -75,41 +52,15 @@ def get_quote(symbol):
     raise Exception('symbol: %s: %s' %(symbol, e))
 
 
-## MAIN
-
-if util.is_running(pidfile):
-  print('Already running')
-  exit(1)
-else:
-  util.create_pid(pidfile)
-
-# Read config
+### MAIN ###
 print('Start')
 cfg = Config()
 dir_quote = cfg['paths']['quotes']
 url_nasdaq_list = cfg['urls']['nasdaq_list']
-debug = cfg['main']['debug']
-download_conids_quotes_limit = cfg['main']['download_conids_quotes_limit']
-download_conid_limit_enable = cfg['main']['download_conid_limit_enable']
-if download_conid_limit_enable == 'True':
-  download_conid_limit_enable = True
-  download_conid_limit_symbol = cfg['main']['download_conid_limit_symbol']
-else:
-  download_conid_limit_enable = False
-print('Will save quotes to', dir_quote)
 
-
-try:
-  util.check_ib_connectivity()
-except Exception as e:
-  print('No IB connectivity')
-  exit(1)
-
-# Get NASDAQ symbols
-log('Get NASDAQ symbols and their quotes')
-quotes = []
+log('Get NASDAQ symbols')
 with urllib.request.urlopen(url_nasdaq_list) as response:
-  # Get NASDAQ symbols
+  # Get quotes for symbols
   symb_nasdaq = [ line.split('|')[0]
     for line in response.read().decode('utf-8').splitlines()[1:-1]
   ]
@@ -119,18 +70,9 @@ with urllib.request.urlopen(url_nasdaq_list) as response:
     for symbol in symb_nasdaq
     if symbol not in skip_quotes.symbols
   ]
-  # Take only N symbols (test)
-  if debug:
-    symb_nasdaq = symb_nasdaq[0:int(download_conids_quotes_limit)]
-  # Take only one symbol if specified
-  if download_conid_limit_enable:
-    symb_nasdaq = [ download_conid_limit_symbol ]
-
-  # Download conids and quotes
-  count_total = len(symb_nasdaq)
   with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
     future_to_data = {
-      executor.submit(get_quote, symbol): symbol
+      executor.submit(get_conid, symbol): symbol
       for symbol in symb_nasdaq
     }
     for future in concurrent.futures.as_completed(future_to_data):
@@ -146,12 +88,5 @@ with urllib.request.urlopen(url_nasdaq_list) as response:
           print('Add conid %s to skip list' % symbol)
         else:
           log('Could not get conid: %s' % e)
-  if len(quotes) == 0:
-    log('Could not get quotes')
-    exit(1)
-  print('Got %i quotes' % len(quotes))
-  # TODO: Remove here the quotes which could not find this time round
-  # TODO: (delisted)
-  #for f in glob.glob(dir_quote + '/*.json'):
-  #  os.remove(f)
-log('Finish')
+
+

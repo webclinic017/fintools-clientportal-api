@@ -47,6 +47,14 @@ def get_perc_from_history(data, perc):
       lo = get(point, 'h')
   return points
 
+
+def log(msg):
+  print('%s: %s' %(
+    datetime.datetime.today().strftime('%Y%m%d %H:%M'),
+    msg
+  ))
+
+
 def timestamp_to_date(timestamp):
   timestamp = int(timestamp)
   return datetime.datetime.fromtimestamp(timestamp/1000).strftime('%Y%m%d')
