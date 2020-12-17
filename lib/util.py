@@ -13,7 +13,7 @@ def get(point, kind):
   # kind = 'h' or 'l'
   return { 't': point['t'], 'value': point[kind], 'v': point['v'] }
 
-def get_conids():
+def get_symbols():
   # List conids from disk
   # TODO
   try:
