@@ -3,6 +3,8 @@ import datetime
 import json
 import sys
 
+# Main
+
 def error(msg):
   print(msg, file=sys.stderr)
 
@@ -14,7 +16,11 @@ def get(point, kind):
 def get_conids():
   # List conids from disk
   # TODO
-  return [ 'AAPL', 'AMZN' ]
+  try:
+    cfg = Config()
+  except Exception as e:
+    raise Exception('Could not read dir:', dir_quote)
+  return os.listdir(cfg['paths']['conids']):
 
 def get_perc_from_history(data, perc):
   # data = {
