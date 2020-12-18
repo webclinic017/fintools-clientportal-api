@@ -29,6 +29,9 @@ class Company:
 
   # Constructor
   def __init__(self, symbol):
+    # Constructor will download (or get from cache)
+    # - conid
+    # - contract (industry)
     self.symbol = symbol
 
     # Config
@@ -53,10 +56,10 @@ class Company:
         print('Could not save conid: %s' % e)
     try:
       # Get industry from cache
-      contract = self.disk_find(kind='contract')
+      contract = self.get_contract()
       self.industry = contract['industry']
     except Exception as e:
-      error('Could not get industry from cache %s: %s' % (symbol, e))
+      error('Could not get contract from cache or download')
 
 
   # PUBLIC METHODS: Aggregates
@@ -226,4 +229,4 @@ class Company:
       with open(fpath, 'r') as f:
         return json.load(f)
     except Exception as e:
-      raise Exception('Symbol %s not found' % self.symbol)
+      raise Exception('Symbol %s not found in cache' % self.symbol)
