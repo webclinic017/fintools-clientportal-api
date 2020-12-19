@@ -4,9 +4,12 @@
 import datetime
 import json
 import sys
+import urllib.request
+
 # Local
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../'))
+from cron import skip_quotes
 from lib.config import Config
 
 # HELPERS
@@ -18,6 +21,35 @@ def get(point, kind):
   # point = { o, c, h, l, v, t }
   # kind = 'h' or 'l'
   return { 't': point['t'], 'value': point[kind], 'v': point['v'] }
+
+def down_symbols(cfg):
+  # Download list of symbols (filter out also)
+  url_nasdaq_list = cfg['urls']['nasdaq_list']
+  debug = cfg['main']['debug']
+  # Limit to conid
+  download_conids_quotes_limit = cfg['main']['download_conids_quotes_limit']
+  download_conid_limit_enable = cfg.getboolean('main', 'download_conid_limit_enable')
+  download_conid_limit_symbol = cfg['main']['download_conid_limit_symbol']
+
+  with urllib.request.urlopen(url_nasdaq_list) as response:
+    # Get NASDAQ symbols
+    symb_nasdaq = [ line.split('|')[0]
+      for line in response.read().decode('utf-8').splitlines()[1:-1]
+    ]
+    # Skip bad symbols
+    symb_nasdaq = [
+      symbol
+      for symbol in symb_nasdaq
+      if symbol not in skip_quotes.symbols
+    ]
+    # Take only N symbols (test)
+    if debug:
+      symb_nasdaq = symb_nasdaq[0:int(download_conids_quotes_limit)]
+    # Take only one symbol if specified
+    if download_conid_limit_enable:
+      symb_nasdaq = [ download_conid_limit_symbol ]
+  return symb_nasdaq
+
 
 def get_symbols():
   # List conids from disk
