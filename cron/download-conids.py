@@ -57,6 +57,7 @@ debug = cfg.getboolean('main', 'debug')
 log('Get NASDAQ symbols')
 symb_nasdaq = down_symbols(cfg)
 count_total = len(symb_nasdaq)
+print('Got %i symbols' % len(symb_nasdaq))
 with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
   future_to_data = {
     executor.submit(get_conid, symbol): symbol
@@ -66,13 +67,7 @@ with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
     res = future_to_data[future]
     try:
       res = future.result()
-      log(res)
     except Exception as e:
       # Failed to get quote for conid: add conid to skip list, and skip
       # TODO: Add to skip list
-      if "'NoneType' object has no attribute points" in str(e) \
-        and 'W:' in str(e):
-        print('Add conid %s to skip list' % symbol)
-      else:
-        print_exc(e)
-        log('Could not get conid: %s' % e)
+      log('Could not get conid: %s' % e)

@@ -115,10 +115,8 @@ with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
       quotes.append(res['symbol'])
     except Exception as e:
       # Failed to get quote for conid: add conid to skip list, and skip
-      # TODO: Add to skip list
       if "'NoneType' object has no attribute points" in str(e) \
         and 'W:' in str(e):
-        print('Add conid %s to skip list' % symbol)
       else:
         print_exc(e)
         log('Could not get conid: %s' % e)

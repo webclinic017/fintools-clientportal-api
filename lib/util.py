@@ -9,8 +9,8 @@ import urllib.request
 # Local
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../'))
-from cron import skip_quotes
 from lib.config import Config
+from lib.skipsymbols import Skipsymbols
 
 # HELPERS
 
@@ -22,7 +22,7 @@ def get(point, kind):
   # kind = 'h' or 'l'
   return { 't': point['t'], 'value': point[kind], 'v': point['v'] }
 
-def down_symbols(cfg):
+def down_symbols(cfg, apply_filters=True):
   # Download list of symbols (filter out also)
   url_nasdaq_list = cfg['urls']['nasdaq_list']
   debug = cfg['main']['debug']
@@ -36,18 +36,19 @@ def down_symbols(cfg):
     symb_nasdaq = [ line.split('|')[0]
       for line in response.read().decode('utf-8').splitlines()[1:-1]
     ]
-    # Skip bad symbols
-    symb_nasdaq = [
-      symbol
-      for symbol in symb_nasdaq
-      if symbol not in skip_quotes.symbols
-    ]
     # Take only N symbols (test)
     if debug:
       symb_nasdaq = symb_nasdaq[0:int(download_conids_quotes_limit)]
     # Take only one symbol if specified
     if download_conid_limit_enable:
       symb_nasdaq = [ download_conid_limit_symbol ]
+    # Skip bad symbols
+    skip = Skipsymbols().get()
+    symb_nasdaq = [
+      symbol
+      for symbol in symb_nasdaq
+      if symbol not in skip
+    ]
   return symb_nasdaq
 
 
@@ -60,6 +61,26 @@ def get_symbols():
     raise Exception('Could not read config')
   l = sorted(os.listdir(cfg['paths']['conids']))
   l.remove('README.md')
+  return l
+
+def get_contracts():
+  # List contracts from disk
+  try:
+    cfg = Config()
+  except Exception as e:
+    raise Exception('Could not read config')
+  l = sorted(os.listdir(cfg['paths']['contracts']))
+  l = [ el.replace('.json', '') for el in l ]
+  return l
+
+def get_quotes():
+  # List quotes from disk
+  try:
+    cfg = Config()
+  except Exception as e:
+    raise Exception('Could not read config')
+  l = sorted(os.listdir(cfg['paths']['quotes']))
+  l = [ el.replace('.json', '') for el in l ]
   return l
 
 def get_perc_from_history(data, perc):

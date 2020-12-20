@@ -14,6 +14,7 @@ from ib_web_api.rest import ApiException
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../'))
 from lib.config import Config
+from lib.skipsymbols import Skipsymbols
 from lib.util import error
 
 # Config
@@ -46,20 +47,29 @@ class Company:
     try:
       # Get conid from cache
       self.conid = self.disk_find_by('symbol', self.symbol)
+      if self.conid == 'None':
+        raise Exception('Not found in cache')
     except Exception as e:
+      # Not found in cache, download
       try:
-        # Download from API as not in cache
-        # NOTE: This should be rare, so print it
-        print('Not found in cache, download conid for %s: %s' % (symbol, e))
+        print('%s: Down conid' % self.symbol)
         self.conid = self.down_conid()
+        if self.conid == 'None':
+          raise Exception('Unable to down conid')
+        print('conid', self.conid)
       except Exception as e:
-        print('Could not save conid: %s' % e)
+        print('%s: Could not down conid: %s' % (self.symbol, e))
+        self.add_to_skip_list()
+        raise Exception(e)
     try:
       # Get industry from cache
       contract = self.get_contract()
       self.industry = contract['industry']
     except Exception as e:
       error('Could not get contract from cache or download')
+      # Add to bad list
+      self.add_to_skip_list()
+      raise Exception(e)
 
 
   # PUBLIC METHODS: Aggregates
@@ -105,6 +115,11 @@ class Company:
 
 
   # PRIVATE
+  def add_to_skip_list(self):
+    print('%s: Add to skip list' % self.symbol)
+    skip = Skipsymbols()
+    skip.add(self.symbol)
+
   def down_conid(self):
     # API: Get conid for symbol
     if self.conid is None:
