@@ -117,6 +117,7 @@ with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
       # Failed to get quote for conid: add conid to skip list, and skip
       if "'NoneType' object has no attribute points" in str(e) \
         and 'W:' in str(e):
+          log('%s' + res)
       else:
         print_exc(e)
         log('Could not get conid: %s' % e)

@@ -6,7 +6,6 @@ import sys
 from ib_web_api import SessionApi
 from ib_web_api.rest import ApiException
 # Local
-import config
 
 def is_running(pidfile):
   if os.path.isfile(pidfile):
