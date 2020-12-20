@@ -16,7 +16,7 @@ if len(sys.argv) < 2:
 industry = sys.argv[1]
 
 try:
-  contracts = get_contracts_cheaper_than(3, redownload=True)
+  contracts = get_contracts_cheaper_than(3)
 except Exception as e:
   print('ERROR: Could not get contracts:', e)
   exit(1)
