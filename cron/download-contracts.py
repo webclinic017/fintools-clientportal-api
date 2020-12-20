@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-# Download contracts of cheap tickers
+# Download contracts
+# TODO: Make this about re-downloading contracts, as already getting
+# in download-conids
 # run time: 3m47s
 
 # Local
