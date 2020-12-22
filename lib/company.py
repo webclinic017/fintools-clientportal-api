@@ -84,11 +84,16 @@ class Company:
 
   def get_quote_single(self):
     # Get quote for one day
-    period = '1d'
-    bar = '1d'
     # TODO: Get from cache maybe if not yet have it
     try:
       return self.disk_find('quote')
+    except ApiException as e:
+      raise Exception('Could not find quote in cache: %s\n' % self.conid)
+
+  def get_day_cache(self):
+    # Get detailed quote for one day
+    try:
+      return self.disk_find('day')
     except ApiException as e:
       raise Exception('Could not find quote in cache: %s\n' % self.conid)
 
@@ -216,10 +221,20 @@ class Company:
     # NOTE: Usually used to get conid from symbol
     # TODO: Scrap this, just search by symbol
     if kind == 'symbol':
+      # SYMBOL
       symbol = value
       try:
         file_conid = self.cfg['dir_conids'] + '/' + symbol
         with open(file_conid, 'r') as f:
+          return f.read()
+      except Exception as e:
+        raise Exception('Symbol %s not found' % symbol)
+    elif kind == 'day':
+      # DAY
+      symbol = value
+      try:
+        f_path = self.cfg['dir_day'] + '/' + symbol
+        with open(f_path, 'r') as f:
           return f.read()
       except Exception as e:
         raise Exception('Symbol %s not found' % symbol)
